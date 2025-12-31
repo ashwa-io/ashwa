@@ -48,6 +48,3 @@ next-env.d.ts
 .wrangler
 .dev.vars*
 
-# yarn
-.yarnrc.yml
-
