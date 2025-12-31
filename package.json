@@ -12,6 +12,9 @@
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
 	},
+	"engines": {
+		"yarn": ">=4.7.0 <5"
+	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.14.4",
 		"next": "15.5.9",
