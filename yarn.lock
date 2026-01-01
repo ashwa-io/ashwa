@@ -4778,6 +4778,7 @@ __metadata:
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
     class-variance-authority: "npm:^0.7.1"
+    cobe: "npm:^0.6.5"
     eslint: "npm:^9"
     eslint-config-next: "npm:15.4.6"
     lenis: "npm:^1.3.17"
@@ -4786,6 +4787,7 @@ __metadata:
     next: "npm:15.5.9"
     react: "npm:19.1.4"
     react-dom: "npm:19.1.4"
+    react-wrap-balancer: "npm:^1.1.1"
     tailwind-merge: "npm:^3.4.0"
     tailwindcss: "npm:^4"
     tw-animate-css: "npm:^1.4.0"
@@ -5067,6 +5069,15 @@ __metadata:
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
   checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
+  languageName: node
+  linkType: hard
+
+"cobe@npm:^0.6.5":
+  version: 0.6.5
+  resolution: "cobe@npm:0.6.5"
+  dependencies:
+    phenomenon: "npm:^1.6.0"
+  checksum: 10c0/a5f28f3c0eac6222769278eda6d1a367978276135c8ed9dbe10f6c4ff56d7fcd762a93f474ac1b0fbfd2b0aa40c783f3790ee832d14649609f63c2e7a0f707b1
   languageName: node
   linkType: hard
 
@@ -8151,6 +8162,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"phenomenon@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "phenomenon@npm:1.6.0"
+  checksum: 10c0/32216a8861e69ab1d96c8fa96217769073f446173f3135fbe369ea61f0959c453347004b5aefb22ba18f725273e7c57ce2d2a29c4db6ac431a2839b7bacf9778
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^1.0.0, picocolors@npm:^1.1.1":
   version: 1.1.1
   resolution: "picocolors@npm:1.1.1"
@@ -8303,6 +8321,15 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10c0/33977da7a5f1a287936a0c85639fec6ca74f4f15ef1e59a6bc20338fc73dc69555381e211f7a3529b8150a1f71e4225525b41b60b52965bda53ce7d47377ada1
+  languageName: node
+  linkType: hard
+
+"react-wrap-balancer@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "react-wrap-balancer@npm:1.1.1"
+  peerDependencies:
+    react: ">=16.8.0 || ^17.0.0 || ^18"
+  checksum: 10c0/2045625cef0095eae9af9363052a0259a15e292d07e36ce8b085924ad65627a5807f986aeaf91068a9d384c6d2266787edb5d0eaba3ac021f8789437464e245d
   languageName: node
   linkType: hard
 
