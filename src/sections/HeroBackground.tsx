@@ -20,7 +20,7 @@ const GameOfLife = () => {
     updateCanvasSize()
 
     let animationFrameId: number
-    const cellSize = 6
+    const cellSize = 5 // Balanced cell size for optimal dot density
     const canvasWidth = canvas.width
     const canvasHeight = canvas.height
     
@@ -45,8 +45,9 @@ const GameOfLife = () => {
       const distance = Math.sqrt(dx * dx + dy * dy)
       // Normalize distance (0 at center, 1 at corners)
       const normalizedDistance = distance / maxDistance
-      // Create smooth fade: 1 at center, 0 at edges (tighter for denser center)
-      return Math.max(0, 1 - Math.pow(normalizedDistance / 0.6, 2))
+      // Create smooth fade: 1 at center, gradually fading to 0 at edges
+      // Using a wider spread (0.75) to allow more dots but with lower opacity at borders
+      return Math.max(0, 1 - Math.pow(normalizedDistance / 0.75, 1.5))
     }
 
     let grid: Grid = Array(rows)
@@ -57,13 +58,14 @@ const GameOfLife = () => {
           .map((_, j) => {
             const radialFade = getRadialFade(j, i)
             // Higher probability of being alive in center (directly proportional to radial fade)
-            // At center (radialFade=1): probability = 0.85 (15% chance of being alive)
-            // At edges (radialFade=0): probability = 1.0 (0% chance of being alive)
-            const weightedProbability = 0.85 + 0.15 * (1 - radialFade)
+            // Balanced spawn rate for optimal density
+            // At center (radialFade=1): probability = 0.75 (25% chance of being alive)
+            // At edges (radialFade=0): probability = 0.95 (5% chance of being alive)
+            const weightedProbability = 0.75 + 0.2 * (1 - radialFade)
             const isAlive = Math.random() > weightedProbability
             return {
               alive: isAlive,
-              opacity: isAlive && Math.random() > 0.5 ? 0.5 * radialFade : 0,
+              opacity: isAlive && Math.random() > 0.4 ? 0.5 * radialFade : 0,
             }
           }),
       )
@@ -93,15 +95,19 @@ const GameOfLife = () => {
           const cell = grid[i][j]
           const radialFade = getRadialFade(j, i)
           
-          if (cell.alive && cell.opacity < 1) {
-            cell.opacity = Math.min(cell.opacity + transitionSpeed, 0.5)
+          // Max opacity is higher in center, lower towards edges
+          const maxOpacity = 0.6 * radialFade + 0.15
+          
+          if (cell.alive && cell.opacity < maxOpacity) {
+            cell.opacity = Math.min(cell.opacity + transitionSpeed, maxOpacity)
           } else if (!cell.alive && cell.opacity > 0) {
             cell.opacity = Math.max(cell.opacity - transitionSpeed, 0)
           }
 
-          if (cell.opacity > 0 && radialFade > 0) {
-            // Apply radial fade to opacity (fade out at edges)
-            const finalOpacity = cell.opacity * radialFade
+          if (cell.opacity > 0 && radialFade > 0.02) {
+            // Apply radial fade to opacity (fade out smoothly at edges)
+            // Square the radialFade for even smoother fade towards borders
+            const finalOpacity = cell.opacity * Math.pow(radialFade, 0.8)
             ctx.fillStyle = `rgba(0, 0, 0, ${finalOpacity})`
             ctx.beginPath()
             ctx.arc(
@@ -126,7 +132,7 @@ const GameOfLife = () => {
           
           // Prevent cells from being alive if radial fade is too low (edges)
           // This ensures symmetric distribution and prevents edge spawning
-          if (radialFade < 0.05) {
+          if (radialFade < 0.1) {
             willBeAlive = false
           }
           

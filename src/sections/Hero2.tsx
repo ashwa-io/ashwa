@@ -44,13 +44,14 @@ export function Hero() {
             href="https://app.ashwa.io"
             target="_blank"
             rel="noopener noreferrer"
+            className="group inline-block mt-6"
           >
             <Button
               variant="primary"
-              className="mt-6 inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              Start Tracking
-              <ArrowUpRight className="size-4" />
+              Launch Dashboard
+              <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Button>
           </a>
         </FadeDiv>
