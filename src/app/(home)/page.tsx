@@ -3,6 +3,7 @@ import { Achievements } from "@/sections/achievements";
 import { Hero } from "@/sections/hero";
 import { Process } from "@/sections/process";
 import { Services } from "@/sections/services";
+import { GlobalDatabase } from "@/components/ui/GlobalDatabase";
 import ReactLenis from "lenis/react";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <Hero />
       <About />
       <Achievements />
+      <GlobalDatabase />
       <Services />
       <Process />
       {/* <ScrollMask viewbox={[0, 0, 228, 167]}>

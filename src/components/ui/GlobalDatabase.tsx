@@ -23,14 +23,20 @@ export const GlobalDatabase: FunctionComponent = () => {
       glowColor: [0.15, 0.15, 0.15],
       markerColor: [100, 100, 100],
       markers: [
-        // { location: [37.7595, -122.4367], size: 0.03 }, // San Francisco
-        // { location: [40.7128, -74.006], size: 0.03 }, // New York City
-        // { location: [35.6895, 139.6917], size: 0.03 }, // Tokyo
-        // { location: [28.7041, 77.1025], size: 0.03 }, // Delhi
+        { location: [28.7041, 77.1025], size: 0.04 }, // Delhi
+        { location: [19.0760, 72.8777], size: 0.04 }, // Mumbai
+        { location: [12.9716, 77.5946], size: 0.04 }, // Bangalore
+        { location: [13.0827, 80.2707], size: 0.04 }, // Chennai
+        { location: [22.5726, 88.3639], size: 0.04 }, // Kolkata
+        { location: [17.3850, 78.4867], size: 0.04 }, // Hyderabad
+        { location: [18.5204, 73.8567], size: 0.04 }, // Pune
+        { location: [23.0225, 72.5714], size: 0.04 }, // Ahmedabad
+        { location: [26.9124, 75.7873], size: 0.04 }, // Jaipur
+        { location: [21.1702, 72.8311], size: 0.04 }, // Surat
       ],
       onRender: (state: { phi?: number }) => {
         state.phi = phi
-        phi += 0.0002
+        phi += 0.0008
       },
     })
 
@@ -41,17 +47,17 @@ export const GlobalDatabase: FunctionComponent = () => {
 
   const features = [
     {
-      name: "Global Clusters",
-      description: "Enable low-latency global access, enhancing performance.",
+      name: "Real-Time GPS Tracking",
+      description: "Monitor your entire fleet with precise location data and instant updates across all vehicles, ensuring complete visibility at all times.",
     },
     {
-      name: "Serverless Triggers",
-      description: "Trigger functions automatically for dynamic app behavior.",
+      name: "Multi-Location Coverage",
+      description: "Track vehicles across cities and regions with seamless coverage, from urban centers to remote locations, keeping your fleet connected.",
     },
     {
-      name: "Monitoring & Alerts",
+      name: "Smart Alerts",
       description:
-        "Monitor health with key metrics or integrate third-party tools.",
+        "Receive instant alerts for geofence violations, unauthorized usage, speed limits, and route deviations to maintain fleet security and compliance.",
     },
   ]
 
@@ -64,14 +70,14 @@ export const GlobalDatabase: FunctionComponent = () => {
         <div className="absolute top-68 size-160 rounded-full bg-indigo-800 blur-3xl md:top-[20rem]" />
         <div className="z-10 inline-block rounded-lg border border-indigo-400/20 bg-indigo-800/20 px-3 py-1.5 font-semibold uppercase leading-4 tracking-tight sm:text-sm">
           <span className="bg-linear-to-b from-indigo-200 to-indigo-400 bg-clip-text text-transparent">
-            Made for the cloud
+            Track anywhere, anytime
           </span>
         </div>
         <h2
           id="global-database-title"
           className="z-10 mt-6 inline-block bg-linear-to-b from-white to-indigo-100 bg-clip-text px-2 text-center text-5xl font-bold tracking-tighter text-transparent md:text-8xl"
         >
-          The global <br /> cloud database
+          Connected fleet <br /> intelligence
         </h2>
         <canvas
           className="absolute top-[7.1rem] z-20 aspect-square size-full max-w-fit md:top-[12rem]"
