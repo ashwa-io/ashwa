@@ -1,6 +1,6 @@
 import { About } from "@/sections/about";
 import { Achievements } from "@/sections/achievements";
-import { Hero } from "@/sections/hero";
+import { Hero } from "@/sections/Hero2";
 import { Process } from "@/sections/process";
 import { Services } from "@/sections/services";
 import { GlobalDatabase } from "@/components/ui/GlobalDatabase";
