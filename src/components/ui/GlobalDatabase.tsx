@@ -1,14 +1,34 @@
 "use client"
 import createGlobe from "cobe"
-import { FunctionComponent, useEffect, useRef } from "react"
+import { FunctionComponent, useEffect, useRef, useState } from "react"
 
 export const GlobalDatabase: FunctionComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [isMobile, setIsMobile] = useState(true)
 
   useEffect(() => {
+    // Check if we're on mobile (below md breakpoint - 768px)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkMobile)
+    }
+  }, [])
+
+  useEffect(() => {
+    // Only create globe on non-mobile devices
+    if (isMobile || !canvasRef.current) {
+      return
+    }
+
     let phi = 4.7
 
-    const globe = createGlobe(canvasRef.current!, {
+    const globe = createGlobe(canvasRef.current, {
       devicePixelRatio: 2,
       width: 1200 * 2,
       height: 1200 * 2,
@@ -43,7 +63,7 @@ export const GlobalDatabase: FunctionComponent = () => {
     return () => {
       globe.destroy()
     }
-  }, [])
+  }, [isMobile])
 
   const features = [
     {
@@ -78,11 +98,13 @@ export const GlobalDatabase: FunctionComponent = () => {
         >
           Fleet intelligence <br /> platform
         </h2>
-        <canvas
-          className="absolute top-[7.1rem] z-20 aspect-square size-full max-w-fit md:top-48"
-          ref={canvasRef}
-          style={{ width: 1200, height: 1200 }}
-        />
+        {!isMobile && (
+          <canvas
+            className="absolute top-[7.1rem] z-20 aspect-square size-full max-w-fit md:top-48"
+            ref={canvasRef}
+            style={{ width: 1200, height: 1200 }}
+          />
+        )}
         <div className="z-20 -mt-32 h-144 w-full overflow-hidden md:-mt-36">
           <div className="absolute bottom-0 h-3/5 w-full bg-linear-to-b from-transparent via-gray-950/95 to-gray-950" />
           <div className="absolute inset-x-6 bottom-12 m-auto max-w-4xl md:top-2/3">
