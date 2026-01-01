@@ -1,9 +1,8 @@
-import { Badge } from "@/components/Badge"
-import { Button } from "@/components/Button"
-import Benefits from "@/components/ui/Benefits"
-import TeamGallery from "@/components/ui/TeamGallery"
-import { cn } from "@/lib/utils"
-import Balancer from "react-wrap-balancer"
+import { Badge } from "@/components/Badge";
+import Benefits from "@/components/ui/Benefits";
+import TeamGallery from "@/components/ui/TeamGallery";
+import { cn } from "@/lib/utils";
+import Balancer from "react-wrap-balancer";
 
 export default function About() {
   return (
@@ -30,6 +29,7 @@ export default function About() {
           happening now. <br /> Database is at the core of this revolution.
         </p>
       </section>
+
       <TeamGallery />
       <Benefits />
       <section aria-labelledby="vision-title" className="mx-auto my-40">
@@ -56,7 +56,7 @@ export default function About() {
           </p>
           <p
             className={cn(
-              "w-fit rotate-3 font-handwriting text-3xl text-indigo-600 dark:text-indigo-400",
+              "w-fit rotate-3 font-handwriting text-3xl text-indigo-600 dark:text-indigo-400"
             )}
           >
             – Shashank and Vipul
@@ -64,5 +64,5 @@ export default function About() {
         </div>
       </section>
     </div>
-  )
+  );
 }

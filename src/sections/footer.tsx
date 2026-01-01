@@ -21,7 +21,7 @@ const links = [
   {
     id: "footer-link-about",
     label: "About",
-    href: "#",
+    href: "/about",
   },
   {
     id: "footer-link-contact",

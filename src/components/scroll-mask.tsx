@@ -34,7 +34,7 @@ function useScrollMaskContext() {
   const context = React.useContext(ScrollMaskContext);
   if (context === undefined) {
     throw new Error(
-      "useScrollMaskContext must be used within a ScrollMaskProvider",
+      "useScrollMaskContext must be used within a ScrollMaskProvider"
     );
   }
   return context;
@@ -87,12 +87,12 @@ export function ScrollMask({
   const matrixA = useTransform(
     scrollYProgress,
     [0, 1],
-    [scaleX, scaleX * scaleMultiplier],
+    [scaleX, scaleX * scaleMultiplier]
   );
   const matrixD = useTransform(
     scrollYProgress,
     [0, 1],
-    [scaleY, scaleY * scaleMultiplier],
+    [scaleY, scaleY * scaleMultiplier]
   );
 
   const finalTranslateX =
@@ -103,12 +103,12 @@ export function ScrollMask({
   const matrixF = useTransform(
     scrollYProgress,
     [0, 1],
-    [translateX, finalTranslateX],
+    [translateX, finalTranslateX]
   );
   const matrixG = useTransform(
     scrollYProgress,
     [0, 1],
-    [translateY, finalTranslateY],
+    [translateY, finalTranslateY]
   );
   const transform = useMotionTemplate`matrix(${matrixA}, 0, 0, ${matrixD}, ${matrixF}, ${matrixG})`;
 
@@ -116,7 +116,7 @@ export function ScrollMask({
     if (svgPathRef.current) {
       svgPathRef.current.setAttribute(
         "transform",
-        `matrix(${scaleX}, 0, 0, ${scaleY}, ${translateX}, ${translateY})`,
+        `matrix(${scaleX}, 0, 0, ${scaleY}, ${translateX}, ${translateY})`
       );
       setIsMounted(true);
     }
@@ -136,7 +136,7 @@ export function ScrollMask({
         className={cn(
           // "relative overflow-visible h-[1809px] p-[0_0_1206px]",
           "relative overflow-visible h-[300vh]",
-          className,
+          className
         )}
         {...props}
       >
@@ -148,19 +148,16 @@ export function ScrollMask({
 
 export function ScrollMaskWrap({
   className,
-  style,
   ...props
 }: HTMLMotionProps<"div">) {
-  const { scrollYProgress, viewbox = [0, 0, 100, 100] } =
-    useScrollMaskContext();
-  const y = useTransform(scrollYProgress, [0, 1], [0, 1206]);
+  const { viewbox = [0, 0, 100, 100] } = useScrollMaskContext();
   return (
     <motion.div
       className={cn(
         // "relative overflow-hidden max-w-full",
         "sticky w-full top-0 overflow-hidden h-screen ",
         `[&>div]:aspect-[${viewbox[2]}/${viewbox[3]}]`,
-        className,
+        className
       )}
       // style={{ y, ...style }}
       {...props}

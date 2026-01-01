@@ -64,7 +64,7 @@ const menu_links = [
   {
     id: "menu-link-about",
     label: "About",
-    href: "#",
+    href: "/about",
   },
   {
     id: "menu-link-contact",
