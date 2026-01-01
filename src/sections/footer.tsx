@@ -26,7 +26,7 @@ const links = [
   {
     id: "footer-link-contact",
     label: "Contact",
-    href: "#",
+    href: "mailto:hello@ashwa.io",
   },
 ];
 export function Footer() {
@@ -62,7 +62,7 @@ export function Footer() {
         <h3 className="text-xl font-medium">Have a question?</h3>
 
         <a
-          href="mailto:mail@email.com"
+          href="mailto:hello@ashwa.io"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px"
@@ -77,10 +77,10 @@ export function Footer() {
         </li>
 
         <li className="list-none relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-          <a href="mailto:mail@email.com">hello@ashwa.io</a>
+          <a href="mailto:hello@ashwa.io">hello@ashwa.io</a>
         </li>
         <li className="list-none relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-          <a href="tel:+21348878799">+91 6263441130</a>
+          <a href="tel:+916263441130">+91 6263441130</a>
         </li>
 
         <li className="inline-flex gap-4">

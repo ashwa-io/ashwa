@@ -69,22 +69,22 @@ const menu_links = [
   {
     id: "menu-link-contact",
     label: "Contact",
-    href: "#",
+    href: "mailto:hello@ashwa.io",
   },
 ];
 
 export function Header() {
   return (
-    <header className="fixed z-999 backdrop-blur-lg w-full pl-8 flex gap-4 justify-between top-0 right-0 min-h-fit">
-      <div className="relative p-2 z-999">
+    <header className="fixed z-999 backdrop-blur-lg w-full pl-4 md:pl-8 flex gap-2 md:gap-4 justify-between top-0 right-0 min-h-fit">
+      <div className="relative p-1 md:p-2 z-999">
         <Link href="/">
           <LogoWithText />
         </Link>
       </div>
       <nav className="flex">
         <AnimatedMenu className="relative">
-          <BgMask className="after:bg-primary before:absolute before:bg-inherit before:block before:size-full before:inset-0 before:shadow-[inset_-1px_0_0_0_rgba(51,51,51,0.6)] bg-black/50 text-accent p-2.5 flex gap-4 justify-between items-center z-[999]">
-            <AnimatedMenuButton className="px-6 py-2.5 mix-blend-difference gap-4">
+          <BgMask className="after:bg-primary before:absolute before:bg-inherit before:block before:size-full before:inset-0 before:shadow-[inset_-1px_0_0_0_rgba(51,51,51,0.6)] bg-black/50 text-accent p-1.5 md:p-2.5 flex gap-2 md:gap-4 justify-between items-center z-[999]">
+            <AnimatedMenuButton className="px-3 md:px-6 py-2 md:py-2.5 mix-blend-difference gap-2 md:gap-4">
               <AnimatedMenuButtonToggleIcon />
               <AnimatedMenuButtonLabel />
             </AnimatedMenuButton>
