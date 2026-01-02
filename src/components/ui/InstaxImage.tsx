@@ -20,14 +20,21 @@ export function InstaxImage({
   return (
     <figure
       className={cn(
-        "h-fit overflow-hidden rounded-lg bg-white shadow-xl shadow-black/10 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-black/20 dark:bg-gray-900 dark:shadow-indigo-500/5 dark:ring-white/20 dark:hover:shadow-indigo-900/20",
+        "h-fit max-w-full overflow-hidden rounded-lg bg-white shadow-xl shadow-black/10 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-black/20 dark:bg-gray-900 dark:shadow-indigo-500/5 dark:ring-white/20 dark:hover:shadow-indigo-900/20",
         className,
       )}
     >
-      <div className="bg-gray-50 p-2 dark:bg-gray-900">
-        <div className="relative overflow-hidden rounded">
+      <div className="bg-gray-50 p-2 dark:bg-gray-900 w-full">
+        <div className="relative overflow-hidden rounded w-full">
           <div className="absolute inset-0 shadow-[inset_0px_0px_3px_0px_rgb(0,0,0,1)]"></div>
-          <Image src={src} alt={alt} width={width} height={height} />
+          <Image 
+            src={src} 
+            alt={alt} 
+            width={width} 
+            height={height}
+            className="max-w-full h-auto w-full"
+            style={{ maxWidth: '100%', height: 'auto' }}
+          />
         </div>
       </div>
       <div
