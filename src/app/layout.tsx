@@ -41,20 +41,11 @@ export const metadata: Metadata = {
     siteName: "Ashwa - Vehicle Tracking System",
     title: "Ashwa - India's Best Vehicle Tracking System",
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Ashwa Vehicle Tracking System",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Ashwa - India's Best Vehicle Tracking System",
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions.",
-    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -68,8 +59,15 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+    other: [
+      { rel: "manifest", url: "/site.webmanifest" },
+    ],
   },
   other: {
     "mobile-web-app-capable": "yes",
