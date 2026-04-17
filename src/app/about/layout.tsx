@@ -16,12 +16,21 @@ export const metadata: Metadata = {
     title: "About Ashwa — Vehicle Tracking Engineers",
     description:
       "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform. Based in Raipur, Chhattisgarh.",
+    images: [
+      {
+        url: "/web-app-manifest-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Ashwa — Vehicle Tracking Engineers",
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "About Ashwa — Vehicle Tracking Engineers",
     description:
       "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform.",
+    images: ["/web-app-manifest-512x512.png"],
   },
 };
 

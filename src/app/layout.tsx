@@ -41,11 +41,20 @@ export const metadata: Metadata = {
     siteName: "Ashwa - Vehicle Tracking System",
     title: "Ashwa - India's Best Vehicle Tracking System",
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
+    images: [
+      {
+        url: "/web-app-manifest-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Ashwa Vehicle Tracking System",
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Ashwa - India's Best Vehicle Tracking System",
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions.",
+    images: ["/web-app-manifest-512x512.png"],
   },
   robots: {
     index: true,
