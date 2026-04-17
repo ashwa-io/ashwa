@@ -4,7 +4,9 @@ import { FunctionComponent, useEffect, useRef, useState } from "react"
 
 export const GlobalDatabase: FunctionComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isMobile, setIsMobile] = useState(true)
+  const [isMobile, setIsMobile] = useState<boolean>(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : true
+  )
 
   useEffect(() => {
     // Check if we're on mobile (below md breakpoint - 768px)
@@ -30,13 +32,13 @@ export const GlobalDatabase: FunctionComponent = () => {
 
     const globe = createGlobe(canvasRef.current, {
       devicePixelRatio: 2,
-      width: 1200 * 2,
-      height: 1200 * 2,
+      width: 600 * 2,
+      height: 600 * 2,
       phi: 0,
       theta: -0.3,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 25000,
+      mapSamples: 16000,
       mapBrightness: 13,
       mapBaseBrightness: 0.05,
       baseColor: [0.3, 0.3, 0.3],
@@ -102,7 +104,7 @@ export const GlobalDatabase: FunctionComponent = () => {
           <canvas
             className="absolute top-[7.1rem] z-20 aspect-square size-full max-w-fit md:top-48"
             ref={canvasRef}
-            style={{ width: 1200, height: 1200 }}
+            style={{ width: 600, height: 600 }}
           />
         )}
         <div className="z-20 -mt-32 h-144 w-full overflow-hidden md:-mt-36">

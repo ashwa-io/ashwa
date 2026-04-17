@@ -21,7 +21,7 @@ export function Hero() {
               </span>
               <span className="flex items-center gap-1 truncate">
                 <span className="w-full truncate">
-                  Real-time vehicle tracking now available
+                  Now live — real-time GPS tracking across India
                 </span>
 
                 <ArrowUpRight className="size-4 shrink-0 text-gray-700" />
@@ -35,9 +35,9 @@ export function Hero() {
           <FadeSpan>Tracking</FadeSpan>
         </h1>
         <p className="mt-5 max-w-xl text-center text-base text-balance text-gray-700 sm:mt-8 sm:text-xl">
-          <FadeSpan>Track vehicles in real-time with complete</FadeSpan>{" "}
-          <FadeSpan>history and analytics. Monitor your fleet</FadeSpan>{" "}
-          <FadeSpan>with precision and efficiency.</FadeSpan>
+          <FadeSpan>Know where every vehicle is, right now.</FadeSpan>{" "}
+          <FadeSpan>Complete route history, driver analytics,</FadeSpan>{" "}
+          <FadeSpan>and instant alerts — built for Indian fleets.</FadeSpan>
         </p>
         <FadeDiv>
           <a
@@ -50,7 +50,7 @@ export function Hero() {
               variant="primary"
               className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              Launch Dashboard
+              Start Tracking Free
               <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Button>
           </a>

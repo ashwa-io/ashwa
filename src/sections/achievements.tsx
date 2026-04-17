@@ -21,28 +21,28 @@ const achievements = [
     id: "achievement-vehicles",
     title: "10,000+ Vehicles Tracked",
     description:
-      "Successfully monitoring thousands of vehicles across various industries including logistics, transportation, and delivery services.",
+      "Across logistics, delivery, and transport fleets — every vehicle monitored 24/7 with live GPS data and full route history.",
     icon: GlobeIcon,
   },
   {
     id: "achievements-clients",
     title: "500+ Fleet Operators",
     description:
-      "Trusted by businesses of all sizes, from small local fleets to large enterprise operations managing hundreds of vehicles.",
+      "From 5-vehicle local businesses to enterprise fleets — operators trust Ashwa to give them visibility they never had before.",
     icon: UserStarIcon,
   },
   {
     id: "achievement-uptime",
     title: "99.9% System Uptime",
     description:
-      "Reliable tracking infrastructure ensuring your fleet data is always accessible when you need it most, with minimal service interruptions.",
+      "Tracking infrastructure built to never sleep. Your fleet data is live, accurate, and accessible the moment you need it.",
     icon: SmilePlusIcon,
   },
   {
     id: "achievement-coverage",
     title: "24/7 Real-Time Coverage",
     description:
-      "Comprehensive GPS coverage with continuous monitoring, instant alerts, and round-the-clock support to keep your fleet operations running smoothly.",
+      "Continuous GPS monitoring, instant geofence alerts, and round-the-clock support — so your fleet never goes dark.",
     icon: TimerIcon,
   },
 ];

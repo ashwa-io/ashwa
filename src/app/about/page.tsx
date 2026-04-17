@@ -21,12 +21,12 @@ export default function About() {
           className="mt-2 inline-block bg-gradient-to-br from-gray-900 to-gray-800 bg-clip-text py-2 text-4xl font-bold tracking-tighter text-transparent sm:text-6xl md:text-6xl dark:from-gray-50 dark:to-gray-300"
         >
           <Balancer>
-            We are engineers, building the vehicle tracking system we always wanted
+            We got tired of fleet operators not knowing where their vehicles were
           </Balancer>
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-gray-700 dark:text-gray-400">
-          Real-time vehicle tracking is transforming fleet management, and it is
-          happening now. <br /> Our tracking system is at the core of this revolution.
+          So we built Ashwa — real-time GPS tracking designed specifically for
+          Indian roads, Indian fleets, and Indian operators who need answers fast.
         </p>
       </section>
 
@@ -41,18 +41,15 @@ export default function About() {
         </h2>
         <div className="mt-6 max-w-prose space-y-4 text-gray-600 dark:text-gray-400">
           <p className="text-lg leading-8">
-            We envision a world where fleet management is no longer a complex
-            challenge but a powerful advantage. By integrating cutting-edge tracking
-            technology and AI into vehicle monitoring solutions, we aim to transform
-            fleet operations into strategic assets, empowering businesses to operate
-            more efficiently and safely.
+            We see a future where a fleet operator can open one screen and know
+            exactly where every vehicle is, where it&apos;s been, and what it should
+            do next — without a single phone call. Tracking becomes invisible
+            infrastructure, not a daily headache.
           </p>
           <p className="text-lg leading-8">
-            We believe in removing the barriers of vehicle visibility and fleet
-            management complexity, enabling teams to focus on optimization and growth
-            rather than manual tracking and monitoring. Our goal is to equip every
-            organization with the tools they need to harness the full potential
-            of their fleet, driving safety, efficiency, and excellence in every journey.
+            We&apos;re removing the complexity between a business and its fleet.
+            Every feature we build answers one question: does this help operators
+            move faster, safer, and smarter? If not, we cut it.
           </p>
           <p
             className={cn(

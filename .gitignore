@@ -48,3 +48,10 @@ next-env.d.ts
 .wrangler
 .dev.vars*
 
+# skills
+.claude/
+.agents/skills
+skills-lock.json
+
+/docs/
+

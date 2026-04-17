@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/sections/header";
@@ -8,6 +9,7 @@ const bebasNeue = Bebas_Neue({
 	weight: "400",
 	subsets: ["latin"],
 	variable: "--font-bebas-neue",
+	display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -85,13 +87,61 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ashwa.in/#organization",
+      name: "Ashwa",
+      url: "https://ashwa.in",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://ashwa.in/logo.png",
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Raipur",
+        addressRegion: "Chhattisgarh",
+        addressCountry: "IN",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "hello@ashwa.io",
+        contactType: "customer service",
+      },
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://ashwa.in/#software",
+      name: "Ashwa Vehicle Tracking System",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      offers: {
+        "@type": "Offer",
+        price: "1200",
+        priceCurrency: "INR",
+      },
+      provider: {
+        "@id": "https://ashwa.in/#organization",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en-IN">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${bebasNeue.variable} antialiased`}>
         <Header />
         {children}
