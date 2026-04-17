@@ -7,23 +7,22 @@ export function Hero() {
   return (
     <section aria-label="hero" className="min-h-screen">
       <FadeContainer className="relative flex flex-col items-center justify-center min-h-screen">
-        <FadeDiv className="mx-auto">
+        <FadeDiv className="mx-auto w-[calc(100%-2rem)] max-w-md">
           <a
             aria-label="View latest update the changelog page"
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-auto w-full"
+            className="block w-full"
           >
-            <div className="inline-flex max-w-full items-center gap-3 rounded-full bg-white/5 px-2.5 py-0.5 pr-3 pl-0.5 font-medium text-gray-900 ring-1 shadow-lg shadow-orange-400/20 ring-black/10 filter backdrop-blur-[1px] transition-colors hover:bg-orange-500/2.5 focus:outline-hidden sm:text-sm">
-              <span className="shrink-0 truncate rounded-full border bg-gray-50 px-2.5 py-1 text-sm text-gray-600 sm:text-xs">
+            <div className="flex w-full items-center gap-3 rounded-full bg-white/5 px-2.5 py-0.5 pr-3 pl-0.5 font-medium text-gray-900 ring-1 shadow-lg shadow-orange-400/20 ring-black/10 filter backdrop-blur-[1px] transition-colors hover:bg-orange-500/2.5 focus:outline-hidden sm:text-sm">
+              <span className="shrink-0 rounded-full border bg-gray-50 px-2.5 py-1 text-sm text-gray-600 sm:text-xs">
                 New
               </span>
-              <span className="flex items-center gap-1 truncate">
-                <span className="w-full truncate">
+              <span className="flex min-w-0 flex-1 items-center justify-between gap-1">
+                <span className="truncate text-sm sm:text-base">
                   Now live — real-time GPS tracking across India
                 </span>
-
                 <ArrowUpRight className="size-4 shrink-0 text-gray-700" />
               </span>
             </div>
