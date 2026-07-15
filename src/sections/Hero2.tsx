@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { FadeContainer, FadeDiv, FadeSpan } from "@/components/Fade";
 import { Button } from "@/components/Button";
-import GameOfLife from "./HeroBackground";
+import Starfield from "./HeroBackground";
 
 export function Hero() {
   return (
@@ -9,8 +9,8 @@ export function Hero() {
       <FadeContainer className="relative flex flex-col items-center justify-center min-h-screen">
         <FadeDiv className="mx-auto w-[calc(100%-2rem)] max-w-md">
           <a
-            aria-label="View latest update the changelog page"
-            href="#"
+            aria-label="Open the Ashwa tracking app"
+            href="https://app.ashwa.io"
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full"
@@ -49,13 +49,14 @@ export function Hero() {
               variant="primary"
               className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              Start Tracking Free
+              Open Live Dashboard
               <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Button>
           </a>
         </FadeDiv>
         <div className="absolute inset-0 -z-10">
-          <GameOfLife />
+          <div className="absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(231,59,36,0.07),transparent_65%)]" />
+          <Starfield />
         </div>
       </FadeContainer>
     </section>

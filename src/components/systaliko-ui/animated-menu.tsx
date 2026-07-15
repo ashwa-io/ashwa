@@ -60,7 +60,7 @@ interface AnimatedMenuButtonLabelProps
 const AnimatedMenuContext = React.createContext<
   AnimatedMenuContextValue | undefined
 >(undefined);
-function useAnimatedMenuContext() {
+export function useAnimatedMenuContext() {
   const context = React.useContext(AnimatedMenuContext);
   if (context === undefined) {
     throw new Error(

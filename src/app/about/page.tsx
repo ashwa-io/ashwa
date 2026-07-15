@@ -53,7 +53,7 @@ export default function About() {
           </p>
           <p
             className={cn(
-              "w-fit rotate-3 font-handwriting text-3xl text-indigo-600 dark:text-indigo-400"
+              "w-fit rotate-3 font-handwriting text-3xl text-primary"
             )}
           >
             – Shashank and Vipul

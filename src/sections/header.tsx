@@ -8,18 +8,19 @@ import {
   AnimatedMenuButtonToggleIcon,
   AnimatedMenuItem,
   AnimatedMenuList,
+  useAnimatedMenuContext,
 } from "@/components/systaliko-ui/animated-menu";
 import { Variants } from "motion";
 import Link from "next/link";
 
 const variants = {
   open: {
-    width: "100vw",
+    width: "100%",
     height: "100vh",
     transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] },
   },
   close: {
-    width: "100vw",
+    width: "100%",
     height: "0vh",
     transition: { duration: 0.75, delay: 0.2, ease: [0.76, 0, 0.24, 1] },
   },
@@ -47,19 +48,19 @@ const menuItemVariants = {
 } as Variants;
 const menu_links = [
   {
-    id: "menu-link-work",
-    label: "Work",
-    href: "#",
-  },
-  {
     id: "menu-link-services",
     label: "Services",
-    href: "#",
+    href: "/#services",
   },
   {
     id: "menu-link-process",
     label: "Process",
-    href: "#",
+    href: "/#process",
+  },
+  {
+    id: "menu-link-achievements",
+    label: "Achievements",
+    href: "/#achievements",
   },
   {
     id: "menu-link-about",
@@ -73,6 +74,21 @@ const menu_links = [
   },
 ];
 
+function MenuLink({ label, href }: { label: string; href: string }) {
+  const { setIsOpen } = useAnimatedMenuContext();
+  return (
+    <a
+      className="text-6xl font-medium"
+      href={href}
+      title={label}
+      aria-label={`go to ${label} page`}
+      onClick={() => setIsOpen(false)}
+    >
+      {label}
+    </a>
+  );
+}
+
 export function Header() {
   return (
     <header className="fixed z-999 backdrop-blur-lg w-full pl-4 md:pl-8 flex gap-2 md:gap-4 justify-between top-0 right-0 min-h-fit">
@@ -83,8 +99,8 @@ export function Header() {
       </div>
       <nav className="flex">
         <AnimatedMenu className="relative">
-          <BgMask className="after:bg-primary before:absolute before:bg-inherit before:block before:size-full before:inset-0 before:shadow-[inset_-1px_0_0_0_rgba(51,51,51,0.6)] bg-black/50 text-accent p-1.5 md:p-2.5 flex gap-2 md:gap-4 justify-between items-center z-[999]">
-            <AnimatedMenuButton className="px-3 md:px-6 py-2 md:py-2.5 mix-blend-difference gap-2 md:gap-4">
+          <BgMask className="after:bg-primary before:absolute before:bg-inherit before:block before:size-full before:inset-0 before:shadow-[inset_-1px_0_0_0_rgba(51,51,51,0.6)] bg-neutral-900/90 text-white backdrop-blur p-1.5 md:p-2.5 flex gap-2 md:gap-4 justify-between items-center z-[999]">
+            <AnimatedMenuButton className="px-3 md:px-6 py-2 md:py-2.5 gap-2 md:gap-4">
               <AnimatedMenuButtonToggleIcon />
               <AnimatedMenuButtonLabel />
             </AnimatedMenuButton>
@@ -106,14 +122,7 @@ export function Header() {
                       variants={menuItemVariants}
                       order={i}
                     >
-                      <a
-                        className="text-6xl font-medium"
-                        href={item.href}
-                        title={item.label}
-                        aria-label={`go to ${item.label} page`}
-                      >
-                        {item.label}
-                      </a>
+                      <MenuLink label={item.label} href={item.href} />
                     </AnimatedMenuItem>
                   </BgMask>
                 ))}

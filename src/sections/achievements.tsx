@@ -69,14 +69,21 @@ export function Achievements() {
   });
   const y = useTransform(scrollYProgress, [0, 1], [0, 192]);
   return (
-    <section className="py-12 px-8 overflow-hidden">
+    <section
+      id="achievements"
+      aria-label="Achievements"
+      className="py-12 px-8 overflow-hidden scroll-mt-24"
+    >
       <div className="relative" ref={containerRef}>
         {isMobile ? (
           <div className="flex gap-4 flex-col">
             {achievements.map((achiev) => {
               const Icon = achiev.icon;
               return (
-                <div key={achiev.id} className="bg-card/60 backdrop-blur">
+                <div
+                  key={achiev.id}
+                  className="bg-card/60 backdrop-blur rounded-lg ring-1 ring-border/60 shadow-sm"
+                >
                   <div className="relative z-10 flex flex-col p-6 gap-8">
                     <div className="flex justify-between items-center gap-4">
                       <h3 className="text-xl max-w-[15ch] font-medium">
@@ -92,7 +99,7 @@ export function Achievements() {
             })}
           </div>
         ) : (
-          <motion.div style={{ y }} className="flex gap-6 ">
+          <motion.div style={{ y }} className="flex gap-6">
             {achievements.map((achiev, index) => {
               const Icon = achiev.icon;
               return (
@@ -100,7 +107,7 @@ export function Achievements() {
                   scrollYProgress={scrollYProgress}
                   key={achiev.id}
                   index={index}
-                  className="bg-card/60 backdrop-blur"
+                  className="bg-card/60 backdrop-blur flex-1 min-w-0 rounded-lg ring-1 ring-border/60 shadow-sm"
                 >
                   <div className="relative z-10 flex flex-col p-6 gap-8">
                     <div className="flex justify-between items-center gap-4">

@@ -19,7 +19,7 @@ const Achievements = dynamic(
   () => import("@/sections/achievements").then((m) => m.Achievements),
   {
     ssr: false,
-    loading: () => <div className="min-h-[50vh]" />,
+    loading: () => <div id="achievements" className="min-h-[50vh]" />,
   }
 );
 
