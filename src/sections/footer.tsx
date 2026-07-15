@@ -4,19 +4,19 @@ import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 const links = [
   {
-    id: "footer-link-work",
-    label: "Work",
-    href: "#",
-  },
-  {
     id: "footer-link-services",
     label: "Services",
-    href: "#",
+    href: "/#services",
   },
   {
     id: "footer-link-process",
     label: "Process",
-    href: "#",
+    href: "/#process",
+  },
+  {
+    id: "footer-link-achievements",
+    label: "Achievements",
+    href: "/#achievements",
   },
   {
     id: "footer-link-about",
@@ -83,18 +83,6 @@ export function Footer() {
           <a href="tel:+916263441130">+91 6263441130</a>
         </li>
 
-        <li className="inline-flex gap-4">
-          <div className="relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-            <a href="http://" target="_blank" rel="noopener noreferrer">
-              Linkedin
-            </a>
-          </div>
-          <div className="relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-            <a href="http://" target="_blank" rel="noopener noreferrer">
-              Instagram
-            </a>
-          </div>
-        </li>
       </ul>
       <div className="text-muted-foreground text-sm">© 2026 Ashwa</div>
     </footer>

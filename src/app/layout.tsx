@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Bebas_Neue } from "next/font/google";
+import { Bebas_Neue, Caveat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
@@ -12,8 +12,19 @@ const bebasNeue = Bebas_Neue({
 	display: "swap",
 });
 
+const caveat = Caveat({
+	weight: "600",
+	subsets: ["latin"],
+	variable: "--font-handwriting",
+	display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Ashwa - India's Best Vehicle Tracking System | Real-Time Fleet Management",
+  title: {
+    default:
+      "Ashwa - India's Best Vehicle Tracking System | Real-Time Fleet Management",
+    template: "%s | Ashwa",
+  },
   description: "India's leading vehicle tracking and fleet management system. Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
   keywords: [
     "vehicle tracking system India",
@@ -43,18 +54,18 @@ export const metadata: Metadata = {
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
     images: [
       {
-        url: "/web-app-manifest-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "Ashwa Vehicle Tracking System",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ashwa — Smart Vehicle Tracking for Indian fleets",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Ashwa - India's Best Vehicle Tracking System",
     description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions.",
-    images: ["/web-app-manifest-512x512.png"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -115,8 +126,21 @@ const jsonLd = {
       contactPoint: {
         "@type": "ContactPoint",
         email: "hello@ashwa.io",
+        telephone: "+91-6263441130",
         contactType: "customer service",
+        areaServed: "IN",
+        availableLanguage: ["en", "hi"],
       },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ashwa.in/#website",
+      url: "https://ashwa.in",
+      name: "Ashwa",
+      publisher: {
+        "@id": "https://ashwa.in/#organization",
+      },
+      inLanguage: "en-IN",
     },
     {
       "@type": "SoftwareApplication",
@@ -149,7 +173,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${bebasNeue.variable} antialiased`}>
+      <body className={`${bebasNeue.variable} ${caveat.variable} antialiased`}>
         <Header />
         {children}
         <Footer />

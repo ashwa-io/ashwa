@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export function About() {
   const isMobile = useIsMobile();
   return (
-    <section className="container">
+    <section id="who-we-are" className="container mx-auto">
       {isMobile ? (
         <div className="min-h-screen lg:w-3/5 lg:mx-auto space-y-4 place-content-center py-12 px-8">
           <h4 className="text-sm uppercase tracking-wide">who are we</h4>

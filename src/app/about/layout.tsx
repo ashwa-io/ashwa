@@ -18,20 +18,53 @@ export const metadata: Metadata = {
       "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform. Based in Raipur, Chhattisgarh.",
     images: [
       {
-        url: "/web-app-manifest-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "Ashwa — Vehicle Tracking Engineers",
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ashwa — Smart Vehicle Tracking for Indian fleets",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "About Ashwa — Vehicle Tracking Engineers",
     description:
       "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform.",
-    images: ["/web-app-manifest-512x512.png"],
+    images: ["/og-image.png"],
   },
+};
+
+const aboutJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://ashwa.in/about#webpage",
+      url: "https://ashwa.in/about",
+      name: "About Ashwa — Vehicle Tracking Engineers",
+      isPartOf: { "@id": "https://ashwa.in/#website" },
+      about: { "@id": "https://ashwa.in/#organization" },
+      inLanguage: "en-IN",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://ashwa.in/about#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://ashwa.in",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "About",
+          item: "https://ashwa.in/about",
+        },
+      ],
+    },
+  ],
 };
 
 export default function Layout({
@@ -39,5 +72,13 @@ export default function Layout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  return <main className="mx-auto mt-36 max-w-6xl">{children}</main>;
+  return (
+    <main className="mx-auto mt-36 max-w-6xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
+      {children}
+    </main>
+  );
 }

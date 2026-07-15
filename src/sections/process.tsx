@@ -49,7 +49,7 @@ const process_phases = [
 ];
 export function Process() {
   return (
-    <section className="py-12 px-8">
+    <section id="process" aria-label="Our process" className="py-12 px-8 scroll-mt-24">
       <CardsStackContainer>
         {process_phases.map((phase, index) => {
           const Icon = phase.icon;

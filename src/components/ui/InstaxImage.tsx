@@ -1,4 +1,3 @@
-"use client"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
@@ -9,6 +8,7 @@ export function InstaxImage({
   height,
   alt,
   caption,
+  sizes,
 }: {
   className?: string
   src: string
@@ -16,6 +16,7 @@ export function InstaxImage({
   height: number
   alt: string
   caption: string
+  sizes?: string
 }) {
   return (
     <figure
@@ -24,24 +25,20 @@ export function InstaxImage({
         className,
       )}
     >
-      <div className="bg-gray-50 p-2 dark:bg-gray-900 w-full">
-        <div className="relative overflow-hidden rounded w-full">
+      <div className="w-full bg-gray-50 p-2 dark:bg-gray-900">
+        <div className="relative w-full overflow-hidden rounded">
           <div className="absolute inset-0 shadow-[inset_0px_0px_3px_0px_rgb(0,0,0,1)]"></div>
-          <Image 
-            src={src} 
-            alt={alt} 
-            width={width} 
+          <Image
+            src={src}
+            alt={alt}
+            width={width}
             height={height}
-            className="max-w-full h-auto w-full"
-            style={{ maxWidth: '100%', height: 'auto' }}
+            sizes={sizes}
+            className="h-auto w-full max-w-full"
           />
         </div>
       </div>
-      <div
-        className={cn(
-          "px-2 pb-2 pt-2 font-handwriting text-xl text-gray-700 dark:text-gray-300",
-        )}
-      >
+      <div className="px-2 pt-2 pb-2 font-handwriting text-xl text-gray-700 dark:text-gray-300">
         <figcaption className="text-center">{caption}</figcaption>
       </div>
     </figure>
