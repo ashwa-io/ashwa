@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Ashwa" }],
   creator: "Ashwa",
   publisher: "Ashwa",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ashwa.in"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ashwa.io"),
   alternates: {
     canonical: "/",
   },
@@ -110,12 +110,12 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://ashwa.in/#organization",
+      "@id": "https://ashwa.io/#organization",
       name: "Ashwa",
-      url: "https://ashwa.in",
+      url: "https://ashwa.io",
       logo: {
         "@type": "ImageObject",
-        url: "https://ashwa.in/logo.png",
+        url: "https://ashwa.io/logo.png",
       },
       address: {
         "@type": "PostalAddress",
@@ -134,17 +134,17 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://ashwa.in/#website",
-      url: "https://ashwa.in",
+      "@id": "https://ashwa.io/#website",
+      url: "https://ashwa.io",
       name: "Ashwa",
       publisher: {
-        "@id": "https://ashwa.in/#organization",
+        "@id": "https://ashwa.io/#organization",
       },
       inLanguage: "en-IN",
     },
     {
       "@type": "SoftwareApplication",
-      "@id": "https://ashwa.in/#software",
+      "@id": "https://ashwa.io/#software",
       name: "Ashwa Vehicle Tracking System",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
@@ -154,7 +154,7 @@ const jsonLd = {
         priceCurrency: "INR",
       },
       provider: {
-        "@id": "https://ashwa.in/#organization",
+        "@id": "https://ashwa.io/#organization",
       },
     },
   ],
