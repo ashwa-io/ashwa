@@ -2,6 +2,8 @@ import { BgMask } from "@/components/bg-mask";
 import { LogoText } from "@/components/logo";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
+
+import { LEGAL_LINKS } from "@/lib/site";
 const links = [
   {
     id: "footer-link-services",
@@ -84,7 +86,20 @@ export function Footer() {
         </li>
 
       </ul>
-      <div className="text-muted-foreground text-sm">© 2026 Ashwa</div>
+      <div className="space-y-3 text-sm">
+        <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1">
+          {LEGAL_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-muted underline-offset-4 hover:underline"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="text-muted-foreground">© 2026 Ashwa</div>
+      </div>
     </footer>
   );
 }

@@ -39,28 +39,28 @@ const aboutJsonLd = {
   "@graph": [
     {
       "@type": "AboutPage",
-      "@id": "https://ashwa.in/about#webpage",
-      url: "https://ashwa.in/about",
+      "@id": "https://ashwa.io/about#webpage",
+      url: "https://ashwa.io/about",
       name: "About Ashwa — Vehicle Tracking Engineers",
-      isPartOf: { "@id": "https://ashwa.in/#website" },
-      about: { "@id": "https://ashwa.in/#organization" },
+      isPartOf: { "@id": "https://ashwa.io/#website" },
+      about: { "@id": "https://ashwa.io/#organization" },
       inLanguage: "en-IN",
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://ashwa.in/about#breadcrumb",
+      "@id": "https://ashwa.io/about#breadcrumb",
       itemListElement: [
         {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://ashwa.in",
+          item: "https://ashwa.io",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "About",
-          item: "https://ashwa.in/about",
+          item: "https://ashwa.io/about",
         },
       ],
     },
