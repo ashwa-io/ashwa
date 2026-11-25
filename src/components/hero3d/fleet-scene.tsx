@@ -11,7 +11,22 @@ import { cn } from "@/lib/utils";
  * Plain three.js, loaded on the client only: the hero copy is server-rendered.
  */
 
-type Kind = "truck" | "bus" | "car";
+type Kind = "truck" | "bus" | "suv" | "sports";
+
+/** The live card that follows a vehicle. Sample data, not real people. */
+interface Card {
+  name: string;
+  role: string;
+  /** Portrait file in public/images/site, shown when it exists; initials otherwise. */
+  avatar: string;
+  vehicle: string;
+  /** Left and right ends of the progress line, e.g. two places or two stops. */
+  from: string;
+  to: string;
+  progress: number;
+  stat: string;
+  note: string;
+}
 
 interface VehicleSpec {
   route: number;
@@ -19,7 +34,7 @@ interface VehicleSpec {
   start: number;
   /** Fraction of the route covered per second. */
   speed: number;
-  label?: [string, string];
+  card?: Card;
 }
 
 /** Distance between street centre lines. A block is PITCH minus one street. */
@@ -38,11 +53,59 @@ const ROUTES: [number, number][][] = [
 ];
 
 const VEHICLES: VehicleSpec[] = [
-  { route: 0, kind: "truck", start: 0.3, speed: 0.022, label: ["CG 04 MX 2217", "46 km/h"] },
-  { route: 0, kind: "truck", start: 0.72, speed: 0.02 },
-  { route: 1, kind: "bus", start: 0.44, speed: 0.024, label: ["Bus 3, Route North", "Stop 5 of 9"] },
-  { route: 1, kind: "car", start: 0.1, speed: 0.03 },
-  { route: 2, kind: "car", start: 0.36, speed: 0.032, label: ["Rental, Ertiga", "On trip"] },
+  {
+    route: 0,
+    kind: "truck",
+    start: 0.3,
+    speed: 0.022,
+    card: {
+      name: "Ramesh Kumar",
+      role: "Driver",
+      avatar: "avatar-driver",
+      vehicle: "CG 04 MX 2217",
+      from: "Raipur",
+      to: "Nagpur",
+      progress: 62,
+      stat: "46 km/h",
+      note: "Arrives 14:20",
+    },
+  },
+  { route: 0, kind: "sports", start: 0.74, speed: 0.034 },
+  {
+    route: 1,
+    kind: "bus",
+    start: 0.44,
+    speed: 0.024,
+    card: {
+      name: "Sunita Verma",
+      role: "Bus driver",
+      avatar: "avatar-bus-driver",
+      vehicle: "Bus 3, Route North",
+      from: "Stop 5",
+      to: "School",
+      progress: 55,
+      stat: "26 on board",
+      note: "Next stop 4 min",
+    },
+  },
+  { route: 1, kind: "suv", start: 0.1, speed: 0.03 },
+  {
+    route: 2,
+    kind: "suv",
+    start: 0.36,
+    speed: 0.032,
+    card: {
+      name: "Aarav Mehta",
+      role: "Rental customer",
+      avatar: "avatar-customer",
+      vehicle: "Ertiga, CG 07 AT 9031",
+      from: "Day 2",
+      to: "Day 3",
+      progress: 48,
+      stat: "38 km/h",
+      note: "Returns tomorrow",
+    },
+  },
   { route: 2, kind: "truck", start: 0.78, speed: 0.021 },
 ];
 
@@ -57,7 +120,18 @@ function seeded(seed: number) {
   };
 }
 
-export function FleetScene({ className }: { className?: string }) {
+export function FleetScene({
+  className,
+  portraits = [],
+  sprites = [],
+}: {
+  className?: string;
+  /** Avatar file names that exist in public/images/site. */
+  portraits?: string[];
+  /** Vehicle kinds that have a top-view image (vehicle-<kind>.png) in public/images/site. */
+  sprites?: string[];
+}) {
+  const spritesRef = useRef(sprites);
   const hostRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
@@ -275,34 +349,128 @@ export function FleetScene({ className }: { className?: string }) {
           return tex;
         };
 
-        const SIZE: Record<Kind, [number, number, number]> = {
-          truck: [1.05, 0.34, 0.42],
-          bus: [1.2, 0.36, 0.44],
-          car: [0.7, 0.22, 0.36],
+        const part = (
+          w: number,
+          h: number,
+          d: number,
+          color: string,
+          x: number,
+          y: number,
+          z = 0,
+        ) => {
+          const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), lit(color));
+          m.position.set(x, y, z);
+          return m;
+        };
+        const GLASS = "#1c2226";
+        const TYRE = "#16130f";
+        /** Wheels sit just outside the body so they read from above. */
+        const wheels = (xs: number[], half: number, r = 0.085) =>
+          xs.flatMap((x) =>
+            [half, -half].map((z) => {
+              const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.07, 14), lit(TYRE));
+              m.rotation.x = Math.PI / 2;
+              m.position.set(x, r, z);
+              return m;
+            }),
+          );
+        const lamps = (x: number, y: number, half: number, color: string) =>
+          [half, -half].map((z) => part(0.03, 0.04, 0.08, color, x, y, z));
+
+        // Every model faces +X and is built from a handful of boxes: body, glass, roof, wheels, lamps.
+        const build = (kind: Kind): InstanceType<typeof THREE.Mesh>[] => {
+          if (kind === "truck") {
+            return [
+              part(1.02, 0.44, 0.5, "#fdfbf6", -0.22, 0.4),
+              part(1.02, 0.03, 0.46, "#ece5d6", -0.22, 0.635),
+              part(1.04, 0.07, 0.52, "#e73b24", -0.22, 0.2),
+              part(0.34, 0.3, 0.48, "#17130e", 0.5, 0.31),
+              part(0.05, 0.14, 0.42, GLASS, 0.665, 0.36),
+              part(0.26, 0.03, 0.4, "#2a251d", 0.48, 0.475),
+              part(1.3, 0.08, 0.4, "#2a251d", -0.05, 0.13),
+              ...wheels([0.48, -0.32, -0.56], 0.25),
+              ...lamps(0.68, 0.2, 0.17, "#fff6d8"),
+            ];
+          }
+          if (kind === "bus") {
+            return [
+              part(1.36, 0.36, 0.48, "#e8a317", 0, 0.34),
+              part(1.26, 0.13, 0.5, GLASS, 0, 0.4),
+              part(1.32, 0.04, 0.44, "#f3b93a", 0, 0.54),
+              part(0.3, 0.05, 0.24, "#d8d2c4", -0.3, 0.585),
+              part(0.3, 0.05, 0.24, "#d8d2c4", 0.25, 0.585),
+              part(0.04, 0.16, 0.42, GLASS, 0.685, 0.4),
+              ...wheels([0.44, -0.44], 0.25),
+              ...lamps(0.69, 0.22, 0.18, "#fff6d8"),
+            ];
+          }
+          if (kind === "sports") {
+            return [
+              part(0.98, 0.13, 0.46, "#e73b24", 0, 0.16),
+              part(0.3, 0.1, 0.4, "#e73b24", 0.42, 0.145),
+              part(0.4, 0.11, 0.36, GLASS, -0.08, 0.27),
+              part(0.22, 0.02, 0.3, "#c42d18", -0.1, 0.335),
+              part(0.05, 0.03, 0.46, "#17130e", -0.47, 0.27),
+              part(0.03, 0.06, 0.04, "#17130e", -0.47, 0.235, 0.18),
+              part(0.03, 0.06, 0.04, "#17130e", -0.47, 0.235, -0.18),
+              ...wheels([0.33, -0.33], 0.235, 0.09),
+              ...lamps(0.565, 0.16, 0.15, "#fff6d8"),
+              ...lamps(-0.495, 0.17, 0.17, "#7a130a"),
+            ];
+          }
+          return [
+            part(0.92, 0.2, 0.44, "#fdfbf6", 0, 0.22),
+            part(0.52, 0.15, 0.4, GLASS, -0.06, 0.39),
+            part(0.44, 0.03, 0.36, "#fdfbf6", -0.06, 0.48),
+            part(0.36, 0.015, 0.03, "#8a8474", -0.06, 0.5, 0.13),
+            part(0.36, 0.015, 0.03, "#8a8474", -0.06, 0.5, -0.13),
+            ...wheels([0.3, -0.3], 0.225, 0.09),
+            ...lamps(0.465, 0.24, 0.15, "#fff6d8"),
+            ...lamps(-0.465, 0.26, 0.16, "#7a130a"),
+          ];
         };
 
         const fleet = VEHICLES.map((spec) => {
           const curve = curves[spec.route];
           const tint = ROUTE_COLOURS[spec.route];
-          const [len, tall, wide] = SIZE[spec.kind];
           const model = new THREE.Group();
-          // Facing +X: a dark body, a pale roof, and a soft halo on the road beneath.
-          const body = new THREE.Mesh(new THREE.BoxGeometry(len, tall, wide), lit("#17130e"));
-          body.position.y = tall / 2 + 0.06;
-          const roof = new THREE.Mesh(
-            new THREE.BoxGeometry(len * 0.62, 0.05, wide * 0.72),
-            lit(spec.kind === "bus" ? "#e8a317" : "#fdfbf6"),
-          );
-          roof.position.set(-len * 0.1, tall + 0.085, 0);
-          const halo = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.74, 48), flat(tint, 0.9));
+          const reach = spec.kind === "truck" || spec.kind === "bus" ? 0.98 : 0.8;
+          const halo = new THREE.Mesh(new THREE.RingGeometry(reach, reach + 0.08, 64), flat(tint, 0.85));
           halo.rotation.x = -Math.PI / 2;
-          halo.position.y = 0.08;
-          const glow = new THREE.Mesh(new THREE.CircleGeometry(0.62, 48), flat(tint, 0.16));
+          halo.position.y = 0.012;
+          const glow = new THREE.Mesh(new THREE.CircleGeometry(reach, 64), flat(tint, 0.14));
           glow.rotation.x = -Math.PI / 2;
-          glow.position.y = 0.075;
-          model.add(glow, halo, body, roof);
+          glow.position.y = 0.01;
+          // Shadows are baked for the static city, so each vehicle carries its own soft one.
+          const shade = new THREE.Mesh(new THREE.CircleGeometry(0.5, 32), flat("#17130e", 0.2));
+          shade.rotation.x = -Math.PI / 2;
+          shade.scale.set(reach * 1.5, 0.62, 1);
+          shade.position.set(-0.06, 0.014, 0.08);
+          model.add(glow, halo, shade);
+          if (spritesRef.current.includes(spec.kind)) {
+            // A photographed top view laid flat on the road reads as a real vehicle at map scale.
+            const length = spec.kind === "truck" ? 1.7 : spec.kind === "bus" ? 1.55 : 1.05;
+            const top = new THREE.Mesh(
+              new THREE.PlaneGeometry(length, length),
+              new THREE.MeshBasicMaterial({ transparent: true, alphaTest: 0.04, opacity: 0 }),
+            );
+            top.rotation.x = -Math.PI / 2;
+            top.position.y = 0.06;
+            new THREE.TextureLoader().load(`/images/site/vehicle-${spec.kind}.png`, (tex) => {
+              tex.colorSpace = THREE.SRGBColorSpace;
+              tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+              top.material.map = tex;
+              top.material.opacity = 1;
+              top.material.needsUpdate = true;
+              // The image is trimmed to the vehicle, so its own proportions set the width.
+              top.scale.y = tex.image.height / tex.image.width;
+            });
+            model.add(top);
+          } else {
+            model.add(...build(spec.kind));
+          }
           // Drawn larger than life: at map scale a true-size vehicle would be a speck.
-          model.scale.setScalar(1.7);
+          model.scale.setScalar(2.3);
           scene.add(model);
 
           const tex = trailTexture(tint);
@@ -329,7 +497,7 @@ export function FleetScene({ className }: { className?: string }) {
           v.tex.offset.x = -(v.t - TRAIL) / TRAIL;
         };
 
-        const labelled = fleet.filter((v) => v.spec.label);
+        const labelled = fleet.filter((v) => v.spec.card);
         const projected = new THREE.Vector3();
         let width = 1;
         let height = 1;
@@ -343,10 +511,12 @@ export function FleetScene({ className }: { className?: string }) {
             const el = labelRefs.current[i];
             if (!el) return;
             projected.copy(v.model.position);
-            projected.y += 2.2;
+            projected.y += 3;
             projected.project(camera);
-            const x = (projected.x * 0.5 + 0.5) * width;
-            const y = (-projected.y * 0.5 + 0.5) * height;
+            // Keep the whole card inside the frame, even when its vehicle is near an edge.
+            const halfW = el.offsetWidth / 2 + 8;
+            const x = Math.min(width - halfW, Math.max(halfW, (projected.x * 0.5 + 0.5) * width));
+            const y = Math.max(el.offsetHeight + 16, (-projected.y * 0.5 + 0.5) * height);
             el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%)`;
             el.style.opacity = String(Math.max(0, Math.min(1, Math.min(v.t, 1 - v.t) / 0.06)));
           });
@@ -430,7 +600,7 @@ export function FleetScene({ className }: { className?: string }) {
     };
   }, []);
 
-  const labels = VEHICLES.filter((v) => v.label);
+  const cards = VEHICLES.filter((v) => v.card);
 
   return (
     <div className={cn("relative", className)}>
@@ -448,24 +618,79 @@ export function FleetScene({ className }: { className?: string }) {
         />
       )}
       {state === "ready"
-        ? labels.map((v, i) => (
-            <div
-              key={v.label?.[0]}
-              ref={(el) => {
-                labelRefs.current[i] = el;
-              }}
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-0 hidden whitespace-nowrap rounded-lg border border-border bg-card/95 px-2.5 py-1.5 shadow-lift backdrop-blur will-change-transform sm:block"
-            >
-              <span className="flex items-center gap-1.5 text-[0.72rem] font-medium leading-none">
-                <i className="size-1.5 rounded-full" style={{ background: ROUTE_COLOURS[v.route] }} />
-                {v.label?.[0]}
-              </span>
-              <span className="mt-1 block font-mono text-[0.64rem] leading-none text-muted-foreground">
-                {v.label?.[1]}
-              </span>
-            </div>
-          ))
+        ? cards.map((v, i) => {
+            const card = v.card;
+            if (!card) return null;
+            const tint = ROUTE_COLOURS[v.route];
+            return (
+              <div
+                key={card.vehicle}
+                ref={(el) => {
+                  labelRefs.current[i] = el;
+                }}
+                aria-hidden="true"
+                className="pointer-events-none absolute left-0 top-0 hidden w-[13.25rem] rounded-2xl border border-border bg-card/95 p-2.5 shadow-float backdrop-blur-md will-change-transform sm:block"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="relative shrink-0">
+                    {portraits.includes(card.avatar) ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- 40px decorative portrait inside an aria-hidden card
+                      <img
+                        src={`/images/site/${card.avatar}.jpg`}
+                        alt=""
+                        width={36}
+                        height={36}
+                        className="size-9 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span
+                        className="grid size-9 place-items-center rounded-full font-display text-[0.8rem] font-semibold text-white"
+                        style={{ background: tint }}
+                      >
+                        {card.name
+                          .split(" ")
+                          .map((w) => w[0])
+                          .join("")}
+                      </span>
+                    )}
+                    <i className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-card bg-moving" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[0.84rem] font-semibold leading-tight">{card.name}</span>
+                    <span className="block truncate text-[0.7rem] leading-tight text-muted-foreground">
+                      {card.role}
+                    </span>
+                  </span>
+                  <span
+                    className="shrink-0 rounded-full px-2 py-1 font-mono text-[0.62rem] font-medium leading-none text-white"
+                    style={{ background: tint }}
+                  >
+                    {card.stat}
+                  </span>
+                </div>
+                <p className="mt-2.5 truncate font-mono text-[0.68rem] leading-none text-muted-foreground">
+                  {card.vehicle}
+                </p>
+                <div className="mt-2 flex items-center gap-2 text-[0.68rem] font-medium leading-none">
+                  <span className="shrink-0">{card.from}</span>
+                  <span className="relative h-1 flex-1 rounded-full bg-foreground/10">
+                    <span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${card.progress}%`, background: tint }}
+                    />
+                    <span
+                      className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card"
+                      style={{ left: `${card.progress}%`, background: tint }}
+                    />
+                  </span>
+                  <span className="shrink-0">{card.to}</span>
+                </div>
+                <p className="mt-2 text-[0.68rem] leading-none text-muted-foreground">{card.note}</p>
+                {/* The tail points the card at its vehicle. */}
+                <span className="absolute left-1/2 top-full size-3 -translate-x-1/2 -translate-y-1.5 rotate-45 border-b border-r border-border bg-card/95" />
+              </div>
+            );
+          })
         : null}
     </div>
   );

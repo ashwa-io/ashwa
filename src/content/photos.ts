@@ -48,3 +48,13 @@ const PAGE_PHOTO_PLAN: Record<string, Photo> = {
 export const PAGE_PHOTOS: Record<string, Photo> = Object.fromEntries(
   Object.entries(PAGE_PHOTO_PLAN).filter(([, p]) => hasPhoto(p)),
 );
+
+/** Portraits for the hero's live cards, listed only when the file has been saved. */
+export const PORTRAITS = ["avatar-driver", "avatar-bus-driver", "avatar-customer"].filter((name) =>
+  existsSync(join(process.cwd(), "public", "images", "site", `${name}.jpg`)),
+);
+
+/** Vehicle kinds with a top-view image for the hero map, listed only when the file has been saved. */
+export const VEHICLE_SPRITES = ["truck", "bus", "suv", "sports"].filter((kind) =>
+  existsSync(join(process.cwd(), "public", "images", "site", "vehicle-" + kind + ".png")),
+);
