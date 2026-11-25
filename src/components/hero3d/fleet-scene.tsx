@@ -6,9 +6,9 @@ import { Visual } from "@/components/visuals";
 import { cn } from "@/lib/utils";
 
 /**
- * The homepage diorama: a low-poly map tile with vehicles driving their routes
- * and leaving live trails. Plain three.js, loaded on the client only, so the
- * hero copy is server-rendered and three never reaches the server bundle.
+ * The homepage map: a dense city seen from above, with vehicles tracing their
+ * routes. Fixed orthographic camera, so it reads as a map and not a toy model.
+ * Plain three.js, loaded on the client only: the hero copy is server-rendered.
  */
 
 type Kind = "truck" | "bus" | "car";
@@ -19,25 +19,34 @@ interface VehicleSpec {
   start: number;
   /** Fraction of the route covered per second. */
   speed: number;
-  trail: string;
   label?: [string, string];
 }
 
+/** Distance between street centre lines. A block is PITCH minus one street. */
+const PITCH = 4;
+const STREET = 0.95;
+const COLS = 11;
+const ROWS = 8;
+
+const ROUTE_COLOURS = ["#e73b24", "#d98a00", "#1f9d6b"];
+
+/** Routes as street intersections (column, row); each leg runs along one street. */
 const ROUTES: [number, number][][] = [
-  [[-19, 6.5], [-10, 3.2], [-3, -1], [4, -2.2], [10, -6], [19, -8.5]],
-  [[-12.5, -13], [-8.5, -5], [-3, -1], [0.5, 4], [2.5, 13]],
-  [[19, 5.5], [11.5, 3], [6, 4.2], [0.5, 4], [-6, 8], [-10.5, 13]],
+  [[-9, 2], [-2, 2], [-2, -1], [3, -1], [3, -4], [9, -4]],
+  [[-9, -3], [0, -3], [0, 1], [4, 1], [4, 4], [9, 4]],
+  [[9, 0], [2, 0], [2, 3], [-4, 3], [-4, 0], [-9, 0]],
 ];
 
 const VEHICLES: VehicleSpec[] = [
-  { route: 0, kind: "truck", start: 0.12, speed: 0.034, trail: "#e73b24", label: ["CG 04 MX 2217", "46 km/h"] },
-  { route: 0, kind: "truck", start: 0.62, speed: 0.03, trail: "#e73b24" },
-  { route: 1, kind: "bus", start: 0.3, speed: 0.04, trail: "#d98a00", label: ["Bus 3, Route North", "Stop 5 of 9"] },
-  { route: 2, kind: "car", start: 0.05, speed: 0.052, trail: "#1f9d6b", label: ["Rental, Ertiga", "On trip"] },
-  { route: 2, kind: "truck", start: 0.55, speed: 0.036, trail: "#1f9d6b" },
+  { route: 0, kind: "truck", start: 0.3, speed: 0.022, label: ["CG 04 MX 2217", "46 km/h"] },
+  { route: 0, kind: "truck", start: 0.72, speed: 0.02 },
+  { route: 1, kind: "bus", start: 0.44, speed: 0.024, label: ["Bus 3, Route North", "Stop 5 of 9"] },
+  { route: 1, kind: "car", start: 0.1, speed: 0.03 },
+  { route: 2, kind: "car", start: 0.36, speed: 0.032, label: ["Rental, Ertiga", "On trip"] },
+  { route: 2, kind: "truck", start: 0.78, speed: 0.021 },
 ];
 
-const TRAIL = 0.2;
+const TRAIL = 0.16;
 
 /** Deterministic pseudo-random so the city is identical on every visit. */
 function seeded(seed: number) {
@@ -66,32 +75,42 @@ export function FleetScene({ className }: { className?: string }) {
         const small = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.25 : 1.75));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, small ? 1.5 : 2));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.shadowMap.enabled = !small;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        // Buildings never move, so their shadows are rendered once.
+        renderer.shadowMap.autoUpdate = false;
         renderer.domElement.setAttribute("aria-hidden", "true");
         host.appendChild(renderer.domElement);
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(28, 1, 1, 200);
-        const world = new THREE.Group();
-        scene.add(world);
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 300);
+        // High, slightly turned view: enough tilt to read building height, flat enough to stay a map.
+        const elevation = (70 * Math.PI) / 180;
+        const azimuth = (28 * Math.PI) / 180;
+        camera.position.set(
+          Math.sin(azimuth) * Math.cos(elevation) * 120,
+          Math.sin(elevation) * 120,
+          Math.cos(azimuth) * Math.cos(elevation) * 120,
+        );
+        camera.lookAt(0, 0, 0);
 
-        scene.add(new THREE.HemisphereLight("#fff8ea", "#cfc3aa", 1.25));
-        const sun = new THREE.DirectionalLight("#fff1d6", 2.1);
-        sun.position.set(-14, 22, 10);
+        scene.add(new THREE.HemisphereLight("#ffffff", "#ddd5c4", 1.55));
+        const sun = new THREE.DirectionalLight("#fff4de", 1.45);
+        sun.position.set(-30, 46, 18);
         sun.castShadow = !small;
-        sun.shadow.mapSize.set(1536, 1536);
-        sun.shadow.camera.left = -24;
-        sun.shadow.camera.right = 24;
-        sun.shadow.camera.top = 18;
-        sun.shadow.camera.bottom = -18;
-        sun.shadow.camera.far = 70;
-        sun.shadow.bias = -0.0006;
+        sun.shadow.mapSize.set(2048, 2048);
+        sun.shadow.camera.left = -52;
+        sun.shadow.camera.right = 52;
+        sun.shadow.camera.top = 40;
+        sun.shadow.camera.bottom = -40;
+        sun.shadow.camera.far = 140;
+        sun.shadow.bias = -0.0004;
+        sun.shadow.radius = 3;
         scene.add(sun);
 
-        const mat = (color: string) => new THREE.MeshStandardMaterial({ color, roughness: 0.92 });
+        const lit = (color: string) => new THREE.MeshStandardMaterial({ color, roughness: 0.95 });
         const flat = (color: string, opacity = 1) =>
           new THREE.MeshBasicMaterial({
             color,
@@ -101,34 +120,103 @@ export function FleetScene({ className }: { className?: string }) {
             depthWrite: opacity === 1,
           });
 
-        // Ground tile with visible thickness, so it reads as a model on a table.
-        const slab = new THREE.Mesh(new THREE.BoxGeometry(38, 1.2, 26), mat("#e9e1d1"));
-        slab.position.y = -0.6;
-        slab.receiveShadow = true;
-        world.add(slab);
+        // Streets are the bare ground; each block is a slightly raised pad on top of it.
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 200), lit("#fbf8f1"));
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
 
-        const patch = (w: number, d: number, x: number, z: number, color: string) => {
-          const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.04, d), mat(color));
-          m.position.set(x, 0.02, z);
-          m.receiveShadow = true;
-          world.add(m);
+        const rand = seeded(11);
+        const tones = ["#fdfbf6", "#f4efe4", "#ebe4d5", "#e2d9c7"];
+        const BLOCK = PITCH - STREET;
+        const pads: { x: number; z: number; c: string }[] = [];
+        const lots: { x: number; z: number; w: number; d: number; h: number; c: string }[] = [];
+
+        for (let i = -COLS; i <= COLS; i++) {
+          for (let j = -ROWS; j <= ROWS; j++) {
+            const x = i * PITCH;
+            const z = j * PITCH;
+            const roll = rand();
+            const water = i >= 5 && i <= 8 && j <= -6;
+            const park = !water && (roll < 0.07 || (i === -1 && j === 0) || (i === 5 && j === 2));
+            pads.push({ x, z, c: water ? "#cfdfe3" : park ? "#d6e0c2" : "#ece5d6" });
+            if (water || park) continue;
+
+            // Split the block into lots; the centre of the map is taller, like a downtown.
+            const nx = 1 + Math.floor(rand() * 3);
+            const nz = 1 + Math.floor(rand() * 2);
+            const downtown = Math.max(0, 1 - Math.hypot(x - 4, z + 2) / 30);
+            for (let a = 0; a < nx; a++) {
+              for (let b = 0; b < nz; b++) {
+                if (rand() < 0.12) continue;
+                const w = BLOCK / nx - 0.22;
+                const d = BLOCK / nz - 0.22;
+                lots.push({
+                  x: x - BLOCK / 2 + (a + 0.5) * (BLOCK / nx),
+                  z: z - BLOCK / 2 + (b + 0.5) * (BLOCK / nz),
+                  w: w * (0.78 + rand() * 0.22),
+                  d: d * (0.78 + rand() * 0.22),
+                  h: 0.25 + Math.pow(rand(), 2.4) * 1.1 + downtown * downtown * rand() * 1.9,
+                  c: tones[Math.floor(rand() * tones.length)],
+                });
+              }
+            }
+          }
+        }
+
+        const dummy = new THREE.Object3D();
+        const colour = new THREE.Color();
+        const instanced = (
+          count: number,
+          material: InstanceType<typeof THREE.MeshStandardMaterial>,
+          place: (i: number) => string,
+        ) => {
+          const mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), material, count);
+          for (let i = 0; i < count; i++) {
+            const c = place(i);
+            dummy.updateMatrix();
+            mesh.setMatrixAt(i, dummy.matrix);
+            mesh.setColorAt(i, colour.set(c));
+          }
+          mesh.receiveShadow = true;
+          scene.add(mesh);
+          return mesh;
         };
-        patch(7, 5, 13.5, 9, "#d5e0c1");
-        patch(5, 4, -15, -9.5, "#d5e0c1");
-        patch(9, 3.2, 12.5, -11, "#c9dde0");
 
-        const curves = ROUTES.map(
-          (pts) =>
-            new THREE.CatmullRomCurve3(
-              pts.map(([x, z]) => new THREE.Vector3(x, 0, z)),
-              false,
-              "catmullrom",
-              0.5,
-            ),
-        );
+        instanced(pads.length, new THREE.MeshStandardMaterial({ roughness: 1 }), (i) => {
+          const p = pads[i];
+          dummy.position.set(p.x, 0.02, p.z);
+          dummy.scale.set(BLOCK, 0.04, BLOCK);
+          return p.c;
+        });
+        const city = instanced(lots.length, new THREE.MeshStandardMaterial({ roughness: 0.9 }), (i) => {
+          const l = lots[i];
+          dummy.position.set(l.x, 0.04 + l.h / 2, l.z);
+          dummy.scale.set(l.w, l.h, l.d);
+          return l.c;
+        });
+        city.castShadow = true;
+
+        // Street path with tightly rounded corners, so vehicles turn instead of snapping.
+        const streetCurve = (nodes: [number, number][]) => {
+          const pts: InstanceType<typeof THREE.Vector3>[] = [];
+          const at = ([c, r]: [number, number]) =>
+            new THREE.Vector3((c + 0.5) * PITCH, 0, (r + 0.5) * PITCH);
+          nodes.forEach((node, k) => {
+            const p = at(node);
+            if (k === 0 || k === nodes.length - 1) {
+              pts.push(p);
+              return;
+            }
+            const before = at(nodes[k - 1]).sub(p).normalize().multiplyScalar(0.7);
+            const after = at(nodes[k + 1]).sub(p).normalize().multiplyScalar(0.7);
+            pts.push(p.clone().add(before), p.clone().add(after));
+          });
+          return new THREE.CatmullRomCurve3(pts, false, "catmullrom", 0.02);
+        };
 
         const ribbon = (curve: InstanceType<typeof THREE.CatmullRomCurve3>, width: number, y: number) => {
-          const segments = 160;
+          const segments = 420;
           const pos: number[] = [];
           const uv: number[] = [];
           const idx: number[] = [];
@@ -136,11 +224,9 @@ export function FleetScene({ className }: { className?: string }) {
             const t = i / segments;
             const p = curve.getPointAt(t);
             const tan = curve.getTangentAt(t);
-            const nx = -tan.z;
-            const nz = tan.x;
-            const len = Math.hypot(nx, nz) || 1;
-            const ox = (nx / len) * (width / 2);
-            const oz = (nz / len) * (width / 2);
+            const len = Math.hypot(tan.x, tan.z) || 1;
+            const ox = (-tan.z / len) * (width / 2);
+            const oz = (tan.x / len) * (width / 2);
             pos.push(p.x + ox, y, p.z + oz, p.x - ox, y, p.z - oz);
             uv.push(t, 0, t, 1);
             if (i < segments) {
@@ -155,104 +241,20 @@ export function FleetScene({ className }: { className?: string }) {
           return g;
         };
 
-        const roadSamples: InstanceType<typeof THREE.Vector3>[] = [];
-        curves.forEach((curve) => {
-          const road = new THREE.Mesh(ribbon(curve, 1.5, 0.05), flat("#fffdf9"));
-          world.add(road);
-          const centre = new THREE.Mesh(ribbon(curve, 0.06, 0.06), flat("#d8cfbd"));
-          world.add(centre);
-          for (let i = 0; i <= 60; i++) roadSamples.push(curve.getPointAt(i / 60));
+        const curves = ROUTES.map(streetCurve);
+        // The planned route: a quiet line under the bright trail each vehicle lays down.
+        curves.forEach((curve, i) => {
+          scene.add(new THREE.Mesh(ribbon(curve, 0.3, 0.05), flat(ROUTE_COLOURS[i], 0.3)));
         });
 
-        // City blocks: instanced boxes, taller toward the centre, clear of roads.
-        const rand = seeded(7);
-        const blocks: { x: number; z: number; w: number; d: number; h: number; c: string }[] = [];
-        const tones = ["#fbf7ee", "#efe7d6", "#e2d8c3", "#d6cab2"];
-        for (let gx = -17; gx <= 17; gx += 2.3) {
-          for (let gz = -11; gz <= 11; gz += 2.3) {
-            const x = gx + (rand() - 0.5) * 0.7;
-            const z = gz + (rand() - 0.5) * 0.7;
-            const keep = rand();
-            const near = roadSamples.some((p) => Math.hypot(p.x - x, p.z - z) < 1.75);
-            const inPatch =
-              (x > 9.5 && z > 6) || (x < -12 && z < -7) || (x > 7.5 && z < -9);
-            if (near || inPatch || keep < 0.22) continue;
-            const centre = Math.max(0, 1 - Math.hypot(x - 5, z - 1) / 13);
-            blocks.push({
-              x,
-              z,
-              w: 1 + rand() * 0.9,
-              d: 1 + rand() * 0.9,
-              h: 0.5 + rand() * 0.9 + centre * centre * 4.2 * rand(),
-              c: tones[Math.floor(rand() * tones.length)],
-            });
-          }
-        }
-        const city = new THREE.InstancedMesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ roughness: 0.9 }),
-          blocks.length,
-        );
-        const dummy = new THREE.Object3D();
-        const colour = new THREE.Color();
-        blocks.forEach((b, i) => {
-          dummy.position.set(b.x, b.h / 2, b.z);
-          dummy.scale.set(b.w, b.h, b.d);
-          dummy.updateMatrix();
-          city.setMatrixAt(i, dummy.matrix);
-          city.setColorAt(i, colour.set(b.c));
-        });
-        city.castShadow = true;
-        city.receiveShadow = true;
-        world.add(city);
-
-        // A geofence around the junction where two routes meet.
+        // A geofence around one block.
         const fence = new THREE.Group();
-        fence.position.set(-3, 0.08, -1);
-        const ring = new THREE.Mesh(new THREE.RingGeometry(2.9, 3.05, 64), flat("#e73b24"));
-        const disc = new THREE.Mesh(new THREE.CircleGeometry(2.9, 64), flat("#e73b24", 0.09));
+        fence.position.set(2 * PITCH, 0.07, -1 * PITCH);
+        const ring = new THREE.Mesh(new THREE.RingGeometry(3.45, 3.6, 96), flat("#e73b24"));
+        const disc = new THREE.Mesh(new THREE.CircleGeometry(3.45, 96), flat("#e73b24", 0.08));
         ring.rotation.x = disc.rotation.x = -Math.PI / 2;
         fence.add(ring, disc);
-        world.add(fence);
-
-        const pin = (x: number, z: number) => {
-          const g = new THREE.Group();
-          const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.6), mat("#17130e"));
-          stem.position.y = 0.8;
-          const head = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 14), mat("#e73b24"));
-          head.position.y = 1.75;
-          g.add(stem, head);
-          g.position.set(x, 0, z);
-          world.add(g);
-        };
-        pin(17, -7.8);
-        pin(2.2, 11);
-
-        const box = (w: number, h: number, d: number, color: string, x: number, y: number) => {
-          const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(color));
-          m.position.set(x, y, 0);
-          m.castShadow = true;
-          return m;
-        };
-        // Models face +X. Wheels are one dark slab under the body.
-        const build = (kind: Kind) => {
-          const g = new THREE.Group();
-          if (kind === "truck") {
-            g.add(box(1.5, 0.78, 0.66, "#fffdf9", -0.3, 0.72));
-            g.add(box(1.5, 0.12, 0.67, "#e73b24", -0.3, 0.44));
-            g.add(box(0.55, 0.6, 0.62, "#17130e", 0.78, 0.6));
-            g.add(box(1.9, 0.2, 0.56, "#2a251d", 0.05, 0.2));
-          } else if (kind === "bus") {
-            g.add(box(1.9, 0.62, 0.64, "#e8a317", 0, 0.62));
-            g.add(box(1.7, 0.2, 0.65, "#17130e", 0, 0.74));
-            g.add(box(1.7, 0.2, 0.54, "#2a251d", 0, 0.2));
-          } else {
-            g.add(box(1.05, 0.3, 0.52, "#17130e", 0, 0.36));
-            g.add(box(0.55, 0.24, 0.46, "#3a342a", -0.05, 0.62));
-            g.add(box(0.9, 0.16, 0.48, "#2a251d", 0, 0.16));
-          }
-          return g;
-        };
+        scene.add(fence);
 
         const trailTexture = (color: string) => {
           const c = document.createElement("canvas");
@@ -262,7 +264,7 @@ export function FleetScene({ className }: { className?: string }) {
           if (ctx) {
             const grad = ctx.createLinearGradient(0, 0, 256, 0);
             grad.addColorStop(0, "rgba(255,255,255,0)");
-            grad.addColorStop(0.96, color);
+            grad.addColorStop(0.97, color);
             grad.addColorStop(1, "rgba(255,255,255,0)");
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 256, 4);
@@ -273,67 +275,80 @@ export function FleetScene({ className }: { className?: string }) {
           return tex;
         };
 
+        const SIZE: Record<Kind, [number, number, number]> = {
+          truck: [1.05, 0.34, 0.42],
+          bus: [1.2, 0.36, 0.44],
+          car: [0.7, 0.22, 0.36],
+        };
+
         const fleet = VEHICLES.map((spec) => {
           const curve = curves[spec.route];
-          const model = build(spec.kind);
-          world.add(model);
-          const tex = trailTexture(spec.trail);
-          const trail = new THREE.Mesh(
-            ribbon(curve, 0.34, 0.09),
-            new THREE.MeshBasicMaterial({
-              map: tex,
-              transparent: true,
-              depthWrite: false,
-              side: THREE.DoubleSide,
-            }),
+          const tint = ROUTE_COLOURS[spec.route];
+          const [len, tall, wide] = SIZE[spec.kind];
+          const model = new THREE.Group();
+          // Facing +X: a dark body, a pale roof, and a soft halo on the road beneath.
+          const body = new THREE.Mesh(new THREE.BoxGeometry(len, tall, wide), lit("#17130e"));
+          body.position.y = tall / 2 + 0.06;
+          const roof = new THREE.Mesh(
+            new THREE.BoxGeometry(len * 0.62, 0.05, wide * 0.72),
+            lit(spec.kind === "bus" ? "#e8a317" : "#fdfbf6"),
           );
-          world.add(trail);
-          return { spec, curve, model, tex, t: spec.start };
+          roof.position.set(-len * 0.1, tall + 0.085, 0);
+          const halo = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.74, 48), flat(tint, 0.9));
+          halo.rotation.x = -Math.PI / 2;
+          halo.position.y = 0.08;
+          const glow = new THREE.Mesh(new THREE.CircleGeometry(0.62, 48), flat(tint, 0.16));
+          glow.rotation.x = -Math.PI / 2;
+          glow.position.y = 0.075;
+          model.add(glow, halo, body, roof);
+          // Drawn larger than life: at map scale a true-size vehicle would be a speck.
+          model.scale.setScalar(1.7);
+          scene.add(model);
+
+          const tex = trailTexture(tint);
+          scene.add(
+            new THREE.Mesh(
+              ribbon(curve, 0.5, 0.06),
+              new THREE.MeshBasicMaterial({
+                map: tex,
+                transparent: true,
+                depthWrite: false,
+                side: THREE.DoubleSide,
+              }),
+            ),
+          );
+          return { spec, curve, model, halo, tex, t: spec.start };
         });
 
         const place = (v: (typeof fleet)[number]) => {
           const p = v.curve.getPointAt(v.t);
           const tan = v.curve.getTangentAt(v.t);
-          v.model.position.set(p.x, 0.05, p.z);
+          v.model.position.set(p.x, 0, p.z);
           v.model.rotation.y = Math.atan2(-tan.z, tan.x);
           // Slide the gradient so it ends at the vehicle: a trail behind it.
           v.tex.offset.x = -(v.t - TRAIL) / TRAIL;
-          // Fade in and out at the tile edges instead of popping.
-          const edge = Math.min(v.t, 1 - v.t) / 0.06;
-          v.model.scale.setScalar(Math.max(0.001, Math.min(1, edge)));
         };
 
         const labelled = fleet.filter((v) => v.spec.label);
         const projected = new THREE.Vector3();
         let width = 1;
         let height = 1;
-        const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
         const frame = (elapsed: number) => {
-          pointer.x += (pointer.tx - pointer.x) * 0.04;
-          pointer.y += (pointer.ty - pointer.y) * 0.04;
-          const sway = reduced ? 0 : Math.sin(elapsed * 0.12) * 0.1;
-          const yaw = -0.62 + sway + pointer.x * 0.12;
-          const dist = width / height < 1 ? 74 : 52;
-          const lift = 0.62 + pointer.y * 0.04;
-          camera.position.set(
-            Math.sin(yaw) * Math.cos(lift) * dist,
-            Math.sin(lift) * dist,
-            Math.cos(yaw) * Math.cos(lift) * dist,
-          );
-          camera.lookAt(0, 0.5, 0);
-          fence.scale.setScalar(1 + Math.sin(elapsed * 1.6) * 0.035);
+          const pulse = 1 + Math.sin(elapsed * 2.2) * 0.12;
+          fleet.forEach((v) => v.halo.scale.setScalar(pulse));
+          fence.scale.setScalar(1 + Math.sin(elapsed * 1.4) * 0.02);
           renderer.render(scene, camera);
           labelled.forEach((v, i) => {
             const el = labelRefs.current[i];
             if (!el) return;
             projected.copy(v.model.position);
-            projected.y += 1.9;
+            projected.y += 2.2;
             projected.project(camera);
             const x = (projected.x * 0.5 + 0.5) * width;
             const y = (-projected.y * 0.5 + 0.5) * height;
             el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -100%)`;
-            el.style.opacity = String(Math.max(0, Math.min(1, Math.min(v.t, 1 - v.t) / 0.08)));
+            el.style.opacity = String(Math.max(0, Math.min(1, Math.min(v.t, 1 - v.t) / 0.06)));
           });
         };
 
@@ -341,12 +356,18 @@ export function FleetScene({ className }: { className?: string }) {
           width = host.clientWidth || 1;
           height = host.clientHeight || 1;
           renderer.setSize(width, height, false);
-          camera.aspect = width / height;
+          // Fixed world height in view: the map keeps its scale and only crops with the box.
+          const view = width / height < 1 ? 44 : 38;
+          camera.top = view / 2;
+          camera.bottom = -view / 2;
+          camera.right = (view * (width / height)) / 2;
+          camera.left = -camera.right;
           camera.updateProjectionMatrix();
           frame(0);
         };
 
         fleet.forEach(place);
+        renderer.shadowMap.needsUpdate = true;
         const sizes = new ResizeObserver(resize);
         sizes.observe(host);
         resize();
@@ -380,12 +401,7 @@ export function FleetScene({ className }: { className?: string }) {
         });
         seen.observe(host);
         const onVisibility = () => run();
-        const onPointer = (e: PointerEvent) => {
-          pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
-          pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
-        };
         document.addEventListener("visibilitychange", onVisibility);
-        if (!small && !reduced) window.addEventListener("pointermove", onPointer, { passive: true });
         run();
 
         cleanup = () => {
@@ -393,7 +409,6 @@ export function FleetScene({ className }: { className?: string }) {
           sizes.disconnect();
           seen.disconnect();
           document.removeEventListener("visibilitychange", onVisibility);
-          window.removeEventListener("pointermove", onPointer);
           scene.traverse((o) => {
             const mesh = o as InstanceType<typeof THREE.Mesh>;
             mesh.geometry?.dispose();
@@ -443,7 +458,7 @@ export function FleetScene({ className }: { className?: string }) {
               className="pointer-events-none absolute left-0 top-0 hidden whitespace-nowrap rounded-lg border border-border bg-card/95 px-2.5 py-1.5 shadow-lift backdrop-blur will-change-transform sm:block"
             >
               <span className="flex items-center gap-1.5 text-[0.72rem] font-medium leading-none">
-                <i className="size-1.5 rounded-full" style={{ background: v.trail }} />
+                <i className="size-1.5 rounded-full" style={{ background: ROUTE_COLOURS[v.route] }} />
                 {v.label?.[0]}
               </span>
               <span className="mt-1 block font-mono text-[0.64rem] leading-none text-muted-foreground">
