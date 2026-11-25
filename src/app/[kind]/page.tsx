@@ -40,10 +40,10 @@ export default async function IndexPage({ params }: Props) {
 
   return (
     <main>
-      <section className="grid-lines pt-28 md:pt-36">
+      <section className="pt-28 md:pt-36">
         <div className="wrap pb-14 md:pb-20">
           <Breadcrumbs items={[{ name: meta.label, href: `/${kind}` }]} />
-          <SectionHeader as="h1" className="mt-10 max-w-4xl" eyebrow={meta.label} title={meta.title} lede={meta.lede} />
+          <SectionHeader as="h1" className="mt-10 max-w-4xl" title={meta.title} lede={meta.lede} />
         </div>
       </section>
 
@@ -53,9 +53,8 @@ export default async function IndexPage({ params }: Props) {
             <li key={d.slug} className="border-b border-border">
               <Link
                 href={`/${kind}/${d.slug}`}
-                className="group wrap grid items-center gap-8 py-10 transition-colors hover:bg-card md:py-14 lg:grid-cols-[4rem_1fr_1.1fr]"
+                className="group wrap grid items-center gap-8 py-10 transition-colors hover:bg-card md:py-14 lg:grid-cols-[1fr_1.1fr]"
               >
-                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
                 <span>
                   <span className="display-2 block">{d.name}</span>
                   <span className="lede mt-4 block max-w-xl">{d.hero.lede}</span>

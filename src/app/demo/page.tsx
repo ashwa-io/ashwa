@@ -22,7 +22,6 @@ export default function DemoPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Book a demo", href: "/demo" }]}
-        eyebrow="Book a demo"
         title="See Ashwa with your own fleet in mind"
         lede="A short call, built around how you run vehicles. No slide deck: we open the platform and walk through your day."
       />

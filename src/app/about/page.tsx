@@ -29,14 +29,13 @@ export default function About() {
     <main>
       <PageHero
         crumbs={[{ name: "About", href: "/about" }]}
-        eyebrow="About Ashwa"
         title="We got tired of fleet owners not knowing where their vehicles were"
         lede="So we built a tracking platform for the way vehicles are really run in India, and kept adding the parts operators asked for next."
       />
 
       <section aria-labelledby="story-title" className="py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <SectionHeader eyebrow="Our story" title={<span id="story-title">From one map to a whole platform</span>} />
+          <SectionHeader title={<span id="story-title">From one map to a whole platform</span>} />
           <Reveal className="space-y-5 text-lg leading-relaxed text-muted-foreground">
             <p>
               Ashwa began after we watched fleet operators lose hours to phone calls just to know
@@ -58,10 +57,9 @@ export default function About() {
         <TeamGallery />
       </div>
 
-      <section aria-labelledby="beliefs-title" className="on-ink grid-lines mt-20 py-20 md:mt-28 md:py-28">
+      <section aria-labelledby="beliefs-title" className="on-ink mt-20 py-20 md:mt-28 md:py-28">
         <div className="wrap">
-          <p className="eyebrow text-ink-muted">What we believe</p>
-          <h2 id="beliefs-title" className="display-2 mt-5 max-w-3xl">
+          <h2 id="beliefs-title" className="display-2 max-w-3xl">
             Four ideas the product is built on
           </h2>
           <ol className="mt-14 grid gap-10 md:grid-cols-2">
@@ -78,7 +76,7 @@ export default function About() {
 
       <section aria-labelledby="where-title" className="py-20 md:py-28">
         <div className="wrap grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-          <SectionHeader eyebrow="Where we are" title={<span id="where-title">Based in {CONTACT.address.split(",")[0]}</span>} />
+          <SectionHeader title={<span id="where-title">Based in {CONTACT.address.split(",")[0]}</span>} />
           <div>
             <p className="lede">
               Our team works from {CONTACT.address}. Customer data stays on servers in India.

@@ -25,7 +25,6 @@ export default function PartnersPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Partners", href: "/partners" }]}
-        eyebrow="Partners"
         title="Sell tracking under your own name"
         lede="For GPS dealers, installers and resellers who want a platform they can brand, bill from and grow with, without building software."
       >
@@ -42,7 +41,7 @@ export default function PartnersPage() {
             <Visual name="branding" />
           </Reveal>
           <div>
-            <SectionHeader eyebrow="Why partner" title={<span id="benefits-title">What you get as a dealer</span>} />
+            <SectionHeader title={<span id="benefits-title">What you get as a dealer</span>} />
             <ul className="mt-10 divide-y divide-border border-y border-border">
               {BENEFITS.map(([t, b]) => (
                 <li key={t} className="py-6">
@@ -58,7 +57,6 @@ export default function PartnersPage() {
       <section aria-labelledby="apply-title" className="border-t border-border bg-card py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <SectionHeader
-            eyebrow="Get started"
             title={<span id="apply-title">Tell us about your business</span>}
             lede="Where you operate, how many vehicles you manage today and which devices you sell. We will set up a panel for you to try."
           />

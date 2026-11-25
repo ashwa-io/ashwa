@@ -21,7 +21,6 @@ export default function ContactPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Contact", href: "/contact" }]}
-        eyebrow="Contact"
         title="Tell us what you are trying to track"
         lede="Sales, support, partnerships: one team answers. The more you tell us about your vehicles, the more useful our first reply will be."
       />

@@ -86,8 +86,8 @@
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 14px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
 
   --shadow-lift: 0 1px 0 rgb(23 19 14 / 0.04), 0 18px 40px -22px rgb(23 19 14 / 0.35);
   --shadow-float: 0 2px 0 rgb(23 19 14 / 0.04), 0 40px 80px -40px rgb(23 19 14 / 0.5);
@@ -147,6 +147,8 @@
   }
   html {
     scroll-behavior: smooth;
+    scrollbar-color: var(--input) var(--background);
+    caret-color: var(--primary);
     -webkit-text-size-adjust: 100%;
   }
   body {
@@ -162,6 +164,14 @@
   }
   p {
     text-wrap: pretty;
+  }
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 0.07em;
+  }
+  time,
+  address {
+    font-variant-numeric: tabular-nums;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-primary;
@@ -193,10 +203,11 @@
   .lede {
     @apply text-[clamp(1.05rem,1.35vw,1.3rem)] leading-relaxed text-muted-foreground;
   }
+  /* Small label for meta lines and footer columns. Sans and sentence case: mono stays for data inside the product visuals. */
   .eyebrow {
-    @apply font-mono text-[0.72rem] uppercase tracking-[0.16em];
+    @apply font-sans text-[0.8125rem] font-medium leading-snug tracking-normal;
   }
-  /* Blueprint grid used behind dark bands and hero grounds. */
+  /* Map grid: only behind the home hero scene and the 404, where a map is the subject. */
   .grid-lines {
     background-image:
       linear-gradient(to right, var(--grid-line, rgb(23 19 14 / 0.06)) 1px, transparent 1px),

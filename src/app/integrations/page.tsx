@@ -42,7 +42,6 @@ export default function IntegrationsPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Integrations and API", href: "/integrations" }]}
-        eyebrow="Integrations and API"
         title="Your tracking data, wherever your business needs it"
         lede="A vehicle's position is most useful inside the system where the work is planned and billed. Ashwa sends it there."
       />
@@ -50,11 +49,10 @@ export default function IntegrationsPage() {
       <section aria-labelledby="ways-title" className="py-20 md:py-28">
         <div className="wrap grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
-            <SectionHeader eyebrow="Four ways to connect" title={<span id="ways-title">Pick the one that fits your system</span>} />
+            <SectionHeader title={<span id="ways-title">Pick the one that fits your system</span>} />
             <ul className="mt-10 divide-y divide-border border-y border-border">
-              {WAYS.map((w, i) => (
-                <li key={w.title} className="grid grid-cols-[2.5rem_1fr] gap-3 py-6">
-                  <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
+              {WAYS.map((w) => (
+                <li key={w.title} className="py-6">
                   <span>
                     <h3 className="font-display text-xl font-semibold tracking-tight">{w.title}</h3>
                     <p className="mt-2 leading-relaxed text-muted-foreground">{w.body}</p>
@@ -71,7 +69,7 @@ export default function IntegrationsPage() {
 
       <section aria-labelledby="data-title" className="border-y border-border bg-card py-20 md:py-28">
         <div className="wrap">
-          <SectionHeader eyebrow="What you can use" title={<span id="data-title">The data behind every screen</span>} />
+          <SectionHeader title={<span id="data-title">The data behind every screen</span>} />
           <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {DATA.map(([t, b]) => (
               <li key={t} className="border-t border-foreground/15 pt-5">

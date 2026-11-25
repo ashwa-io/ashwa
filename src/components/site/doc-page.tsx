@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { KIND_META, resolveRef } from "@/content";
 import type { PageDoc, PageKind } from "@/content/types";
 import { SITE_URL } from "@/lib/site";
@@ -8,17 +10,32 @@ import { Visual } from "@/components/visuals";
 import { PAGE_PHOTOS } from "@/content/photos";
 
 import { Photo } from "./photo";
-import { Reveal, RevealGroup, RevealItem } from "./reveal";
-import {
-  Breadcrumbs,
-  ButtonLink,
-  CardLink,
-  CtaBand,
-  Eyebrow,
-  FaqList,
-  JsonLd,
-  SectionHeader,
-} from "./ui";
+import { Reveal } from "./reveal";
+import { Breadcrumbs, ButtonLink, CardLink, CtaBand, FaqList, JsonLd } from "./ui";
+
+type Block = "problems" | "showcase" | "cases";
+
+/** Headings and running order differ by page kind, so the three kinds do not read as one template. */
+const KIND_COPY: Record<PageKind, { problems: string; features: string; cases: string; order: Block[] }> = {
+  solutions: {
+    problems: "What it looks like before Ashwa",
+    features: "What the solution includes",
+    cases: "Situations it handles",
+    order: ["problems", "showcase"],
+  },
+  products: {
+    problems: "The gaps this module closes",
+    features: "What the module does",
+    cases: "Where it gets used",
+    order: ["showcase", "problems"],
+  },
+  industries: {
+    problems: "What the work throws at you",
+    features: "What the setup covers",
+    cases: "On an ordinary working day",
+    order: ["cases", "problems", "showcase"],
+  },
+};
 
 function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
   const crumbs = (
@@ -38,19 +55,20 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
     </div>
   );
 
-  // Products lead with the interface, centred and wide.
+  // Products lead with the interface: headline and lede share a row, the screen runs wide beneath.
   if (kind === "products") {
     return (
-      <section className="grid-lines pt-28 md:pt-36">
+      <section className="pt-28 md:pt-36">
         <div className="wrap">
           {crumbs}
-          <div className="mx-auto mt-10 max-w-4xl text-center">
-            <Eyebrow className="justify-center">{doc.hero.eyebrow}</Eyebrow>
-            <h1 className="display-page mt-5">{doc.hero.title}</h1>
-            <p className="lede mx-auto mt-6 max-w-2xl">{doc.hero.lede}</p>
-            <div className="flex justify-center">{actions}</div>
+          <div className="mt-8 grid gap-x-16 gap-y-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <h1 className="display-page">{doc.hero.title}</h1>
+            <div>
+              <p className="lede max-w-xl">{doc.hero.lede}</p>
+              {actions}
+            </div>
           </div>
-          <Reveal className="mx-auto mt-14 max-w-5xl pb-16 md:pb-24">
+          <Reveal className="mt-14 pb-16 md:pb-24">
             <Visual name={doc.hero.visual} />
           </Reveal>
         </div>
@@ -61,14 +79,13 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
   // Industries open on ink, the way a trade magazine opens a feature.
   if (kind === "industries") {
     return (
-      <section className="on-ink grid-lines pt-28 md:pt-36">
+      <section className="on-ink pt-28 md:pt-36">
         <div className="wrap grid items-end gap-12 pb-16 lg:grid-cols-[1.05fr_0.95fr] lg:pb-24">
           <div>
             <div className="[&_a]:text-ink-muted [&_nav]:text-ink-muted [&_span[aria-current]]:text-white">
               {crumbs}
             </div>
-            <Eyebrow className="mt-10 text-ink-muted">{doc.hero.eyebrow}</Eyebrow>
-            <h1 className="display-page mt-5">{doc.hero.title}</h1>
+            <h1 className="display-page mt-8">{doc.hero.title}</h1>
             <p className="mt-6 max-w-xl text-[clamp(1.05rem,1.35vw,1.3rem)] leading-relaxed text-ink-muted">
               {doc.hero.lede}
             </p>
@@ -83,12 +100,11 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
   }
 
   return (
-    <section className="grid-lines pt-28 md:pt-36">
+    <section className="pt-28 md:pt-36">
       <div className="wrap grid items-center gap-12 pb-16 lg:grid-cols-[1fr_1.05fr] lg:pb-24">
         <div>
           {crumbs}
-          <Eyebrow className="mt-10">{doc.hero.eyebrow}</Eyebrow>
-          <h1 className="display-page mt-5">{doc.hero.title}</h1>
+          <h1 className="display-page mt-8">{doc.hero.title}</h1>
           <p className="lede mt-6 max-w-xl">{doc.hero.lede}</p>
           {actions}
         </div>
@@ -104,28 +120,87 @@ export function DocPage({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
   const related = doc.related.map(resolveRef).filter((r) => r !== undefined);
   const url = `${SITE_URL}/${kind}/${doc.slug}`;
   const photo = PAGE_PHOTOS[`${kind}/${doc.slug}`];
+  const copy = KIND_COPY[kind];
+
+  const blocks: Record<Block, ReactNode> = {
+    problems: (
+      <section key="problems" aria-labelledby="problems-title" className="py-20 md:py-28">
+        <div className="wrap">
+          <h2 id="problems-title" className="display-2 max-w-3xl">
+            {copy.problems}
+          </h2>
+          <ul className="mt-12 grid gap-10 md:grid-cols-3">
+            {doc.problems.map((p) => (
+              <li key={p.title} className="border-t-2 border-foreground pt-6">
+                <h3 className="display-3">{p.title}</h3>
+                <p className="mt-4 leading-relaxed text-muted-foreground">{p.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ),
+    showcase: (
+      <section key="showcase" aria-label="How Ashwa helps" className="space-y-20 py-10 md:space-y-32 md:py-16">
+        {doc.showcase.map((s, i) => (
+          <div
+            key={s.title}
+            className={cn(
+              "wrap grid items-center gap-10 lg:gap-20",
+              // The visual takes the wider column, and the sides swap each time.
+              i % 2 === 1 ? "lg:grid-cols-[0.85fr_1.15fr]" : "lg:grid-cols-[1.15fr_0.85fr]",
+            )}
+          >
+            <Reveal className={cn(i % 2 === 1 && "lg:order-2")}>
+              <Visual name={s.visual} />
+            </Reveal>
+            <div>
+              <h2 className="display-2">{s.title}</h2>
+              <p className="lede mt-5">{s.body}</p>
+              <ul className="mt-7 space-y-3 border-t border-border pt-6">
+                {s.bullets.map((b) => (
+                  <li key={b} className="flex gap-3 leading-relaxed">
+                    <span aria-hidden="true" className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-primary" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </section>
+    ),
+    cases: (
+      <section key="cases" aria-labelledby="cases-title" className="py-16 md:py-24">
+        <div className="wrap">
+          <h2 id="cases-title" className="display-3">
+            {copy.cases}
+          </h2>
+          <ul className="mt-8 grid border-t border-foreground/15 md:grid-cols-3 md:border-t-0">
+            {doc.useCases.map((u) => (
+              <li
+                key={u.title}
+                className="border-b border-foreground/15 py-7 md:border-b-0 md:border-l md:px-8 md:py-1 md:first:border-l-0 md:first:pl-0"
+              >
+                <h3 className="font-display text-xl font-semibold tracking-tight">{u.title}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{u.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ),
+  };
 
   return (
     <main>
       <Hero kind={kind} doc={doc} />
 
-      <section
-        aria-label="Who it is for"
-        className="border-y border-border bg-card"
-      >
-        <div className="wrap flex flex-col gap-4 py-6 md:flex-row md:items-center md:gap-8">
-          <p className="eyebrow shrink-0 text-muted-foreground">Built for</p>
-          <ul className="flex flex-wrap gap-2">
-            {doc.audience.map((a) => (
-              <li
-                key={a}
-                className="rounded-full border border-border px-3.5 py-1.5 text-[0.9rem] font-medium"
-              >
-                {a}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <section aria-label="Who it is for" className="border-y border-border">
+        <p className="wrap py-5 leading-relaxed text-muted-foreground">
+          Built for{" "}
+          <span className="font-medium text-foreground">{doc.audience.join(", ")}</span>
+        </p>
       </section>
 
       {photo ? (
@@ -136,139 +211,75 @@ export function DocPage({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
         </div>
       ) : null}
 
-      <section aria-labelledby="problems-title" className="py-20 md:py-28">
-        <div className="wrap">
-          <SectionHeader
-            eyebrow="The problem"
-            title={<span id="problems-title">What goes wrong without it</span>}
-          />
-          <RevealGroup as="ol" className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
-            {doc.problems.map((p, i) => (
-              <RevealItem as="li" key={p.title} className="bg-background p-7 md:p-9">
-                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="display-3 mt-8">{p.title}</h3>
-                <p className="mt-4 leading-relaxed text-muted-foreground">{p.body}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
+      {copy.order.map((k) => blocks[k])}
 
-      <section aria-label="How Ashwa helps" className="space-y-20 pb-20 md:space-y-32 md:pb-32">
-        {doc.showcase.map((s, i) => (
-          <div key={s.title} className="wrap grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
-            <Reveal className={cn(i % 2 === 1 && "lg:order-2")}>
-              <Visual name={s.visual} />
-            </Reveal>
-            <Reveal delay={0.08}>
-              <span className="font-mono text-sm text-muted-foreground">
-                {String(i + 1).padStart(2, "0")} / {String(doc.showcase.length).padStart(2, "0")}
-              </span>
-              <h2 className="display-2 mt-4">{s.title}</h2>
-              <p className="lede mt-5">{s.body}</p>
-              <ul className="mt-7 space-y-3 border-t border-border pt-6">
-                {s.bullets.map((b) => (
-                  <li key={b} className="flex gap-3 leading-relaxed">
-                    <span aria-hidden="true" className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-primary" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        ))}
-      </section>
-
-      <section aria-labelledby="features-title" className="border-y border-border bg-card py-20 md:py-28">
+      <section
+        aria-labelledby="features-title"
+        className="mt-10 border-y border-border bg-card py-20 md:mt-16 md:py-28"
+      >
         <div className="wrap">
-          <SectionHeader
-              eyebrow="Capabilities"
-              title={<span id="features-title">Everything in the module</span>}
-              lede="Switch on what you need. Each capability works with the rest of the platform."
-            />
-          <RevealGroup as="ul" className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-            {doc.features.map((f) => (
-              <RevealItem as="li" key={f.title} className="border-t border-foreground/15 pt-5">
-                <h3 className="font-display text-xl font-semibold tracking-tight">{f.title}</h3>
-                <p className="mt-2 leading-relaxed text-muted-foreground">{f.body}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      <section aria-labelledby="how-title" className="on-ink grid-lines py-20 md:py-28">
-        <div className="wrap">
-          <Eyebrow className="text-ink-muted">How it works</Eyebrow>
-          <h2 id="how-title" className="display-2 mt-5 max-w-3xl">
-            From device to decision
+          <h2 id="features-title" className="display-2 max-w-3xl">
+            {copy.features}
           </h2>
-          <RevealGroup as="ol" className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <p className="lede mt-5 max-w-2xl">
+            Switch on what you need. Each capability works with the rest of the platform.
+          </p>
+          <ul className="mt-12 grid gap-x-16 lg:grid-cols-2">
+            {doc.features.map((f) => (
+              <li
+                key={f.title}
+                className="grid gap-2 border-t border-border py-6 sm:grid-cols-[minmax(0,13rem)_1fr] sm:gap-6"
+              >
+                <h3 className="font-display text-lg font-semibold leading-snug tracking-tight">{f.title}</h3>
+                <p className="leading-relaxed text-muted-foreground">{f.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="how-title" className="on-ink py-20 md:py-28">
+        <div className="wrap">
+          <h2 id="how-title" className="display-2 max-w-3xl">
+            How it runs, step by step
+          </h2>
+          <ol className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             {doc.how.map((h, i) => (
-              <RevealItem as="li" key={h.title} className="border-t border-ink-line pt-6">
+              <li key={h.title} className="border-t border-ink-line pt-6">
                 <span className="font-display text-5xl font-semibold tracking-tight text-primary">
                   {i + 1}
                 </span>
                 <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">{h.title}</h3>
                 <p className="mt-3 leading-relaxed text-ink-muted">{h.body}</p>
-              </RevealItem>
+              </li>
             ))}
-          </RevealGroup>
+          </ol>
         </div>
       </section>
 
-      <section aria-labelledby="outcomes-title" className="py-20 md:py-28">
-        <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeader
-            eyebrow="Outcomes"
-            title={<span id="outcomes-title">What changes for the business</span>}
-          />
-          <RevealGroup as="ul" className="divide-y divide-border border-y border-border">
-            {doc.outcomes.map((o) => (
-              <RevealItem as="li" key={o.title} className="grid gap-3 py-7 md:grid-cols-[1fr_1.3fr] md:gap-10">
-                <h3 className="display-3">{o.title}</h3>
-                <p className="leading-relaxed text-muted-foreground">{o.body}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      <section aria-labelledby="cases-title" className="pb-20 md:pb-28">
+      <section aria-labelledby="outcomes-title" className="py-24 md:py-36">
         <div className="wrap">
-          <SectionHeader
-            eyebrow="In practice"
-            title={<span id="cases-title">Where it earns its keep</span>}
-          />
-          <RevealGroup as="ul" className="mt-12 grid gap-5 md:grid-cols-3">
-            {doc.useCases.map((u, i) => (
-              <RevealItem
-                as="li"
-                key={u.title}
-                className={cn(
-                  "flex flex-col rounded-2xl p-7",
-                  i === 0 ? "bg-primary text-primary-foreground" : "border border-border bg-card",
-                )}
-              >
-                <span className={cn("eyebrow", i === 0 ? "text-white/70" : "text-muted-foreground")}>
-                  Scenario {i + 1}
-                </span>
-                <h3 className="display-3 mt-10">{u.title}</h3>
-                <p className={cn("mt-4 leading-relaxed", i === 0 ? "text-white/85" : "text-muted-foreground")}>
-                  {u.body}
-                </p>
-              </RevealItem>
+          <h2 id="outcomes-title" className="display-2 max-w-3xl">
+            What changes once it is running
+          </h2>
+          <ul className="mt-14 grid gap-x-16 gap-y-12 md:grid-cols-2">
+            {doc.outcomes.map((o) => (
+              <li key={o.title} className="max-w-xl">
+                <h3 className="display-3">{o.title}</h3>
+                <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{o.body}</p>
+              </li>
             ))}
-          </RevealGroup>
+          </ul>
         </div>
       </section>
+
+      {copy.order.includes("cases") ? null : <div className="border-t border-border">{blocks.cases}</div>}
 
       <section aria-labelledby="faq-title" className="border-t border-border py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeader
-            eyebrow="Questions"
-            title={<span id="faq-title">{doc.name}: common questions</span>}
-          />
+          <h2 id="faq-title" className="display-2">
+            {doc.name}: common questions
+          </h2>
           <FaqList faqs={doc.faqs} />
         </div>
       </section>

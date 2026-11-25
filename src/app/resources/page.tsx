@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { PageHero, pageMeta } from "@/components/site/page-hero";
-import { RevealGroup, RevealItem } from "@/components/site/reveal";
 import { CardLink, CtaBand } from "@/components/site/ui";
 import { articles } from "@/content";
 import { RESOURCE_LINKS } from "@/lib/site";
@@ -24,7 +23,6 @@ export default function ResourcesPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Resources", href: "/resources" }]}
-        eyebrow="Resources"
         title="Guides for people who run vehicles"
         lede="How trackers work, what they cost, where diesel goes missing and which papers lapse when. Written to be useful whether or not you buy from us."
       />
@@ -58,9 +56,9 @@ export default function ResourcesPage() {
           <h2 id="guides-title" className="display-3">
             All guides
           </h2>
-          <RevealGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((a) => (
-              <RevealItem key={a.slug}>
+              <div key={a.slug}>
                 <CardLink
                   href={`/resources/${a.slug}`}
                   kicker={`${a.category} · ${a.readMinutes} min read`}
@@ -68,9 +66,9 @@ export default function ResourcesPage() {
                   body={a.description}
                   className="h-full"
                 />
-              </RevealItem>
+              </div>
             ))}
-          </RevealGroup>
+          </div>
         </div>
       </section>
 

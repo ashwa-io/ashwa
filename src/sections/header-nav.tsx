@@ -227,7 +227,7 @@ export function HeaderNav({ groups, appUrl }: { groups: NavGroup[]; appUrl: stri
                 </div>
                 <Link
                   href={active.feature.href}
-                  className="on-ink grid-lines group flex flex-col justify-between rounded-2xl p-6"
+                  className="on-ink group flex flex-col justify-between rounded-2xl p-6"
                 >
                   <div>
                     <p className="eyebrow text-ink-muted">{active.feature.kicker}</p>

@@ -50,7 +50,7 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <main>
       <article>
-        <header className="grid-lines border-b border-border pt-28 md:pt-36">
+        <header className="border-b border-border pt-28 md:pt-36">
           <div className="wrap pb-14 md:pb-20">
             <Breadcrumbs
               items={[

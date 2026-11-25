@@ -46,7 +46,6 @@ export default function PricingPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Pricing", href: "/pricing" }]}
-        eyebrow="Pricing"
         title="Pay for the vehicles and modules you use"
         lede="There is no single price list because no two fleets take the same set. Here is exactly how a quote is built, so nothing in it surprises you."
       >
@@ -60,7 +59,7 @@ export default function PricingPage() {
 
       <section aria-labelledby="parts-title" className="py-20 md:py-28">
         <div className="wrap">
-          <SectionHeader eyebrow="Three parts" title={<span id="parts-title">What a quote is made of</span>} />
+          <SectionHeader title={<span id="parts-title">What a quote is made of</span>} />
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             {PARTS.map((p, i) => (
               <Reveal
@@ -68,12 +67,11 @@ export default function PricingPage() {
                 delay={i * 0.08}
                 className={
                   i === 1
-                    ? "on-ink grid-lines flex flex-col rounded-2xl p-8"
+                    ? "on-ink flex flex-col rounded-2xl p-8"
                     : "flex flex-col rounded-2xl border border-border bg-card p-8"
                 }
               >
-                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="display-3 mt-6">{p.title}</h3>
+                <h3 className="display-3">{p.title}</h3>
                 <p className={i === 1 ? "eyebrow mt-2 text-ink-muted" : "eyebrow mt-2 text-muted-foreground"}>
                   {p.when}
                 </p>
@@ -97,7 +95,6 @@ export default function PricingPage() {
       <section aria-labelledby="factors-title" className="border-y border-border bg-card py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionHeader
-            eyebrow="What moves the number"
             title={<span id="factors-title">Four things decide your price</span>}
           />
           <ul className="divide-y divide-border border-y border-border">
@@ -114,7 +111,7 @@ export default function PricingPage() {
       {pricingFaqs.length ? (
         <section aria-labelledby="pricing-faq-title" className="py-20 md:py-28">
           <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-            <SectionHeader eyebrow="Questions" title={<span id="pricing-faq-title">Pricing questions</span>} />
+            <SectionHeader title={<span id="pricing-faq-title">Pricing questions</span>} />
             <FaqList faqs={pricingFaqs} />
           </div>
         </section>

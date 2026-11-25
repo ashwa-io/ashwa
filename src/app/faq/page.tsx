@@ -17,7 +17,6 @@ export default function FaqPage() {
     <main>
       <PageHero
         crumbs={[{ name: "FAQ", href: "/faq" }]}
-        eyebrow="Frequently asked questions"
         title="Straight answers before you call us"
         lede="The questions fleet owners, schools and dealers ask us most, grouped by where you are in the decision."
       >

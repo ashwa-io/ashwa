@@ -42,7 +42,6 @@ export default function DevicesPage() {
     <main>
       <PageHero
         crumbs={[{ name: "Devices", href: "/devices" }]}
-        eyebrow="Devices"
         title="GPS devices that work with Ashwa"
         lede="The tracker is the part you never look at again, so it has to be right for the vehicle. Here is what goes where, and what Ashwa can read."
       />
@@ -50,16 +49,15 @@ export default function DevicesPage() {
       <section aria-labelledby="types-title" className="py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
-            <SectionHeader eyebrow="Three kinds" title={<span id="types-title">Match the tracker to the vehicle</span>} />
+            <SectionHeader title={<span id="types-title">Match the tracker to the vehicle</span>} />
             <Reveal className="mt-10">
               <Visual name="device" />
             </Reveal>
           </div>
           <ol className="divide-y divide-border border-y border-border">
-            {TYPES.map((t, i) => (
+            {TYPES.map((t) => (
               <li key={t.title} className="py-8">
-                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="display-3 mt-3">{t.title}</h3>
+                <h3 className="display-3">{t.title}</h3>
                 <p className="eyebrow mt-2 text-muted-foreground">{t.fits}</p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">{t.body}</p>
               </li>
@@ -68,11 +66,10 @@ export default function DevicesPage() {
         </div>
       </section>
 
-      <section aria-labelledby="families-title" className="on-ink grid-lines py-20 md:py-28">
+      <section aria-labelledby="families-title" className="on-ink py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <p className="eyebrow text-ink-muted">Compatibility</p>
-            <h2 id="families-title" className="display-2 mt-5">
+            <h2 id="families-title" className="display-2">
               Tracker families Ashwa reads
             </h2>
             <ButtonLink href="/contact" variant="inverse" className="mt-8">
@@ -93,7 +90,6 @@ export default function DevicesPage() {
       <section aria-labelledby="install-title" className="py-20 md:py-28">
         <div className="wrap">
           <SectionHeader
-            eyebrow="Installation"
             title={<span id="install-title">Fitted, tested and live before the technician leaves</span>}
             lede="A technician fits the device out of sight, checks that it reports, and the vehicle appears on your map before they leave."
           />

@@ -2,13 +2,12 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { FleetScene } from "@/components/hero3d/fleet-scene";
-import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal";
+import { Reveal } from "@/components/site/reveal";
 import { Tabs } from "@/components/site/tabs";
 import {
   ButtonLink,
   CardLink,
   CtaBand,
-  Eyebrow,
   FaqList,
   SectionHeader,
 } from "@/components/site/ui";
@@ -16,7 +15,6 @@ import { Visual } from "@/components/visuals";
 import { DOCS, articles, getDoc } from "@/content";
 import { siteFaqs } from "@/content/faqs";
 import type { PageKind, VisualKey } from "@/content/types";
-import { cn } from "@/lib/utils";
 
 const AUDIENCES: { label: string; ref: [PageKind, string]; points: string[] }[] = [
   {
@@ -92,14 +90,13 @@ const REASONS: { title: string; body: string }[] = [
   },
 ];
 
-function Panel({ label, kind, slug, points }: { label: string; kind: PageKind; slug: string; points: string[] }) {
+function Panel({ kind, slug, points }: { kind: PageKind; slug: string; points: string[] }) {
   const doc = getDoc(kind, slug);
   if (!doc) return null;
   return (
     <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
       <div>
-        <p className="eyebrow text-muted-foreground">For {label.toLowerCase()}</p>
-        <h3 className="display-3 mt-4">{doc.hero.title}</h3>
+        <h3 className="display-3">{doc.hero.title}</h3>
         <p className="mt-4 leading-relaxed text-muted-foreground">{doc.hero.lede}</p>
         <ul className="mt-6 space-y-2.5 border-t border-border pt-5">
           {points.map((p) => (
@@ -131,8 +128,7 @@ export default function Home() {
       <section className="grid-lines relative overflow-hidden">
         <div className="wrap relative z-10 grid min-h-[100svh] items-center pb-[46svh] pt-28 lg:pb-16 lg:pt-24">
           <div className="max-w-[40rem]">
-            <Eyebrow>GPS tracking and fleet platform</Eyebrow>
-            <h1 className="display-1 mt-6">
+            <h1 className="display-1">
               Every vehicle you run, on one <span className="text-primary">live</span> platform.
             </h1>
             <p className="lede mt-6 max-w-xl">
@@ -145,7 +141,7 @@ export default function Home() {
                 Explore the platform
               </ButtonLink>
             </div>
-            <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-muted-foreground">
+            <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-foreground/15 pt-5 text-sm font-medium text-muted-foreground">
               <li>Devices and software</li>
               <li>{products.length} modules</li>
               <li>Web and mobile</li>
@@ -161,11 +157,10 @@ export default function Home() {
       </section>
 
       {/* 2. Platform overview */}
-      <section aria-labelledby="overview-title" className="border-t border-border py-20 md:py-28">
+      <section aria-labelledby="overview-title" className="border-t border-border py-24 md:py-40">
         <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <Reveal>
-            <Eyebrow>What Ashwa is</Eyebrow>
-            <h2 id="overview-title" className="display-2 mt-5">
+            <h2 id="overview-title" className="display-2">
               More than a dot on a map. A tracking ecosystem you shape around your work.
             </h2>
           </Reveal>
@@ -191,7 +186,6 @@ export default function Home() {
       <section aria-labelledby="audiences-title" className="border-y border-border bg-card py-20 md:py-28">
         <div className="wrap">
           <SectionHeader
-            eyebrow="One platform, many operations"
             title={<span id="audiences-title">The same platform, arranged for your business</span>}
           />
           <div className="mt-12">
@@ -199,7 +193,7 @@ export default function Home() {
               label="Who uses Ashwa"
               items={AUDIENCES.map((a) => ({
                 label: a.label,
-                panel: <Panel label={a.label} kind={a.ref[0]} slug={a.ref[1]} points={a.points} />,
+                panel: <Panel kind={a.ref[0]} slug={a.ref[1]} points={a.points} />,
               }))}
             />
           </div>
@@ -211,7 +205,6 @@ export default function Home() {
         <div className="wrap">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeader
-              eyebrow="Solutions"
               title={<span id="solutions-title">Find the one that matches how you run vehicles</span>}
             />
             <ButtonLink href="/solutions" variant="secondary" className="shrink-0">
@@ -224,35 +217,33 @@ export default function Home() {
               className="group grid items-center gap-8 rounded-2xl border border-border bg-card p-6 transition-[border-color,box-shadow] duration-200 hover:border-foreground/40 hover:shadow-lift lg:grid-cols-[0.8fr_1.2fr] lg:gap-12 lg:p-10"
             >
               <span>
-                <span className="eyebrow text-muted-foreground">01</span>
-                <span className="display-3 mt-3 block">{solutions[0].name}</span>
+                <span className="display-3 block">{solutions[0].name}</span>
                 <span className="mt-3 block leading-relaxed text-muted-foreground">
                   {solutions[0].hero.lede}
                 </span>
                 <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium">
-                  Learn more
+                  Explore {solutions[0].name.toLowerCase()}
                   <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </span>
               <Visual name={solutions[0].hero.visual} />
             </Link>
           </Reveal>
-          <RevealGroup className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {solutions.slice(1).map((s, i) => (
-              <RevealItem key={s.slug}>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {solutions.slice(1).map((s) => (
+              <div key={s.slug}>
                 <CardLink
                   href={`/solutions/${s.slug}`}
-                  kicker={String(i + 2).padStart(2, "0")}
                   title={s.name}
                   body={s.blurb}
                   className="h-full"
                 />
-              </RevealItem>
+              </div>
             ))}
-            <RevealItem className="sm:col-span-2">
+            <div className="sm:col-span-2">
               <Link
                 href="/contact"
-                className="on-ink grid-lines group flex h-full flex-col justify-between rounded-2xl p-6"
+                className="on-ink group flex h-full flex-col justify-between rounded-2xl p-6"
               >
                 <span className="eyebrow text-ink-muted">Mixed fleet?</span>
                 <span className="mt-8 block">
@@ -265,18 +256,17 @@ export default function Home() {
                   </span>
                 </span>
               </Link>
-            </RevealItem>
-          </RevealGroup>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* 5. Product ecosystem */}
-      <section aria-labelledby="modules-title" className="on-ink grid-lines py-20 md:py-28">
+      <section aria-labelledby="modules-title" className="on-ink py-20 md:py-28">
         <div className="wrap">
           <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-end">
             <div>
-              <Eyebrow className="text-ink-muted">Product ecosystem</Eyebrow>
-              <h2 id="modules-title" className="display-2 mt-5">
+              <h2 id="modules-title" className="display-2">
                 {products.length} modules. Choose yours.
               </h2>
             </div>
@@ -285,33 +275,29 @@ export default function Home() {
               trips. Trips feed reports. Maintenance knows the odometer because tracking does.
             </p>
           </div>
-          <RevealGroup as="ul" className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ink-line bg-ink-line sm:grid-cols-2 lg:grid-cols-4">
-            {products.map((p, i) => (
-              <RevealItem as="li" key={p.slug} className="bg-ink">
+          <ul className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ink-line bg-ink-line sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((p) => (
+              <li key={p.slug} className="bg-ink">
                 <Link
                   href={`/products/${p.slug}`}
                   className="group flex h-full min-h-40 flex-col justify-between p-6 transition-colors hover:bg-ink-2"
                 >
-                  <span className="flex items-center justify-between font-mono text-xs text-ink-muted">
-                    {String(i + 1).padStart(2, "0")}
-                    <ArrowUpRight
+                  <ArrowUpRight
                       aria-hidden="true"
-                      className="size-4 text-primary opacity-0 transition-opacity group-hover:opacity-100"
-                    />
-                  </span>
+                      className="size-4 self-end text-ink-muted transition-[color,transform] duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                  />
                   <span>
                     <span className="block font-display text-xl font-semibold tracking-tight">{p.name}</span>
                     <span className="mt-1.5 block text-sm leading-snug text-ink-muted">{p.blurb}</span>
                   </span>
                 </Link>
-              </RevealItem>
+              </li>
             ))}
-            <RevealItem as="li" className="bg-primary sm:col-span-2">
+            <li className="bg-primary sm:col-span-2">
               <Link
                 href="/demo"
-                className="group flex h-full min-h-40 flex-col justify-between p-6 text-primary-foreground"
+                className="group flex h-full min-h-40 flex-col justify-end p-6 text-primary-foreground"
               >
-                <span className="font-mono text-xs text-white/70">Your set</span>
                 <span className="flex items-end justify-between gap-6">
                   <span className="block max-w-sm font-display text-2xl font-semibold leading-tight tracking-tight">
                     Tell us what you run. We will map the modules that fit.
@@ -322,35 +308,34 @@ export default function Home() {
                   />
                 </span>
               </Link>
-            </RevealItem>
-          </RevealGroup>
+            </li>
+          </ul>
         </div>
       </section>
 
       {/* 6. Live tracking experience */}
-      <section aria-labelledby="live-title" className="py-20 md:py-28">
+      <section aria-labelledby="live-title" className="py-24 md:py-36">
         <div className="wrap">
           <SectionHeader
-            className="mx-auto text-center [&_.eyebrow]:justify-center [&_.lede]:mx-auto"
-            eyebrow="Live tracking"
+            className="mx-auto text-center [&_.lede]:mx-auto"
             title={<span id="live-title">Watch the whole fleet move, as it happens</span>}
             lede="Moving, stopped, idle or offline: each vehicle's state, speed and last update, on a map your whole team shares."
           />
           <Reveal className="mx-auto mt-14 max-w-5xl">
             <Visual name="live-map" />
           </Reveal>
-          <RevealGroup as="ul" className="mx-auto mt-12 grid max-w-5xl gap-8 md:grid-cols-3">
+          <ul className="mx-auto mt-12 grid max-w-5xl gap-8 md:grid-cols-3">
             {[
               ["Routes that follow the road", "GPS spikes are filtered out, so a parked truck does not appear to wander."],
               ["Replay any day", "Scrub through a vehicle's day to see each stop, halt and detour."],
               ["Share a live link", "Send a customer one link to follow their trip. Revoke it when the trip closes."],
             ].map(([t, b]) => (
-              <RevealItem as="li" key={t} className="border-t border-foreground/15 pt-5">
+              <li key={t} className="border-t border-foreground/15 pt-5">
                 <h3 className="font-display text-xl font-semibold tracking-tight">{t}</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">{b}</p>
-              </RevealItem>
+              </li>
             ))}
-          </RevealGroup>
+          </ul>
         </div>
       </section>
 
@@ -359,7 +344,6 @@ export default function Home() {
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeader
-              eyebrow="Industries"
               title={<span id="industries-title">Built around how your industry moves</span>}
               lede="A tipper, a school bus and a self-drive car need different things from the same tracker."
             />
@@ -368,13 +352,12 @@ export default function Home() {
             </ButtonLink>
           </div>
           <ul className="border-t border-border">
-            {industries.map((d, i) => (
+            {industries.map((d) => (
               <li key={d.slug} className="border-b border-border">
                 <Link
                   href={`/industries/${d.slug}`}
-                  className="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-6 transition-[padding] duration-300 hover:pl-3"
+                  className="group grid grid-cols-[1fr_auto] items-baseline gap-4 py-6"
                 >
-                  <span className="font-mono text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
                   <span>
                     <span className="display-3 block transition-colors group-hover:text-primary">{d.name}</span>
                     <span className="mt-1 block text-muted-foreground">{d.blurb}</span>
@@ -395,7 +378,6 @@ export default function Home() {
         <div className="wrap grid gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
             <SectionHeader
-              eyebrow="How Ashwa works"
               title={<span id="how-title">From a device under the dashboard to a decision</span>}
             />
             <Reveal className="mt-10">
@@ -405,46 +387,42 @@ export default function Home() {
               Devices we work with
             </ButtonLink>
           </div>
-          <RevealGroup as="ol" className="divide-y divide-border border-y border-border">
+          <ol className="divide-y divide-border border-y border-border">
             {STEPS.map((s, i) => (
-              <RevealItem as="li" key={s.title} className="grid grid-cols-[3rem_1fr] gap-4 py-7">
+              <li key={s.title} className="grid grid-cols-[3rem_1fr] gap-4 py-7">
                 <span className="font-display text-3xl font-semibold tracking-tight text-primary">{i + 1}</span>
                 <span>
                   <h3 className="font-display text-xl font-semibold tracking-tight">{s.title}</h3>
                   <p className="mt-2 leading-relaxed text-muted-foreground">{s.body}</p>
                 </span>
-              </RevealItem>
+              </li>
             ))}
-          </RevealGroup>
+          </ol>
         </div>
       </section>
 
       {/* 9. Why Ashwa */}
-      <section aria-labelledby="why-title" className="py-20 md:py-28">
-        <div className="wrap">
-          <SectionHeader eyebrow="Why Ashwa" title={<span id="why-title">Five reasons teams choose it</span>} />
-          <RevealGroup as="ul" className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-6">
-            {REASONS.map((r, i) => (
-              <RevealItem
-                as="li"
-                key={r.title}
-                className={cn("bg-background p-7 md:p-9", i < 2 ? "md:col-span-3" : "md:col-span-2")}
-              >
-                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="display-3 mt-6">{r.title}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{r.body}</p>
-              </RevealItem>
+      <section aria-labelledby="why-title" className="border-t border-border py-16 md:py-24">
+        <div className="wrap grid gap-10 lg:grid-cols-[0.6fr_1.4fr] lg:gap-20">
+          <h2 id="why-title" className="display-3">
+            Why teams choose Ashwa
+          </h2>
+          {/* Run-in list: the title opens the sentence, so five reasons read as prose, not five boxes. */}
+          <ul className="grid gap-x-14 gap-y-8 text-[1.2rem] leading-snug md:grid-cols-2">
+            {REASONS.map((r) => (
+              <li key={r.title} className="text-muted-foreground">
+                <h3 className="inline font-sans font-semibold text-foreground">{r.title}.</h3> {r.body}
+              </li>
             ))}
-          </RevealGroup>
+          </ul>
         </div>
       </section>
 
       {/* 10. Mobile apps */}
-      <section aria-labelledby="apps-title" className="on-ink grid-lines overflow-hidden py-20 md:py-28">
+      <section aria-labelledby="apps-title" className="on-ink overflow-hidden py-20 md:py-28">
         <div className="wrap grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <Eyebrow className="text-ink-muted">Mobile apps</Eyebrow>
-            <h2 id="apps-title" className="display-2 mt-5">
+            <h2 id="apps-title" className="display-2">
               The right screen for the owner, the driver and the parent.
             </h2>
             <p className="mt-5 max-w-lg text-lg leading-relaxed text-ink-muted">
@@ -473,7 +451,6 @@ export default function Home() {
           </Reveal>
           <div>
             <SectionHeader
-              eyebrow="Integrations and customisation"
               title={<span id="integrations-title">Fits into the systems you already run</span>}
               lede="Send positions, trips and events to your ERP, a customer's portal or a government system. Where your process is unusual, we build the dashboard or workflow with you."
             />
@@ -490,20 +467,19 @@ export default function Home() {
       </section>
 
       {/* 12. Resources */}
-      <section aria-labelledby="resources-title" className="border-t border-border py-20 md:py-28">
+      <section aria-labelledby="resources-title" className="border-t border-border py-16 md:py-24">
         <div className="wrap">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeader
-              eyebrow="Resources"
               title={<span id="resources-title">Guides for people who run vehicles</span>}
             />
             <ButtonLink href="/resources" variant="secondary" className="shrink-0">
               All guides
             </ButtonLink>
           </div>
-          <RevealGroup className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
             {articles.slice(0, 3).map((a) => (
-              <RevealItem key={a.slug}>
+              <div key={a.slug}>
                 <CardLink
                   href={`/resources/${a.slug}`}
                   kicker={`${a.category} · ${a.readMinutes} min read`}
@@ -511,9 +487,9 @@ export default function Home() {
                   body={a.description}
                   className="h-full"
                 />
-              </RevealItem>
+              </div>
             ))}
-          </RevealGroup>
+          </div>
         </div>
       </section>
 
@@ -521,7 +497,7 @@ export default function Home() {
       <section aria-labelledby="faq-title" className="border-t border-border py-20 md:py-28">
         <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <SectionHeader eyebrow="Questions" title={<span id="faq-title">Before you ask</span>} />
+            <SectionHeader title={<span id="faq-title">Before you ask</span>} />
             <ButtonLink href="/faq" variant="secondary" className="mt-8">
               All questions
             </ButtonLink>

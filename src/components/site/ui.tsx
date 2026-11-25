@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronRight, Plus } from "lucide-react";
 
 import type { Faq } from "@/content/types";
 import { SITE_URL } from "@/lib/site";
@@ -24,7 +24,7 @@ interface ButtonLinkProps extends Omit<ComponentProps<typeof Link>, "className">
 
 export function ButtonLink({
   variant = "primary",
-  arrow = true,
+  arrow,
   className,
   children,
   ...props
@@ -36,13 +36,13 @@ export function ButtonLink({
       {...props}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={cn(
-        "group inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[0.95rem] font-medium transition-[background-color,border-color,transform] duration-200 active:scale-[0.98]",
+        "group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-[0.95rem] font-medium transition-[background-color,border-color,transform] duration-200 active:scale-[0.98]",
         VARIANTS[variant],
         className,
       )}
     >
       {children}
-      {arrow ? (
+      {(arrow ?? (variant === "primary" || external)) ? (
         <Icon
           aria-hidden="true"
           className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
@@ -52,23 +52,12 @@ export function ButtonLink({
   );
 }
 
-export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <p className={cn("eyebrow flex items-center gap-2 text-muted-foreground", className)}>
-      <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" />
-      {children}
-    </p>
-  );
-}
-
 export function SectionHeader({
-  eyebrow,
   title,
   lede,
   className,
   as: Tag = "h2",
 }: {
-  eyebrow?: string;
   title: ReactNode;
   lede?: ReactNode;
   className?: string;
@@ -76,8 +65,7 @@ export function SectionHeader({
 }) {
   return (
     <div className={cn("max-w-3xl", className)}>
-      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-      <Tag className={cn(Tag === "h1" ? "display-1" : "display-2", eyebrow && "mt-5")}>{title}</Tag>
+      <Tag className={Tag === "h1" ? "display-page" : "display-2"}>{title}</Tag>
       {lede ? <p className="lede mt-5 max-w-2xl">{lede}</p> : null}
     </div>
   );
@@ -102,7 +90,7 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
   return (
     <>
       <nav aria-label="Breadcrumb" className={className}>
-        <ol className="flex flex-wrap items-center gap-1 font-mono text-[0.72rem] text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-1 text-[0.8125rem] text-muted-foreground">
           {trail.map((c, i) => (
             <li key={c.href} className="flex items-center gap-1">
               {i > 0 ? <ChevronRight aria-hidden="true" className="size-3" /> : null}
@@ -144,12 +132,10 @@ export function FaqList({ faqs, schema = true }: { faqs: Faq[]; schema?: boolean
           <details key={f.q} className="group">
             <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left font-display text-lg font-medium leading-snug [&::-webkit-details-marker]:hidden">
               {f.q}
-              <span
+              <Plus
                 aria-hidden="true"
-                className="mt-1 grid size-6 shrink-0 place-items-center rounded-full border border-foreground/20 text-sm transition-transform duration-200 group-open:rotate-45"
-              >
-                +
-              </span>
+                className="mt-1 size-5 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-45 group-open:text-primary"
+                />
             </summary>
             <p className="max-w-3xl pb-6 leading-relaxed text-muted-foreground">{f.a}</p>
           </details>
@@ -180,7 +166,7 @@ export function CtaBand({
   body?: string;
 }) {
   return (
-    <section aria-labelledby="cta-title" className="on-ink grid-lines">
+    <section aria-labelledby="cta-title" className="on-ink">
       <div className="wrap flex flex-col gap-10 py-20 md:flex-row md:items-end md:justify-between md:py-28">
         <div className="max-w-2xl">
           <h2 id="cta-title" className="display-2">
@@ -219,21 +205,18 @@ export function CardLink({
     <Link
       href={href}
       className={cn(
-        "group flex flex-col rounded-2xl border border-border bg-card p-6 transition-[transform,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-foreground/40 hover:shadow-lift",
+        "group flex flex-col rounded-2xl border border-border bg-card p-6 transition-colors duration-200 hover:border-foreground",
         className,
       )}
     >
       {children}
-      {kicker ? <span className="eyebrow text-muted-foreground">{kicker}</span> : null}
-      <span className={cn("font-display text-xl font-semibold tracking-tight", kicker && "mt-3")}>
-        {title}
-      </span>
+      <span className="font-display text-xl font-semibold tracking-tight underline-offset-4 group-hover:underline">{title}</span>
       <span className="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted-foreground">{body}</span>
-      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium">
-        Learn more
-        <ArrowRight
+      <span className="mt-6 flex items-center justify-between gap-4 text-sm text-muted-foreground">
+          <span>{kicker}</span>
+          <ArrowRight
           aria-hidden="true"
-          className="size-4 transition-transform duration-200 group-hover:translate-x-1"
+          className="size-4 shrink-0 text-foreground transition-[transform,color] duration-200 group-hover:translate-x-1 group-hover:text-primary"
         />
       </span>
     </Link>
