@@ -11,7 +11,9 @@ import {
   FaqList,
   SectionHeader,
 } from "@/components/site/ui";
+import { Photo } from "@/components/site/photo";
 import { Visual } from "@/components/visuals";
+import { PHOTOS, hasPhoto } from "@/content/photos";
 import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
 import { siteFaqs } from "@/content/faqs";
@@ -182,6 +184,14 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+
+      {hasPhoto(PHOTOS.dispatchDesk) ? (
+        <div className="wrap pb-20 md:pb-28">
+          <Reveal>
+            <Photo photo={PHOTOS.dispatchDesk} className="aspect-[16/10] md:aspect-[21/9]" />
+          </Reveal>
+        </div>
+      ) : null}
 
       {/* 3. One platform, multiple solutions */}
       <section aria-labelledby="audiences-title" className="border-y border-border bg-card py-20 md:py-28">

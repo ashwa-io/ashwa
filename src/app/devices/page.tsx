@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { PageHero, pageMeta } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
 import { ButtonLink, CtaBand, SectionHeader } from "@/components/site/ui";
+import { Photo } from "@/components/site/photo";
 import { Visual } from "@/components/visuals";
+import { PHOTOS, hasPhoto } from "@/content/photos";
 
 export const metadata: Metadata = pageMeta(
   "/devices",
@@ -93,6 +95,11 @@ export default function DevicesPage() {
             title={<span id="install-title">Fitted, tested and live before the technician leaves</span>}
             lede="A technician fits the device out of sight, checks that it reports, and the vehicle appears on your map before they leave."
           />
+          {hasPhoto(PHOTOS.gpsInstall) ? (
+            <Reveal className="mt-12">
+              <Photo photo={PHOTOS.gpsInstall} className="aspect-[16/10] md:aspect-[21/9]" />
+            </Reveal>
+          ) : null}
           <ul className="mt-12 grid gap-8 md:grid-cols-3">
             {[
               ["Before the visit", "We confirm vehicle types and where each one will be, so the technician brings the right devices."],
