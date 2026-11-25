@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	compress: true,
 	poweredByHeader: false,
+	// The dev badge would be photographed into the product screens captured from /shots.
+	devIndicators: false,
 	images: {
 		formats: ["image/avif", "image/webp"],
 	},

@@ -11,7 +11,7 @@ import {
   FaqList,
   SectionHeader,
 } from "@/components/site/ui";
-import { PhoneTrio, Visual } from "@/components/visuals";
+import { LiveShowcase, PhoneTrio, Visual } from "@/components/visuals";
 import { PORTRAITS } from "@/content/photos";
 import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
@@ -323,7 +323,7 @@ export default function Home() {
             lede="Moving, stopped, idle or offline: each vehicle's state, speed and last update, on a map your whole team shares."
           />
           <Reveal className="mx-auto mt-14 max-w-5xl">
-            <Visual name="live-map" />
+            <LiveShowcase />
           </Reveal>
           <ul className="mx-auto mt-12 grid max-w-5xl gap-8 md:grid-cols-3">
             {[

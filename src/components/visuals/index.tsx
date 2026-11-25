@@ -4,111 +4,86 @@ import type { VisualKey } from "@/content/types";
 import { cn } from "@/lib/utils";
 
 /**
- * Product visuals: real Ashwa screens (public/images/product) set in a browser
- * window and a phone, so every page shows the product itself.
+ * Product visuals: designed Ashwa screens, captured from /shots into
+ * public/images/product (see scripts/capture-shots.mjs). Web visuals carry
+ * their own backdrop; phone screens sit in a phone.
  */
 
-/** A web screen, cropped to 1600px wide. */
+/** A designed web visual from /shots, 1680x1050. */
 type Web =
+  | "overview"
   | "tracking"
-  | "tracking-dark"
-  | "tracking-vehicle"
-  | "notifications"
+  | "playback"
+  | "geofences"
+  | "alerts"
   | "trips"
-  | "trips-dark"
   | "trip-detail"
-  | "trip-reports"
-  | "trip-customers"
+  | "reports"
   | "maintenance"
-  | "maintenance-dark"
-  | "renewals"
-  | "fuel"
   | "drivers"
-  | "driver-profile"
   | "vehicles"
-  | "vehicle-profile"
-  | "roles"
-  | "staff"
-  | "service-history";
+  | "routes"
+  | "rental"
+  | "school"
+  | "enterprise"
+  | "coverage"
+  | "branding"
+  | "assets";
 
-/** A mobile screen, 600px wide at the app's own 5:11 proportion. */
-type Mobile = "list-tall" | "list-search" | "map-live" | "map-playback" | "map-plate";
+/** A designed phone screen from /shots, 600x1200. */
+type Mobile = "fleet" | "live" | "playback" | "driver" | "parent" | "alerts";
 
 const WEB_ALT: Record<Web, string> = {
-  tracking: "Ashwa live tracking: vehicle list beside a map of the fleet",
-  "tracking-dark": "Ashwa live tracking in dark mode with vehicles across the map",
-  "tracking-vehicle": "Ashwa route playback for one vehicle with its path on the map",
-  notifications: "Ashwa live map with the notifications panel open",
-  trips: "Ashwa trips board with running trips, customers, drivers and freight",
-  "trips-dark": "Ashwa trips board in dark mode",
-  "trip-detail": "Ashwa trip detail with stages, money and the route map",
-  "trip-reports": "Ashwa trip reports with profit, cost and profit per kilometre",
-  "trip-customers": "Ashwa customers list with billed, received and due amounts",
-  maintenance: "Ashwa maintenance overview with documents, services and fuel spend",
-  "maintenance-dark": "Ashwa maintenance overview in dark mode",
-  renewals: "Ashwa document renewals grid for insurance, PUC, fitness and permits",
-  fuel: "Ashwa fuel log with quantity, amount, odometer and mileage",
-  drivers: "Ashwa drivers list with phone, licence and ledger balance",
-  "driver-profile": "Ashwa driver profile with the cash ledger",
-  vehicles: "Ashwa vehicles list with types and status",
-  "vehicle-profile": "Ashwa vehicle profile with live location, maintenance and fuel",
-  roles: "Ashwa roles and permissions with members per role",
-  staff: "Ashwa staff list with roles",
-  "service-history": "Ashwa service history with garages, odometer and cost",
+  overview: "Ashwa live tracking: a live map, the vehicle table with drivers, fleet filters and an overspeed alert",
+  tracking: "Ashwa live tracking: the fleet on a map with the vehicle list and one vehicle in focus",
+  playback: "Ashwa route playback: a vehicle's travelled route with a time scrubber and its stops",
+  geofences: "Ashwa geofences: zones on the map with entry, exit and dwell events",
+  alerts: "Ashwa alerts: a feed of overspeed, idling and geofence alerts with alert rules",
+  trips: "Ashwa trips: running trips with customer, vehicle, driver, stage and freight",
+  "trip-detail": "Ashwa trip detail: stage tracker, route map, trip money and stops",
+  reports: "Ashwa reports: profit, cost per kilometre and utilisation by vehicle",
+  maintenance: "Ashwa maintenance: documents and services due, fuel this month",
+  drivers: "Ashwa drivers: driver list with assigned vehicle and cash ledger",
+  vehicles: "Ashwa vehicles: vehicle list with one vehicle's profile",
+  routes: "Ashwa routes: a planned route with ordered stops and arrival times",
+  rental: "Ashwa rental: a week of bookings by car with one booking in focus",
+  school: "Ashwa school transport: buses on route, students on board and a parent notification",
+  enterprise: "Ashwa for enterprises: branches, roles and switching between organisations",
+  coverage: "Ashwa waste collection: ward coverage on a map with households scanned",
+  branding: "Ashwa white-label: a dealer's customer list under the dealer's own brand",
+  assets: "Ashwa asset tracking: equipment on a work site with engine hours",
 };
 
 const MOBILE_ALT: Record<Mobile, string> = {
-  "list-tall": "Ashwa mobile app: tracking list with live vehicles and speeds",
-  "list-search": "Ashwa mobile app: searching the vehicle list",
-  "map-live": "Ashwa mobile app: a vehicle live on the map",
-  "map-playback": "Ashwa mobile app: route history playback",
-  "map-plate": "Ashwa mobile app: vehicle on the map with its route",
+  fleet: "Ashwa mobile app: the vehicle list with live status and speed",
+  live: "Ashwa mobile app: one vehicle live on the map with its trip",
+  playback: "Ashwa mobile app: route history playback",
+  driver: "Ashwa driver app: the driver's trip with the next stop",
+  parent: "Ashwa parent app: the school bus on its way with arrival time",
+  alerts: "Ashwa mobile app: alert notifications",
 };
 
-/** A laptop showing a web screen. Measures are in cqw, a share of the laptop's own width. */
+/** A web visual. It carries its own backdrop, so it needs no device around it. */
 function Browser({ screen, className }: { screen: Web; className?: string }) {
   return (
-    <div className={cn("relative px-[6%] [container-type:inline-size]", className)}>
-      {/* Lid: thin dark bezel with the camera in the top edge */}
-      <div
-        className="relative rounded-t-[2.2cqw] rounded-b-[0.6cqw] p-[1.1cqw] pb-[1.3cqw]"
-        style={{
-          background: "linear-gradient(180deg, #2c2822 0%, #14110d 100%)",
-          boxShadow: "inset 0 0 0 0.18cqw #4d473e, 0 3cqw 7cqw -3cqw rgb(23 19 14 / 0.45)",
-        }}
-      >
-        <span
-          aria-hidden="true"
-          className="absolute left-1/2 top-[0.34cqw] size-[0.45cqw] -translate-x-1/2 rounded-full bg-[#3a4350]"
-        />
-        <div className="overflow-hidden rounded-[0.9cqw] bg-white">
-          <Image
-            src={`/images/product/${screen}.jpg`}
-            alt={WEB_ALT[screen]}
-            width={1600}
-            height={1000}
-            sizes="(min-width: 1024px) 680px, 90vw"
-            className="block h-auto w-full"
-          />
-        </div>
-      </div>
-      {/* Base: wider than the lid, with the thumb notch and a soft ground shadow */}
-      <div aria-hidden="true" className="relative mx-[-6.8%]">
-        <div
-          className="h-[1.5cqw] rounded-b-[1.6cqw] rounded-t-[0.2cqw]"
-          style={{
-            background: "linear-gradient(180deg, #e4dfd4 0%, #c9c3b6 55%, #a8a294 100%)",
-            boxShadow: "0 2.4cqw 4cqw -1.6cqw rgb(23 19 14 / 0.4)",
-          }}
-        />
-        <span className="absolute left-1/2 top-0 h-[0.55cqw] w-[13cqw] -translate-x-1/2 rounded-b-[0.8cqw] bg-[#b3ad9f]" />
-      </div>
+    <div
+      className={cn(
+        "overflow-hidden rounded-2xl border border-foreground/10 shadow-float md:rounded-3xl",
+        className,
+      )}
+    >
+      <Image
+        src={`/images/product/${screen}.jpg`}
+        alt={WEB_ALT[screen]}
+        width={1680}
+        height={1050}
+        sizes="(min-width: 1024px) 720px, 100vw"
+        className="block h-auto w-full"
+      />
     </div>
   );
 }
 function Phone({ screen, className }: { screen: Mobile; className?: string }) {
-  // Lists keep their top; map screens keep the card at the bottom.
-  const anchor = screen.startsWith("map") ? "object-bottom" : "object-top";
   return (
     // Every measure inside is in cqw, a share of the phone's own width, so the
     // device keeps its proportions at any size it is placed at.
@@ -132,9 +107,9 @@ function Phone({ screen, className }: { screen: Mobile; className?: string }) {
             src={`/images/product/m-${screen}.jpg`}
             alt={MOBILE_ALT[screen]}
             width={600}
-            height={1320}
+            height={1200}
             sizes="(min-width: 1024px) 260px, 45vw"
-            className={cn("block aspect-[9/18] w-full object-cover", anchor)}
+            className="block h-auto w-full"
           />
           {/* Dynamic island with its camera lens */}
           <span
@@ -163,9 +138,9 @@ function Phone({ screen, className }: { screen: Mobile; className?: string }) {
 /** A web screen with the mobile app in front of it, at true relative scale. */
 function Duo({ web, mobile }: { web: Web; mobile: Mobile }) {
   return (
-    <div className="relative pr-[7%]">
+    <div className="relative pb-[7%] pr-[6%]">
       <Browser screen={web} />
-      <Phone screen={mobile} className="absolute bottom-[-2%] right-0 w-[19%]" />
+      <Phone screen={mobile} className="absolute bottom-0 right-0 w-[21%]" />
     </div>
   );
 }
@@ -179,13 +154,18 @@ function Phones({ left, right }: { left: Mobile; right: Mobile }) {
   );
 }
 
+/** The homepage's live tracking picture: the full overview with the phone app in front. */
+export function LiveShowcase() {
+  return <Duo web="overview" mobile="live" />;
+}
+
 /** Three phones in a row, the middle one raised: the mobile apps at a readable size. */
 export function PhoneTrio() {
   return (
     <div className="flex items-end justify-center gap-[4%]">
-      <Phone screen="list-tall" className="w-[29%] max-w-60" />
-      <Phone screen="map-live" className="mb-[7%] w-[29%] max-w-60" />
-      <Phone screen="map-playback" className="w-[29%] max-w-60" />
+      <Phone screen="driver" className="w-[29%] max-w-60" />
+      <Phone screen="live" className="mb-[7%] w-[29%] max-w-60" />
+      <Phone screen="parent" className="w-[29%] max-w-60" />
     </div>
   );
 }
@@ -261,28 +241,27 @@ function Api() {
 }
 
 const VISUALS: Record<VisualKey, () => React.ReactNode> = {
-  "live-map": () => <Duo web="tracking" mobile="map-live" />,
-  "trip-playback": () => <Duo web="tracking-vehicle" mobile="map-playback" />,
-  geofence: () => <Browser screen="tracking-dark" />,
-  alerts: () => <Browser screen="notifications" />,
-  reports: () => <Browser screen="trip-reports" />,
+  "live-map": () => <Duo web="tracking" mobile="live" />,
+  "trip-playback": () => <Browser screen="playback" />,
+  geofence: () => <Browser screen="geofences" />,
+  alerts: () => <Browser screen="alerts" />,
+  reports: () => <Browser screen="reports" />,
   drivers: () => <Browser screen="drivers" />,
   vehicles: () => <Browser screen="vehicles" />,
-  routes: () => <Browser screen="trip-detail" />,
-  rental: () => <Browser screen="trip-customers" />,
-  "school-bus": () => <Duo web="tracking" mobile="map-plate" />,
-  "parent-app": () => <Phones left="map-live" right="list-search" />,
-  enterprise: () => <Browser screen="roles" />,
-  assets: () => <Browser screen="vehicle-profile" />,
+  routes: () => <Browser screen="routes" />,
+  rental: () => <Browser screen="rental" />,
+  "school-bus": () => <Browser screen="school" />,
+  "parent-app": () => <Phones left="parent" right="alerts" />,
+  enterprise: () => <Browser screen="enterprise" />,
+  assets: () => <Browser screen="assets" />,
   trips: () => <Browser screen="trips" />,
   maintenance: () => <Browser screen="maintenance" />,
-  coverage: () => <Browser screen="service-history" />,
-  branding: () => <Browser screen="trips-dark" />,
-  "mobile-app": () => <Phones left="list-tall" right="map-playback" />,
+  coverage: () => <Browser screen="coverage" />,
+  branding: () => <Browser screen="branding" />,
+  "mobile-app": () => <Phones left="fleet" right="driver" />,
   device: Device,
   api: Api,
 };
-
 export function Visual({ name, className }: { name: VisualKey; className?: string }) {
   const Component = VISUALS[name];
   return (
