@@ -166,7 +166,7 @@ export function CtaBand({
   body?: string;
 }) {
   return (
-    <section aria-labelledby="cta-title" className="on-ink">
+    <section aria-labelledby="cta-title" className="on-ink grid-lines">
       <div className="wrap flex flex-col gap-10 py-20 md:flex-row md:items-end md:justify-between md:py-28">
         <div className="max-w-2xl">
           <h2 id="cta-title" className="display-2">

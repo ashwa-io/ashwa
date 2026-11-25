@@ -12,6 +12,7 @@ import {
   SectionHeader,
 } from "@/components/site/ui";
 import { Visual } from "@/components/visuals";
+import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
 import { siteFaqs } from "@/content/faqs";
 import type { PageKind, VisualKey } from "@/content/types";
@@ -69,11 +70,11 @@ const STEPS: { title: string; body: string }[] = [
 
 const REASONS: { title: string; body: string }[] = [
   {
-    title: "Flexible",
+    title: "Start small, add modules",
     body: "Start with live tracking. Add trips, maintenance, routes or school transport when you need them.",
   },
   {
-    title: "Built to scale",
+    title: "One account, any fleet size",
     body: "The same account runs a handful of vehicles or a multi-branch fleet, across organisations.",
   },
   {
@@ -81,11 +82,11 @@ const REASONS: { title: string; body: string }[] = [
     body: "Custom dashboards, workflows and integrations, set up around how your operation already works.",
   },
   {
-    title: "One place for everything",
+    title: "One record for the whole fleet",
     body: "Location, trips, drivers, documents and costs sit together, so nobody copies numbers between sheets.",
   },
   {
-    title: "Real-time by default",
+    title: "One live position on every screen",
     body: "The map, the trip board and the parent's phone all update from the same live position.",
   },
 ];
@@ -402,22 +403,29 @@ export default function Home() {
       </section>
 
       {/* 9. Why Ashwa */}
-      <section aria-labelledby="why-title" className="border-t border-border py-16 md:py-24">
-        <div className="wrap grid gap-10 lg:grid-cols-[0.6fr_1.4fr] lg:gap-20">
-          <h2 id="why-title" className="display-3">
-            Why teams choose Ashwa
+      <section aria-labelledby="why-title" className="border-t border-border py-20 md:py-28">
+        <div className="wrap">
+          <p className="eyebrow flex items-center gap-2 text-muted-foreground">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-primary" />
+            Why Ashwa
+          </p>
+          <h2 id="why-title" className="display-2 mt-5 max-w-3xl">
+            Five things the platform is built for
           </h2>
-          {/* Run-in list: the title opens the sentence, so five reasons read as prose, not five boxes. */}
-          <ul className="grid gap-x-14 gap-y-8 text-[1.2rem] leading-snug md:grid-cols-2">
-            {REASONS.map((r) => (
-              <li key={r.title} className="text-muted-foreground">
-                <h3 className="inline font-sans font-semibold text-foreground">{r.title}.</h3> {r.body}
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-6">
+            {REASONS.map((r, i) => (
+              <li
+                key={r.title}
+                className={cn("bg-background p-7 md:p-9", i < 2 ? "md:col-span-3" : "md:col-span-2")}
+              >
+                <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="display-3 mt-6">{r.title}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{r.body}</p>
               </li>
             ))}
           </ul>
         </div>
       </section>
-
       {/* 10. Mobile apps */}
       <section aria-labelledby="apps-title" className="on-ink overflow-hidden py-20 md:py-28">
         <div className="wrap grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr]">
