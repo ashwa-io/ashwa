@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BellRing } from "lucide-react";
 
 import { Visual } from "@/components/visuals";
 import { cn } from "@/lib/utils";
@@ -130,6 +131,7 @@ export function FleetScene({
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const alertRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
 
   useEffect(() => {
@@ -323,7 +325,10 @@ export function FleetScene({
         const ring = new THREE.Mesh(new THREE.RingGeometry(3.45, 3.6, 96), flat("#e73b24"));
         const disc = new THREE.Mesh(new THREE.CircleGeometry(3.45, 96), flat("#e73b24", 0.08));
         ring.rotation.x = disc.rotation.x = -Math.PI / 2;
-        fence.add(ring, disc);
+        const rippleMaterial = flat("#e73b24", 0.5);
+        const ripple = new THREE.Mesh(new THREE.RingGeometry(3.5, 3.7, 96), rippleMaterial);
+        ripple.rotation.x = -Math.PI / 2;
+        fence.add(ring, disc, ripple);
         scene.add(fence);
 
         const trailTexture = (color: string) => {
@@ -449,18 +454,13 @@ export function FleetScene({
           const tint = ROUTE_COLOURS[spec.route];
           const model = new THREE.Group();
           const reach = spec.kind === "truck" || spec.kind === "bus" ? 0.98 : 0.8;
-          const halo = new THREE.Mesh(new THREE.RingGeometry(reach, reach + 0.08, 64), flat(tint, 0.85));
-          halo.rotation.x = -Math.PI / 2;
-          halo.position.y = 0.012;
-          const glow = new THREE.Mesh(new THREE.CircleGeometry(reach, 64), flat(tint, 0.14));
-          glow.rotation.x = -Math.PI / 2;
-          glow.position.y = 0.01;
+
           // Shadows are baked for the static city, so each vehicle carries its own soft one.
           const shade = new THREE.Mesh(new THREE.CircleGeometry(0.5, 32), flat("#17130e", 0.2));
           shade.rotation.x = -Math.PI / 2;
           shade.scale.set(reach * 1.5, 0.62, 1);
           shade.position.set(-0.06, 0.014, 0.08);
-          model.add(glow, halo, shade);
+          model.add(shade);
           // Simple box model first; the downloaded model replaces it as soon as it has loaded.
           const fallback = build(spec.kind);
           model.add(...fallback);
@@ -488,7 +488,7 @@ export function FleetScene({
               }),
             ),
           );
-          return { spec, curve, model, halo, tex, t: spec.start };
+          return { spec, curve, model, tex, t: spec.start };
         });
 
         const place = (v: (typeof fleet)[number]) => {
@@ -506,10 +506,19 @@ export function FleetScene({
         let height = 1;
 
         const frame = (elapsed: number) => {
-          const pulse = 1 + Math.sin(elapsed * 2.2) * 0.12;
-          fleet.forEach((v) => v.halo.scale.setScalar(pulse));
-          fence.scale.setScalar(1 + Math.sin(elapsed * 1.4) * 0.02);
+          // The alert ripple: a ring that spreads out from the zone and fades, every three seconds.
+          const phase = (elapsed % 3) / 3;
+          ripple.scale.setScalar(1 + phase * 0.75);
+          rippleMaterial.opacity = 0.55 * (1 - phase);
           renderer.render(scene, camera);
+          const alert = alertRef.current;
+          if (alert) {
+            projected.copy(fence.position);
+            projected.project(camera);
+            const ax = Math.min(width - alert.offsetWidth / 2 - 8, Math.max(alert.offsetWidth / 2 + 8, (projected.x * 0.5 + 0.5) * width));
+            const ay = Math.max(alert.offsetHeight + 12, (-projected.y * 0.5 + 0.5) * height - 26);
+            alert.style.transform = `translate3d(${ax.toFixed(1)}px, ${ay.toFixed(1)}px, 0) translate(-50%, -100%)`;
+          }
           labelled.forEach((v, i) => {
             const el = labelRefs.current[i];
             if (!el) return;
@@ -621,6 +630,25 @@ export function FleetScene({
           )}
         />
       )}
+      {state === "ready" ? (
+        // The geofence alert, shown the way it lands on a phone: it pops in, holds, and clears.
+        <div ref={alertRef} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 hidden will-change-transform sm:block">
+          <div className="flex w-[15.5rem] animate-alert items-start gap-2.5 rounded-2xl bg-ink/95 p-2.5 text-[#f4efe4] shadow-float backdrop-blur-md">
+            <span className="grid size-9 shrink-0 place-items-center rounded-[0.7rem] bg-primary">
+              <BellRing className="size-[1.1rem] animate-ring" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-baseline justify-between gap-2">
+                <span className="text-[0.78rem] font-semibold leading-tight">Geofence alert</span>
+                <span className="font-mono text-[0.6rem] text-ink-muted">now</span>
+              </span>
+              <span className="mt-0.5 block text-[0.72rem] leading-snug text-[#f4efe4]/80">
+                CG 07 CN 4409 left the Depot zone
+              </span>
+            </span>
+          </div>
+        </div>
+      ) : null}
       {state === "ready"
         ? cards.map((v, i) => {
             const card = v.card;

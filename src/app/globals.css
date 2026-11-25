@@ -99,6 +99,8 @@
   --animate-ping-soft: ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
   --animate-travel: travel var(--travel-time, 14s) linear infinite;
   --animate-marquee: marquee 40s linear infinite;
+  --animate-alert: alert-cycle 9s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  --animate-ring: bell-ring 9s ease-in-out infinite;
 
   @keyframes slide-up-fade {
     from {
@@ -132,6 +134,41 @@
     }
     to {
       offset-distance: 100%;
+    }
+  }
+  /* A phone notification: drops in, holds, lifts away, rests. */
+  @keyframes alert-cycle {
+    0%,
+    6% {
+      opacity: 0;
+      transform: translateY(10px) scale(0.94);
+    }
+    12%,
+    72% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    80%,
+    100% {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.98);
+    }
+  }
+  @keyframes bell-ring {
+    0%,
+    12%,
+    30%,
+    100% {
+      transform: rotate(0);
+    }
+    15%,
+    21%,
+    27% {
+      transform: rotate(14deg);
+    }
+    18%,
+    24% {
+      transform: rotate(-14deg);
     }
   }
   @keyframes marquee {
