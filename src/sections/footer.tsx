@@ -1,104 +1,81 @@
-import { BgMask } from "@/components/bg-mask";
-import { LogoText } from "@/components/logo";
-import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { LEGAL_LINKS } from "@/lib/site";
-const links = [
-  {
-    id: "footer-link-services",
-    label: "Services",
-    href: "/#services",
-  },
-  {
-    id: "footer-link-process",
-    label: "Process",
-    href: "/#process",
-  },
-  {
-    id: "footer-link-achievements",
-    label: "Achievements",
-    href: "/#achievements",
-  },
-  {
-    id: "footer-link-about",
-    label: "About",
-    href: "/about",
-  },
-  {
-    id: "footer-link-contact",
-    label: "Contact",
-    href: "mailto:hello@ashwa.io",
-  },
-];
-export function Footer() {
-  return (
-    <footer className="bg-card-foreground text-background px-8 flex flex-col gap-8 py-12 md:grid md:grid-cols-3 md:items-start md:grid-rows-2">
-      <div className="row-span-1 col-span-1 space-y-4">
-        <LogoText className="text-muted-foreground" />
-        <p className="max-w-prose text-muted text-sm">
-          Leading provider of vehicle tracking and fleet management solutions.
-          We empower businesses with real-time tracking, comprehensive history
-          management, and actionable insights to optimize fleet operations.
-        </p>
-      </div>
+import { LogoText } from "@/components/logo";
+import { DOCS, KIND_META, KINDS } from "@/content";
+import { COMPANY_LINKS, CONTACT, LEGAL_LINKS, RESOURCE_LINKS } from "@/lib/site";
 
-      <nav className=" row-span-2 flex flex-col">
-        {links.map((item) => (
-          <li key={item.id} className="border-b list-none border-b-border/40">
-            <BgMask className="after:bg-primary p-6 flex gap-2 items-center">
-              <Link
-                href={item.href}
-                title={item.label}
-                aria-label={`navigate to ${item.label} page`}
-              >
-                {item.label}
-              </Link>
-              <ArrowUpRightIcon className="size-4" />
-            </BgMask>
+function Column({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+  return (
+    <nav aria-label={title}>
+      <h2 className="eyebrow text-ink-muted">{title}</h2>
+      <ul className="mt-4 space-y-1">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              className="inline-flex min-h-8 items-center text-[0.94rem] text-[#f4efe4]/85 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              {l.label}
+            </Link>
           </li>
         ))}
-      </nav>
-
-      <div className="space-y-2">
-        <h3 className="text-xl font-medium">Have a question?</h3>
-
-        <a
-          href="mailto:hello@ashwa.io"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px"
-        >
-          Contact us
-        </a>
-      </div>
-
-      <ul className="flex flex-col items-start space-y-2 text-muted">
-        <li className="list-none relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-          <address>Raipur, Chhattisgarh, India</address>
-        </li>
-
-        <li className="list-none relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-          <a href="mailto:hello@ashwa.io">hello@ashwa.io</a>
-        </li>
-        <li className="list-none relative after:absolute after:bottom-0 after:left-0 after:scale-x-0 after:transition-transform hover:after:scale-x-100 after:duration-300 after:origin-left after:bg-current after:w-full after:h-px">
-          <a href="tel:+916263441130">+91 6263441130</a>
-        </li>
-
       </ul>
-      <div className="space-y-3 text-sm">
-        <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1">
-          {LEGAL_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted underline-offset-4 hover:underline"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="text-muted-foreground">© 2026 Ashwa</div>
+    </nav>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer className="on-ink border-t border-ink-line">
+      <div className="wrap py-16 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_3fr]">
+          <div>
+            <LogoText className="text-4xl md:text-5xl" />
+            <p className="mt-4 max-w-xs text-[0.95rem] leading-relaxed text-ink-muted">
+              GPS tracking and fleet management, built as modules you combine around your own
+              operation.
+            </p>
+            <address className="mt-8 space-y-1 text-[0.94rem] not-italic text-[#f4efe4]/85">
+              <p>{CONTACT.address}</p>
+              <p>
+                <a href={`mailto:${CONTACT.email}`} className="underline-offset-4 hover:underline">
+                  {CONTACT.email}
+                </a>
+              </p>
+              <p>
+                <a href={CONTACT.phoneHref} className="underline-offset-4 hover:underline">
+                  {CONTACT.phone}
+                </a>
+              </p>
+            </address>
+          </div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+            {KINDS.map((kind) => (
+              <Column
+                key={kind}
+                title={KIND_META[kind].label}
+                links={DOCS[kind].map((d) => ({ href: `/${kind}/${d.slug}`, label: d.name }))}
+              />
+            ))}
+            <div className="space-y-10">
+              <Column
+                title="Resources"
+                links={RESOURCE_LINKS.slice(0, 4).map((l) => ({ href: l.href, label: l.label }))}
+              />
+              <Column title="Company" links={COMPANY_LINKS.map((l) => ({ ...l }))} />
+            </div>
+          </div>
+        </div>
+        <div className="mt-16 flex flex-col gap-4 border-t border-ink-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
+          <p>© {new Date().getFullYear()} Ashwa. Product visuals on this site are illustrative.</p>
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-1">
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className="underline-offset-4 hover:text-white hover:underline">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </footer>
   );

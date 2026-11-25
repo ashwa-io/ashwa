@@ -4,117 +4,44 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #faf8f5;
-  --foreground: #413825;
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(60 1.9608% 10%);
-  --popover: #ffffff;
-  --popover-foreground: hsl(41.0526 28.3582% 13.1373%);
+  /* Paper and ink: warm neutrals so the single red accent carries the brand. */
+  --background: #f6f2ea;
+  --foreground: #17130e;
+  --card: #fffdf9;
+  --card-foreground: #17130e;
+  --popover: #fffdf9;
+  --popover-foreground: #17130e;
   --primary: #e73b24;
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: #ece5d9;
-  --secondary-foreground: #565043;
-  --muted: hsl(37.1429 41.1765% 90%);
-  --muted-foreground: #84827c;
-  --accent: #ece5d9;
-  --accent-foreground: #2b2518;
-  --destructive: hsl(60 1.9608% 10%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(45 10% 84.3137%);
-  --input: hsl(41.0526 11.6564% 68.0392%);
-  --ring: hsl(7.0769 80.2469% 52.3529%);
-  --chart-1: hsl(10.1087 82.1429% 43.9216%);
-  --chart-2: hsl(243.2308 100% 74.5098%);
-  --chart-3: hsl(37.8947 41.3043% 81.9608%);
-  --chart-4: hsl(248.7805 69.4915% 88.4314%);
-  --chart-5: hsl(9.8462 86.6667% 44.1176%);
-  --sidebar: hsl(43.6364 40.7407% 94.7059%);
-  --sidebar-foreground: hsl(48 4.2017% 23.3333%);
-  --sidebar-primary: hsl(7.0769 80.2469% 52.3529%);
-  --sidebar-primary-foreground: hsl(0 0% 98.4314%);
-  --sidebar-accent: hsl(37.8947 33.3333% 88.8235%);
-  --sidebar-accent-foreground: hsl(0 0% 20.3922%);
-  --sidebar-border: hsl(0 0% 92.1569%);
-  --sidebar-ring: hsl(0 0% 70.9804%);
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  --radius: 0.5rem;
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
-}
+  --primary-foreground: #ffffff;
+  --secondary: #ebe4d6;
+  --secondary-foreground: #3b3427;
+  --muted: #efe9dd;
+  --muted-foreground: #6b6557;
+  --accent: #ebe4d6;
+  --accent-foreground: #17130e;
+  --destructive: #b3261e;
+  --destructive-foreground: #ffffff;
+  --border: #dcd4c4;
+  --input: #c9c0ae;
+  --ring: #e73b24;
+  --radius: 0.75rem;
 
-.dark {
-  --background: hsl(60 2.7027% 14.5098%);
-  --foreground: hsl(37.8947 14.2857% 73.9216%);
-  --card: hsl(60 2.7027% 14.5098%);
-  --card-foreground: hsl(42.8571 46.6667% 97.0588%);
-  --popover: hsl(60 2.1277% 18.4314%);
-  --popover-foreground: hsl(48 9.0909% 89.2157%);
-  --primary: hsl(7.0213 91.2621% 59.6078%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(42.8571 46.6667% 97.0588%);
-  --secondary-foreground: hsl(60 2.1277% 18.4314%);
-  --muted: hsl(60 3.8462% 10.1961%);
-  --muted-foreground: hsl(45 12.6582% 69.0196%);
-  --accent: hsl(42.8571 13.7255% 10%);
-  --accent-foreground: hsl(43.6364 40.7407% 94.7059%);
-  --destructive: hsl(352.0197 100% 60.1961%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(52.5 6.7797% 23.1373%);
-  --input: hsl(45 7.6923% 30.5882%);
-  --ring: hsl(7.0213 91.2621% 59.6078%);
-  --chart-1: hsl(10.1087 82.1429% 43.9216%);
-  --chart-2: hsl(243.2308 100% 74.5098%);
-  --chart-3: hsl(42.8571 13.7255% 10%);
-  --chart-4: hsl(240 35.6522% 22.549%);
-  --chart-5: hsl(9.8462 86.6667% 44.1176%);
-  --sidebar: hsl(30 3.3333% 11.7647%);
-  --sidebar-foreground: hsl(37.8947 14.2857% 73.9216%);
-  --sidebar-primary: hsl(0 0% 20.3922%);
-  --sidebar-primary-foreground: hsl(0 0% 98.4314%);
-  --sidebar-accent: hsl(40 5.8824% 10%);
-  --sidebar-accent-foreground: hsl(37.8947 14.2857% 73.9216%);
-  --sidebar-border: hsl(0 0% 92.1569%);
-  --sidebar-ring: hsl(0 0% 70.9804%);
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  --radius: 0.5rem;
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  --ink: #14110d;
+  --ink-2: #1f1b15;
+  --ink-line: rgb(255 255 255 / 0.1);
+  --ink-muted: #a59d8c;
+
+  /* Telemetry status colours, used only inside product visuals. */
+  --moving: #1f9d6b;
+  --idle: #d98a00;
+  --stopped: #8a8474;
+
+  /* Map palette for the concept UI. */
+  --map-land: #efe8da;
+  --map-block: #e4dccb;
+  --map-road: #fffdf9;
+  --map-water: #cfe0e2;
+  --map-park: #d9e3c8;
 }
 
 @theme inline {
@@ -137,42 +64,41 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-line: var(--ink-line);
+  --color-ink-muted: var(--ink-muted);
+  --color-moving: var(--moving);
+  --color-idle: var(--idle);
+  --color-stopped: var(--stopped);
+  --color-map-land: var(--map-land);
+  --color-map-block: var(--map-block);
+  --color-map-road: var(--map-road);
+  --color-map-water: var(--map-water);
+  --color-map-park: var(--map-park);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+  --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-bebas-neue: var(--font-bebas-neue);
   --font-handwriting: var(--font-handwriting), cursive;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 14px);
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+  --shadow-lift: 0 1px 0 rgb(23 19 14 / 0.04), 0 18px 40px -22px rgb(23 19 14 / 0.35);
+  --shadow-float: 0 2px 0 rgb(23 19 14 / 0.04), 0 40px 80px -40px rgb(23 19 14 / 0.5);
 }
+
 @theme {
   --animate-slide-up-fade: slide-up-fade 0.6s ease-out;
+  --animate-dash: dash 2.4s linear infinite;
+  --animate-ping-soft: ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-travel: travel var(--travel-time, 14s) linear infinite;
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes slide-up-fade {
     from {
@@ -184,13 +110,114 @@
       transform: translateY(0);
     }
   }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes ping-soft {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.55;
+    }
+    80%,
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+  @keyframes travel {
+    from {
+      offset-distance: 0%;
+    }
+    to {
+      offset-distance: 100%;
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+  ::selection {
+    background: var(--primary);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Shared page gutter: every section lines up on the same two edges. */
+  .wrap {
+    @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12;
+  }
+  .display-1 {
+    @apply font-display text-[clamp(2.6rem,6.4vw,5.75rem)] font-semibold leading-[0.95] tracking-[-0.035em];
+  }
+  /* Inner-page H1: long keyword headlines need a smaller scale than the home hero. */
+  .display-page {
+    @apply font-display text-[clamp(2.3rem,4.4vw,4.1rem)] font-semibold leading-[1] tracking-[-0.032em];
+  }
+  .display-2 {
+    @apply font-display text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1] tracking-[-0.03em];
+  }
+  .display-3 {
+    @apply font-display text-[clamp(1.5rem,2.4vw,2.25rem)] font-semibold leading-[1.08] tracking-[-0.02em];
+  }
+  .lede {
+    @apply text-[clamp(1.05rem,1.35vw,1.3rem)] leading-relaxed text-muted-foreground;
+  }
+  .eyebrow {
+    @apply font-mono text-[0.72rem] uppercase tracking-[0.16em];
+  }
+  /* Blueprint grid used behind dark bands and hero grounds. */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, var(--grid-line, rgb(23 19 14 / 0.06)) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line, rgb(23 19 14 / 0.06)) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .on-ink {
+    --grid-line: rgb(255 255 255 / 0.05);
+    @apply bg-ink text-[#f4efe4];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

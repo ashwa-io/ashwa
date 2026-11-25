@@ -1,84 +1,28 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: "About Ashwa — Vehicle Tracking Engineers | Raipur, India",
-  description:
-    "Meet the team behind Ashwa. Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking and fleet management platform.",
-  alternates: {
-    canonical: "/about",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: "/about",
-    siteName: "Ashwa - Vehicle Tracking System",
-    title: "About Ashwa — Vehicle Tracking Engineers",
-    description:
-      "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform. Based in Raipur, Chhattisgarh.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Ashwa — Smart Vehicle Tracking for Indian fleets",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About Ashwa — Vehicle Tracking Engineers",
-    description:
-      "Engineers and fleet tracking experts building India's most reliable GPS vehicle tracking platform.",
-    images: ["/og-image.png"],
-  },
-};
+import { pageMeta } from "@/components/site/page-hero";
+import { JsonLd } from "@/components/site/ui";
+import { SITE_URL } from "@/lib/site";
 
-const aboutJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "AboutPage",
-      "@id": "https://ashwa.io/about#webpage",
-      url: "https://ashwa.io/about",
-      name: "About Ashwa — Vehicle Tracking Engineers",
-      isPartOf: { "@id": "https://ashwa.io/#website" },
-      about: { "@id": "https://ashwa.io/#organization" },
-      inLanguage: "en-IN",
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": "https://ashwa.io/about#breadcrumb",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://ashwa.io",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "About",
-          item: "https://ashwa.io/about",
-        },
-      ],
-    },
-  ],
-};
+export const metadata: Metadata = pageMeta(
+  "/about",
+  "About Ashwa: the team behind the tracking platform",
+  "Ashwa is a GPS tracking and fleet management platform built in Raipur, India. Meet the team and the ideas behind a platform made of modules you combine.",
+);
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export default function AboutLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto mt-36 max-w-6xl">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          url: `${SITE_URL}/about`,
+          mainEntity: { "@id": `${SITE_URL}/#organization` },
+        }}
       />
       {children}
-    </main>
+    </>
   );
 }

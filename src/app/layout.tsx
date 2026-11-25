@@ -1,14 +1,33 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Bebas_Neue, Caveat } from "next/font/google";
+import { Bebas_Neue, Bricolage_Grotesque, Caveat, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/sections/header";
 import { Footer } from "@/sections/footer";
+import { MotionProvider } from "@/components/site/reveal";
 
 const bebasNeue = Bebas_Neue({
 	weight: "400",
 	subsets: ["latin"],
 	variable: "--font-bebas-neue",
+	display: "swap",
+});
+
+const display = Bricolage_Grotesque({
+	subsets: ["latin"],
+	variable: "--ff-display",
+	display: "swap",
+});
+
+const body = Geist({
+	subsets: ["latin"],
+	variable: "--ff-body",
+	display: "swap",
+});
+
+const mono = Geist_Mono({
+	subsets: ["latin"],
+	variable: "--ff-mono",
 	display: "swap",
 });
 
@@ -22,10 +41,10 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: {
     default:
-      "Ashwa - India's Best Vehicle Tracking System | Real-Time Fleet Management",
+      "Ashwa | GPS Vehicle Tracking and Fleet Management Platform",
     template: "%s | Ashwa",
   },
-  description: "India's leading vehicle tracking and fleet management system. Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
+  description: "Ashwa is a modular GPS tracking and fleet management platform. Live vehicle tracking, trip history, geofences, alerts and reports, with modules for rental fleets, school buses and enterprise operations.",
   keywords: [
     "vehicle tracking system India",
     "GPS tracking India",
@@ -34,7 +53,7 @@ export const metadata: Metadata = {
     "vehicle tracking software",
     "fleet tracking system",
     "GPS vehicle tracker India",
-    "best tracking system India",
+    "school bus tracking system",
     "vehicle monitoring system",
     "fleet analytics India"
   ],
@@ -49,9 +68,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: "/",
-    siteName: "Ashwa - Vehicle Tracking System",
-    title: "Ashwa - India's Best Vehicle Tracking System",
-    description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions for businesses across India.",
+    siteName: "Ashwa",
+    title: "Ashwa | GPS Vehicle Tracking and Fleet Management Platform",
+    description: "Live vehicle tracking, trip history, geofences, alerts and reports, with modules for rental fleets, school buses and enterprise operations.",
     images: [
       {
         url: "/og-image.png",
@@ -63,8 +82,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ashwa - India's Best Vehicle Tracking System",
-    description: "Real-time GPS tracking, complete vehicle history, analytics, and comprehensive fleet management solutions.",
+    title: "Ashwa | GPS Vehicle Tracking and Fleet Management Platform",
+    description: "Live vehicle tracking, trip history, geofences, alerts and reports, with modules for rental fleets, school buses and enterprise operations.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -145,14 +164,9 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": "https://ashwa.io/#software",
-      name: "Ashwa Vehicle Tracking System",
+      name: "Ashwa",
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Web",
-      offers: {
-        "@type": "Offer",
-        price: "1200",
-        priceCurrency: "INR",
-      },
+      operatingSystem: "Web, Android",
       provider: {
         "@id": "https://ashwa.io/#organization",
       },
@@ -173,10 +187,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${bebasNeue.variable} ${caveat.variable} antialiased`}>
-        <Header />
-        {children}
-        <Footer />
+      <body className={`${bebasNeue.variable} ${caveat.variable} ${display.variable} ${body.variable} ${mono.variable} antialiased`}>
+        <MotionProvider>
+          <Header />
+          <div id="main">{children}</div>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

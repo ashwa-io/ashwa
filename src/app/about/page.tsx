@@ -1,65 +1,99 @@
-import { Badge } from "@/components/Badge";
-import WhatWeDo from "@/components/ui/WhatWeDo";
+import { PageHero } from "@/components/site/page-hero";
+import { Reveal } from "@/components/site/reveal";
+import { ButtonLink, CtaBand, SectionHeader } from "@/components/site/ui";
 import TeamGallery from "@/components/ui/TeamGallery";
-import { cn } from "@/lib/utils";
-import Balancer from "react-wrap-balancer";
+import { DOCS } from "@/content";
+import { CONTACT } from "@/lib/site";
+
+const BELIEFS = [
+  {
+    title: "Tracking is the start, not the product",
+    body: "Knowing where a vehicle is solves the first phone call of the day. The business is run on what comes after: trips, money, papers and people.",
+  },
+  {
+    title: "Nobody should pay for modules they do not use",
+    body: "A school does not need trip profit. A transporter does not need a parent app. So the platform is modules, and each customer switches on their own set.",
+  },
+  {
+    title: "Built on Indian roads, for Indian fleets",
+    body: "Patchy signal, long hauls, permits by state, diesel bought in cash. We design for the conditions our customers actually drive in.",
+  },
+  {
+    title: "Software should bend to the operation",
+    body: "When a customer's process is unusual, we build the dashboard or the integration with them instead of asking them to change how they work.",
+  },
+];
 
 export default function About() {
   return (
-    <div className="mt-36 flex flex-col overflow-hidden px-3">
-      <section
-        aria-labelledby="about-overview"
-        className="animate-slide-up-fade"
-        style={{
-          animationDuration: "600ms",
-          animationFillMode: "backwards",
-        }}
-      >
-        <Badge>about vehicle tracking</Badge>
-        <h1
-          id="about-overview"
-          className="mt-2 inline-block bg-gradient-to-br from-gray-900 to-gray-800 bg-clip-text py-2 text-4xl font-bold tracking-tighter text-transparent sm:text-6xl md:text-6xl dark:from-gray-50 dark:to-gray-300"
-        >
-          <Balancer>
-            We got tired of fleet operators not knowing where their vehicles were
-          </Balancer>
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-gray-700 dark:text-gray-400">
-          So we built Ashwa — real-time GPS tracking designed specifically for
-          Indian roads, Indian fleets, and Indian operators who need answers fast.
-        </p>
-      </section>
+    <main>
+      <PageHero
+        crumbs={[{ name: "About", href: "/about" }]}
+        eyebrow="About Ashwa"
+        title="We got tired of fleet owners not knowing where their vehicles were"
+        lede="So we built a tracking platform for the way vehicles are really run in India, and kept adding the parts operators asked for next."
+      />
 
-      <TeamGallery />
-      <WhatWeDo />
-      <section aria-labelledby="vision-title" className="mx-auto my-40">
-        <h2
-          id="vision-title"
-          className="inline-block bg-linear-to-t from-gray-900 to-gray-800 bg-clip-text py-2 text-4xl font-bold tracking-tighter text-transparent md:text-5xl dark:from-gray-50 dark:to-gray-300"
-        >
-          Our Vision
-        </h2>
-        <div className="mt-6 max-w-prose space-y-4 text-gray-600 dark:text-gray-400">
-          <p className="text-lg leading-8">
-            We see a future where a fleet operator can open one screen and know
-            exactly where every vehicle is, where it&apos;s been, and what it should
-            do next — without a single phone call. Tracking becomes invisible
-            infrastructure, not a daily headache.
-          </p>
-          <p className="text-lg leading-8">
-            We&apos;re removing the complexity between a business and its fleet.
-            Every feature we build answers one question: does this help operators
-            move faster, safer, and smarter? If not, we cut it.
-          </p>
-          <p
-            className={cn(
-              "w-fit rotate-3 font-handwriting text-3xl text-primary"
-            )}
-          >
-            – Shashank and Vipul
-          </p>
+      <section aria-labelledby="story-title" className="py-20 md:py-28">
+        <div className="wrap grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <SectionHeader eyebrow="Our story" title={<span id="story-title">From one map to a whole platform</span>} />
+          <Reveal className="space-y-5 text-lg leading-relaxed text-muted-foreground">
+            <p>
+              Ashwa began after we watched fleet operators lose hours to phone calls just to know
+              where their vehicles were. The first version did one thing: it put every vehicle on a
+              live map, with its full route history behind it.
+            </p>
+            <p>
+              Then the questions changed. Could it show what a trip earned? Could it warn before
+              the insurance lapsed? Could a school use it for buses, with parents watching? Each
+              answer became a module. Today there are {DOCS.products.length} of them, and customers
+              from transporters to schools to municipal bodies combine them in their own way.
+            </p>
+            <p className="w-fit rotate-2 font-handwriting text-3xl text-primary">Shashank and Vipul</p>
+          </Reveal>
         </div>
       </section>
-    </div>
+
+      <div className="wrap">
+        <TeamGallery />
+      </div>
+
+      <section aria-labelledby="beliefs-title" className="on-ink grid-lines mt-20 py-20 md:mt-28 md:py-28">
+        <div className="wrap">
+          <p className="eyebrow text-ink-muted">What we believe</p>
+          <h2 id="beliefs-title" className="display-2 mt-5 max-w-3xl">
+            Four ideas the product is built on
+          </h2>
+          <ol className="mt-14 grid gap-10 md:grid-cols-2">
+            {BELIEFS.map((b, i) => (
+              <li key={b.title} className="border-t border-ink-line pt-6">
+                <span className="font-display text-4xl font-semibold tracking-tight text-primary">{i + 1}</span>
+                <h3 className="display-3 mt-5">{b.title}</h3>
+                <p className="mt-3 max-w-lg leading-relaxed text-ink-muted">{b.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section aria-labelledby="where-title" className="py-20 md:py-28">
+        <div className="wrap grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <SectionHeader eyebrow="Where we are" title={<span id="where-title">Based in {CONTACT.address.split(",")[0]}</span>} />
+          <div>
+            <p className="lede">
+              Our team works from {CONTACT.address}. Customer data stays on servers in India.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/contact">Get in touch</ButtonLink>
+              <ButtonLink href="/partners" variant="secondary">
+                Partner with us
+              </ButtonLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <CtaBand />
+    </main>
   );
 }

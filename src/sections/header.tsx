@@ -1,136 +1,55 @@
-"use client";
-import { BgMask } from "@/components/bg-mask";
-import { LogoWithText } from "@/components/logo";
-import {
-  AnimatedMenu,
-  AnimatedMenuButton,
-  AnimatedMenuButtonLabel,
-  AnimatedMenuButtonToggleIcon,
-  AnimatedMenuItem,
-  AnimatedMenuList,
-  useAnimatedMenuContext,
-} from "@/components/systaliko-ui/animated-menu";
-import { Variants } from "motion";
-import Link from "next/link";
+import { DOCS, KIND_META, KINDS } from "@/content";
+import { APP_URL, RESOURCE_LINKS } from "@/lib/site";
 
-const variants = {
-  open: {
-    width: "100%",
-    height: "100vh",
-    transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] },
-  },
-  close: {
-    width: "100%",
-    height: "0vh",
-    transition: { duration: 0.75, delay: 0.2, ease: [0.76, 0, 0.24, 1] },
-  },
-} as Variants;
-const menuItemVariants = {
-  initial: {
-    opacity: 0,
-    y: 100,
-  },
-  enter: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 0.55 + i * 0.1,
-      duration: 0.75,
-    },
-  }),
-  exit: (i: number) => ({
-    opacity: 0,
-    y: -100,
-    transition: {
-      delay: 0.25 + -i * 0.1,
-    },
-  }),
-} as Variants;
-const menu_links = [
-  {
-    id: "menu-link-services",
-    label: "Services",
-    href: "/#services",
-  },
-  {
-    id: "menu-link-process",
-    label: "Process",
-    href: "/#process",
-  },
-  {
-    id: "menu-link-achievements",
-    label: "Achievements",
-    href: "/#achievements",
-  },
-  {
-    id: "menu-link-about",
-    label: "About",
-    href: "/about",
-  },
-  {
-    id: "menu-link-contact",
-    label: "Contact",
-    href: "mailto:hello@ashwa.io",
-  },
-];
+import { HeaderNav, type NavGroup } from "./header-nav";
 
-function MenuLink({ label, href }: { label: string; href: string }) {
-  const { setIsOpen } = useAnimatedMenuContext();
-  return (
-    <a
-      className="text-6xl font-medium"
-      href={href}
-      title={label}
-      aria-label={`go to ${label} page`}
-      onClick={() => setIsOpen(false)}
-    >
-      {label}
-    </a>
-  );
-}
+const FEATURES: Record<string, NavGroup["feature"]> = {
+  solutions: {
+    kicker: "One platform",
+    title: "Start with tracking. Add what your operation needs.",
+    body: "Every solution runs on the same modules, so a school, a transporter and a rental yard can share one account.",
+    href: "/products",
+    cta: "See the modules",
+  },
+  products: {
+    kicker: "Modular by design",
+    title: "Pick modules like parts, not a fixed plan.",
+    body: "Tell us what you run. We will map the modules that fit and what each one needs to go live.",
+    href: "/demo",
+    cta: "Book a demo",
+  },
+  industries: {
+    kicker: "Not sure where you fit?",
+    title: "Describe your fleet and we will show the setup.",
+    body: "Mixed fleets are normal. Most customers combine two or three of these.",
+    href: "/contact",
+    cta: "Talk to sales",
+  },
+};
 
+/** Server wrapper: only labels and links cross to the client, not page content. */
 export function Header() {
-  return (
-    <header className="fixed z-999 backdrop-blur-lg w-full pl-4 md:pl-8 flex gap-2 md:gap-4 justify-between top-0 right-0 min-h-fit">
-      <div className="relative p-1 md:p-2 z-999">
-        <Link href="/">
-          <LogoWithText />
-        </Link>
-      </div>
-      <nav className="flex">
-        <AnimatedMenu className="relative">
-          <BgMask className="after:bg-primary before:absolute before:bg-inherit before:block before:size-full before:inset-0 before:shadow-[inset_-1px_0_0_0_rgba(51,51,51,0.6)] bg-neutral-900/90 text-white backdrop-blur p-1.5 md:p-2.5 flex gap-2 md:gap-4 justify-between items-center z-[999]">
-            <AnimatedMenuButton className="px-3 md:px-6 py-2 md:py-2.5 gap-2 md:gap-4">
-              <AnimatedMenuButtonToggleIcon />
-              <AnimatedMenuButtonLabel />
-            </AnimatedMenuButton>
-          </BgMask>
-
-          <AnimatedMenuList
-            menuListVariants={variants}
-            className="fixed top-0 right-0 origin-top z-[800] bg-accent/98 text-accent-foreground"
-          >
-            <div className="flex  px-6 justify-evenly flex-wrap gap-6 items-center size-full">
-              <div className="flex flex-col items-start gap-4">
-                {menu_links.map((item, i) => (
-                  <BgMask
-                    className="after:bg-primary overflow-hidden"
-                    key={item.id}
-                  >
-                    <AnimatedMenuItem
-                      className="p-2.5"
-                      variants={menuItemVariants}
-                      order={i}
-                    >
-                      <MenuLink label={item.label} href={item.href} />
-                    </AnimatedMenuItem>
-                  </BgMask>
-                ))}
-              </div>
-            </div>
-          </AnimatedMenuList>
-        </AnimatedMenu>
-      </nav>
-    </header>
-  );
+  const groups: NavGroup[] = [
+    ...KINDS.map((kind) => ({
+      label: KIND_META[kind].label,
+      href: `/${kind}`,
+      intro: KIND_META[kind].lede,
+      links: DOCS[kind].map((d) => ({ label: d.name, href: `/${kind}/${d.slug}`, blurb: d.blurb })),
+      feature: FEATURES[kind],
+    })),
+    {
+      label: "Resources",
+      href: "/resources",
+      intro: "Guides, answers and the practical details of putting trackers on vehicles.",
+      links: RESOURCE_LINKS.map((l) => ({ ...l })),
+      feature: {
+        kicker: "New to GPS tracking?",
+        title: "How a tracker turns into a dot on your map.",
+        body: "Device, SIM, server and app, explained without the jargon.",
+        href: "/resources",
+        cta: "Read the guides",
+      },
+    },
+  ];
+  return <HeaderNav groups={groups} appUrl={APP_URL} />;
 }
