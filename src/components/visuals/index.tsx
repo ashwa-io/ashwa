@@ -65,57 +65,97 @@ const MOBILE_ALT: Record<Mobile, string> = {
   "map-plate": "Ashwa mobile app: vehicle on the map with its route",
 };
 
+/** A laptop showing a web screen. Measures are in cqw, a share of the laptop's own width. */
 function Browser({ screen, className }: { screen: Web; className?: string }) {
   return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-xl border border-foreground/10 bg-card shadow-float md:rounded-2xl",
-        className,
-      )}
-    >
-      <div className="flex items-center gap-3 border-b border-foreground/10 bg-[#efeae0] px-3 py-2 md:px-4 md:py-2.5">
-        <span className="flex gap-1.5" aria-hidden="true">
-          <i className="size-2.5 rounded-full bg-[#e0786a]" />
-          <i className="size-2.5 rounded-full bg-[#e3bd59]" />
-          <i className="size-2.5 rounded-full bg-[#7fbf7a]" />
-        </span>
-        <span className="mx-auto flex h-6 w-1/2 max-w-64 items-center justify-center rounded-md bg-card font-mono text-[0.66rem] text-foreground/55">
-          app.ashwa.io
-        </span>
-        <span className="w-11" aria-hidden="true" />
+    <div className={cn("relative px-[6%] [container-type:inline-size]", className)}>
+      {/* Lid: thin dark bezel with the camera in the top edge */}
+      <div
+        className="relative rounded-t-[2.2cqw] rounded-b-[0.6cqw] p-[1.1cqw] pb-[1.3cqw]"
+        style={{
+          background: "linear-gradient(180deg, #2c2822 0%, #14110d 100%)",
+          boxShadow: "inset 0 0 0 0.18cqw #4d473e, 0 3cqw 7cqw -3cqw rgb(23 19 14 / 0.45)",
+        }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute left-1/2 top-[0.34cqw] size-[0.45cqw] -translate-x-1/2 rounded-full bg-[#3a4350]"
+        />
+        <div className="overflow-hidden rounded-[0.9cqw] bg-white">
+          <Image
+            src={`/images/product/${screen}.jpg`}
+            alt={WEB_ALT[screen]}
+            width={1600}
+            height={1000}
+            sizes="(min-width: 1024px) 680px, 90vw"
+            className="block h-auto w-full"
+          />
+        </div>
       </div>
-      <Image
-        src={`/images/product/${screen}.jpg`}
-        alt={WEB_ALT[screen]}
-        width={1600}
-        height={1000}
-        sizes="(min-width: 1024px) 720px, 100vw"
-        className="block h-auto w-full"
-      />
+      {/* Base: wider than the lid, with the thumb notch and a soft ground shadow */}
+      <div aria-hidden="true" className="relative mx-[-6.8%]">
+        <div
+          className="h-[1.5cqw] rounded-b-[1.6cqw] rounded-t-[0.2cqw]"
+          style={{
+            background: "linear-gradient(180deg, #e4dfd4 0%, #c9c3b6 55%, #a8a294 100%)",
+            boxShadow: "0 2.4cqw 4cqw -1.6cqw rgb(23 19 14 / 0.4)",
+          }}
+        />
+        <span className="absolute left-1/2 top-0 h-[0.55cqw] w-[13cqw] -translate-x-1/2 rounded-b-[0.8cqw] bg-[#b3ad9f]" />
+      </div>
     </div>
   );
 }
-
 function Phone({ screen, className }: { screen: Mobile; className?: string }) {
+  // Lists keep their top; map screens keep the card at the bottom.
+  const anchor = screen.startsWith("map") ? "object-bottom" : "object-top";
   return (
-    <div
-      className={cn(
-        "relative rounded-[13%/6%] bg-ink p-[3.2%] shadow-float ring-1 ring-white/10",
-        className,
-      )}
-    >
+    // Every measure inside is in cqw, a share of the phone's own width, so the
+    // device keeps its proportions at any size it is placed at.
+    <div className={cn("relative [container-type:inline-size]", className)}>
+      {/* Side buttons */}
+      <span aria-hidden="true" className="absolute left-[-0.8cqw] top-[20cqw] h-[5cqw] w-[1.2cqw] rounded-l-[1cqw] bg-[#2b2721]" />
+      <span aria-hidden="true" className="absolute left-[-0.8cqw] top-[30cqw] h-[9cqw] w-[1.2cqw] rounded-l-[1cqw] bg-[#2b2721]" />
+      <span aria-hidden="true" className="absolute left-[-0.8cqw] top-[42cqw] h-[9cqw] w-[1.2cqw] rounded-l-[1cqw] bg-[#2b2721]" />
+      <span aria-hidden="true" className="absolute right-[-0.8cqw] top-[34cqw] h-[14cqw] w-[1.2cqw] rounded-r-[1cqw] bg-[#2b2721]" />
+      {/* Body: a brushed dark frame with a lighter metal edge */}
       <div
-        aria-hidden="true"
-        className="absolute left-1/2 top-[2.6%] z-10 h-[2.6%] w-[28%] -translate-x-1/2 rounded-full bg-ink"
-      />
-      <Image
-        src={`/images/product/m-${screen}.jpg`}
-        alt={MOBILE_ALT[screen]}
-        width={600}
-        height={1320}
-        sizes="(min-width: 1024px) 260px, 45vw"
-        className="block h-auto w-full rounded-[10.5%/4.8%]"
-      />
+        className="relative rounded-[15cqw] p-[2.6cqw]"
+        style={{
+          background: "linear-gradient(145deg, #45403a 0%, #1a1713 38%, #0c0a08 100%)",
+          boxShadow:
+            "inset 0 0 0 0.45cqw #5a544b, inset 0 0 0 1.1cqw #0c0a08, 0 8cqw 16cqw -6cqw rgb(23 19 14 / 0.5), 0 1.2cqw 3cqw rgb(23 19 14 / 0.22)",
+        }}
+      >
+        <div className="relative overflow-hidden rounded-[12.6cqw] bg-white">
+          <Image
+            src={`/images/product/m-${screen}.jpg`}
+            alt={MOBILE_ALT[screen]}
+            width={600}
+            height={1320}
+            sizes="(min-width: 1024px) 260px, 45vw"
+            className={cn("block aspect-[9/18] w-full object-cover", anchor)}
+          />
+          {/* Dynamic island with its camera lens */}
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-[2.8cqw] flex h-[7.4cqw] w-[27cqw] -translate-x-1/2 items-center justify-end rounded-full bg-[#0c0a08] pr-[2.4cqw]"
+          >
+            <i className="size-[2.4cqw] rounded-full bg-[#1d2430] ring-[0.4cqw] ring-[#15120e]" />
+          </span>
+          {/* Glass sheen */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{ background: "linear-gradient(125deg, rgb(255 255 255 / 0.16) 0%, rgb(255 255 255 / 0) 34%)" }}
+          />
+          {/* Home indicator */}
+          <span
+            aria-hidden="true"
+            className="absolute bottom-[2.2cqw] left-1/2 h-[1.2cqw] w-[34cqw] -translate-x-1/2 rounded-full bg-black/55"
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -123,9 +163,9 @@ function Phone({ screen, className }: { screen: Mobile; className?: string }) {
 /** A web screen with the mobile app in front of it, at true relative scale. */
 function Duo({ web, mobile }: { web: Web; mobile: Mobile }) {
   return (
-    <div className="relative pb-[9%] pr-[5%]">
+    <div className="relative pr-[7%]">
       <Browser screen={web} />
-      <Phone screen={mobile} className="absolute bottom-0 right-0 w-[23%]" />
+      <Phone screen={mobile} className="absolute bottom-[-2%] right-0 w-[19%]" />
     </div>
   );
 }
@@ -133,8 +173,19 @@ function Duo({ web, mobile }: { web: Web; mobile: Mobile }) {
 function Phones({ left, right }: { left: Mobile; right: Mobile }) {
   return (
     <div className="flex items-start justify-center gap-[6%] px-[6%]">
-      <Phone screen={left} className="w-[36%] max-w-60" />
-      <Phone screen={right} className="mt-[12%] w-[36%] max-w-60" />
+      <Phone screen={left} className="w-[34%] max-w-56" />
+      <Phone screen={right} className="mt-[10%] w-[34%] max-w-56" />
+    </div>
+  );
+}
+
+/** Three phones in a row, the middle one raised: the mobile apps at a readable size. */
+export function PhoneTrio() {
+  return (
+    <div className="flex items-end justify-center gap-[4%]">
+      <Phone screen="list-tall" className="w-[29%] max-w-60" />
+      <Phone screen="map-live" className="mb-[7%] w-[29%] max-w-60" />
+      <Phone screen="map-playback" className="w-[29%] max-w-60" />
     </div>
   );
 }

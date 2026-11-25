@@ -11,12 +11,12 @@ import {
   FaqList,
   SectionHeader,
 } from "@/components/site/ui";
-import { Visual } from "@/components/visuals";
+import { PhoneTrio, Visual } from "@/components/visuals";
 import { PORTRAITS } from "@/content/photos";
 import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
 import { siteFaqs } from "@/content/faqs";
-import type { PageKind, VisualKey } from "@/content/types";
+import type { PageKind } from "@/content/types";
 
 const AUDIENCES: { label: string; ref: [PageKind, string]; points: string[] }[] = [
   {
@@ -122,7 +122,6 @@ export default function Home() {
   const products = DOCS.products;
   const industries = DOCS.industries;
   const faqs = siteFaqs.flatMap((g) => g.items.slice(0, 2)).slice(0, 7);
-  const appVisuals: VisualKey[] = ["mobile-app", "parent-app"];
 
   return (
     <main>
@@ -442,13 +441,9 @@ export default function Home() {
               See the mobile apps
             </ButtonLink>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {appVisuals.map((v, i) => (
-              <Reveal key={v} delay={i * 0.1}>
-                <Visual name={v} />
-              </Reveal>
-            ))}
-          </div>
+          <Reveal>
+            <PhoneTrio />
+          </Reveal>
         </div>
       </section>
 
