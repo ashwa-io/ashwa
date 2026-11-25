@@ -12,7 +12,7 @@ import {
   SectionHeader,
 } from "@/components/site/ui";
 import { Visual } from "@/components/visuals";
-import { PORTRAITS, VEHICLE_SPRITES } from "@/content/photos";
+import { PORTRAITS } from "@/content/photos";
 import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
 import { siteFaqs } from "@/content/faqs";
@@ -151,7 +151,7 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <FleetScene portraits={PORTRAITS} sprites={VEHICLE_SPRITES} className="absolute inset-x-0 bottom-0 h-[52svh] [mask-image:linear-gradient(to_bottom,transparent,black_16%)] lg:inset-y-0 lg:left-[46%] lg:right-0 lg:h-auto lg:[mask-image:linear-gradient(to_right,transparent,black_20%)]" />
+        <FleetScene portraits={PORTRAITS} className="absolute inset-x-0 bottom-0 h-[52svh] [mask-image:linear-gradient(to_bottom,transparent,black_16%)] lg:inset-y-0 lg:left-[46%] lg:right-0 lg:h-auto lg:[mask-image:linear-gradient(to_right,transparent,black_20%)]" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent"

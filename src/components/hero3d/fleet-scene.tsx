@@ -123,15 +123,11 @@ function seeded(seed: number) {
 export function FleetScene({
   className,
   portraits = [],
-  sprites = [],
 }: {
   className?: string;
   /** Avatar file names that exist in public/images/site. */
   portraits?: string[];
-  /** Vehicle kinds that have a top-view image (vehicle-<kind>.png) in public/images/site. */
-  sprites?: string[];
 }) {
-  const spritesRef = useRef(sprites);
   const hostRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
@@ -430,6 +426,24 @@ export function FleetScene({
           ];
         };
 
+        // Vehicle models: Kenney Car Kit, CC0 (public/models/vehicles). They face +Z, the scene uses +X.
+        let redraw = () => {};
+        const models = import("three/examples/jsm/loaders/GLTFLoader.js").then(async ({ GLTFLoader }) => {
+          const loader = new GLTFLoader();
+          const kinds: Kind[] = ["truck", "bus", "suv", "sports"];
+          const loaded = await Promise.all(
+            kinds.map(async (kind) => {
+              const gltf = await loader.loadAsync(`/models/vehicles/${kind}.glb`);
+              const holder = new THREE.Group();
+              gltf.scene.rotation.y = Math.PI / 2;
+              gltf.scene.scale.setScalar(kind === "truck" || kind === "bus" ? 0.4 : 0.36);
+              holder.add(gltf.scene);
+              return [kind, holder] as const;
+            }),
+          );
+          return Object.fromEntries(loaded) as Record<Kind, InstanceType<typeof THREE.Group>>;
+        });
+
         const fleet = VEHICLES.map((spec) => {
           const curve = curves[spec.route];
           const tint = ROUTE_COLOURS[spec.route];
@@ -447,28 +461,17 @@ export function FleetScene({
           shade.scale.set(reach * 1.5, 0.62, 1);
           shade.position.set(-0.06, 0.014, 0.08);
           model.add(glow, halo, shade);
-          if (spritesRef.current.includes(spec.kind)) {
-            // A photographed top view laid flat on the road reads as a real vehicle at map scale.
-            const length = spec.kind === "truck" ? 1.7 : spec.kind === "bus" ? 1.55 : 1.05;
-            const top = new THREE.Mesh(
-              new THREE.PlaneGeometry(length, length),
-              new THREE.MeshBasicMaterial({ transparent: true, alphaTest: 0.04, opacity: 0 }),
-            );
-            top.rotation.x = -Math.PI / 2;
-            top.position.y = 0.06;
-            new THREE.TextureLoader().load(`/images/site/vehicle-${spec.kind}.png`, (tex) => {
-              tex.colorSpace = THREE.SRGBColorSpace;
-              tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-              top.material.map = tex;
-              top.material.opacity = 1;
-              top.material.needsUpdate = true;
-              // The image is trimmed to the vehicle, so its own proportions set the width.
-              top.scale.y = tex.image.height / tex.image.width;
-            });
-            model.add(top);
-          } else {
-            model.add(...build(spec.kind));
-          }
+          // Simple box model first; the downloaded model replaces it as soon as it has loaded.
+          const fallback = build(spec.kind);
+          model.add(...fallback);
+          models
+            .then((library) => {
+              if (disposed) return;
+              fallback.forEach((m) => model.remove(m));
+              model.add(library[spec.kind].clone(true));
+              redraw();
+            })
+            .catch(() => {});
           // Drawn larger than life: at map scale a true-size vehicle would be a speck.
           model.scale.setScalar(2.3);
           scene.add(model);
@@ -537,6 +540,7 @@ export function FleetScene({
         };
 
         fleet.forEach(place);
+        redraw = () => frame(0);
         renderer.shadowMap.needsUpdate = true;
         const sizes = new ResizeObserver(resize);
         sizes.observe(host);
@@ -629,7 +633,7 @@ export function FleetScene({
                   labelRefs.current[i] = el;
                 }}
                 aria-hidden="true"
-                className="pointer-events-none absolute left-0 top-0 hidden w-[13.25rem] rounded-2xl border border-border bg-card/95 p-2.5 shadow-float backdrop-blur-md will-change-transform sm:block"
+                className="pointer-events-none absolute left-0 top-0 hidden w-[14.75rem] rounded-2xl border border-border bg-card/95 p-2.5 shadow-float backdrop-blur-md will-change-transform sm:block"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="relative shrink-0">
