@@ -67,7 +67,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-16 flex flex-col gap-4 border-t border-ink-line pt-6 text-sm text-ink-muted md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Ashwa. Product visuals on this site are illustrative.</p>
+          <p>© {new Date().getFullYear()} Ashwa</p>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-1">
             {LEGAL_LINKS.map((l) => (
               <Link key={l.href} href={l.href} className="underline-offset-4 hover:text-white hover:underline">
