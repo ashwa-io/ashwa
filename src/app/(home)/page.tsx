@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { FleetScene } from "@/components/hero3d/fleet-scene";
+import { SignalGlobe } from "@/components/hero3d/signal-globe";
 import { Reveal } from "@/components/site/reveal";
 import { Tabs } from "@/components/site/tabs";
 import {
@@ -383,7 +384,7 @@ export default function Home() {
               title={<span id="how-title">From a device under the dashboard to a decision</span>}
             />
             <Reveal className="mt-10">
-              <Visual name="device" />
+              <SignalGlobe fallback={<Visual name="device" />} />
             </Reveal>
             <ButtonLink href="/devices" variant="secondary" className="mt-6">
               Devices we work with
