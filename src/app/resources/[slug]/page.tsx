@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { OG_IMAGE } from "@/components/site/page-hero";
 import { Breadcrumbs, CardLink, CtaBand, FaqList, JsonLd } from "@/components/site/ui";
 import { KIND_META, articles, getArticle, resolveRef } from "@/content";
 import { SITE_URL } from "@/lib/site";
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!a) return {};
   const path = `/resources/${slug}`;
   return {
-    title: a.title,
+    // Guide titles are long: leave off the site suffix so they are not cut in results.
+    title: { absolute: a.title },
     description: a.description,
     keywords: a.keywords,
     alternates: { canonical: path },
@@ -29,8 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: path,
       type: "article",
       publishedTime: a.published,
+      images: [OG_IMAGE],
     },
-    twitter: { card: "summary_large_image", title: a.title, description: a.description },
+    twitter: { card: "summary_large_image", title: a.title, description: a.description, images: [OG_IMAGE.url] },
   };
 }
 

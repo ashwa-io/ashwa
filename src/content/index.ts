@@ -17,7 +17,7 @@ export const KIND_META: Record<
     singular: "Solution",
     title: "Tracking solutions for every kind of fleet",
     description:
-      "GPS vehicle tracking, fleet management, school bus tracking, rental fleet and enterprise tracking solutions from Ashwa. Pick the one that matches how you run vehicles.",
+      "GPS vehicle tracking, fleet management, school bus tracking, rental fleet and enterprise solutions from Ashwa. Pick the one that fits how you run vehicles.",
     lede: "Each solution is the same Ashwa platform, arranged around one job: running a truck fleet, a school's buses, a rental yard or a whole enterprise.",
   },
   products: {

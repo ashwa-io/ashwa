@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ashwa.io/sitemap.xml

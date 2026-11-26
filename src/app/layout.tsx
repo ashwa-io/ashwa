@@ -44,7 +44,7 @@ export const metadata: Metadata = {
       "Ashwa | GPS Vehicle Tracking and Fleet Management Platform",
     template: "%s | Ashwa",
   },
-  description: "Ashwa is a modular GPS tracking and fleet management platform. Live vehicle tracking, trip history, geofences, alerts and reports, with modules for rental fleets, school buses and enterprise operations.",
+  description: "Ashwa is a GPS vehicle tracking and fleet management platform built from modules: live tracking, trips, maintenance, school buses, rentals and more.",
   keywords: [
     "vehicle tracking system India",
     "GPS tracking India",

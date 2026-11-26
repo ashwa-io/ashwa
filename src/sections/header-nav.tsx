@@ -260,7 +260,9 @@ export function HeaderNav({ groups, appUrl }: { groups: NavGroup[]; appUrl: stri
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 bottom-0 top-[4.25rem] overflow-y-auto overscroll-contain bg-background lg:hidden"
+            // Positioned from the header, not the viewport: the header's backdrop blur makes it
+            // the containing block for fixed children, which would squash a `fixed` menu to nothing.
+            className="absolute inset-x-0 top-full h-[calc(100dvh-4.25rem)] overflow-y-auto overscroll-contain bg-background lg:hidden"
           >
             <nav aria-label="Mobile" className="wrap pb-10 pt-2">
               {groups.map((g) => (

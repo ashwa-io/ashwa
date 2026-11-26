@@ -10,7 +10,7 @@ import { PHOTOS, hasPhoto } from "@/content/photos";
 export const metadata: Metadata = pageMeta(
   "/devices",
   "GPS tracking devices compatible with Ashwa",
-  "Ashwa works with widely used GPS trackers: Concox GT06-protocol, JT/T 808 and Teltonika FMB and FMC families. Wired, OBD and battery-powered options for every vehicle.",
+  "Ashwa works with widely used GPS trackers: Concox GT06-protocol, JT/T 808 and Teltonika FMB and FMC families. Wired, OBD and battery-powered options.",
 );
 
 const TYPES = [

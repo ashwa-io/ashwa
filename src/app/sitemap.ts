@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 
+import { visualImage } from "@/components/visuals";
 import { DOCS, KINDS, articles } from "@/content";
+import { pageContext } from "@/content/contexts";
 import { CONTENT_UPDATED, SITE_URL } from "@/lib/site";
 
 const lastModified = new Date(CONTENT_UPDATED);
@@ -20,7 +22,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("", 1, "weekly"),
     ...KINDS.flatMap((kind) => [
       page(`/${kind}`, 0.9),
-      ...DOCS[kind].map((d) => page(`/${kind}/${d.slug}`, 0.8)),
+      // Each product page lists its own picture, so it can surface in image search.
+      ...DOCS[kind].map((d) => ({
+        ...page(`/${kind}/${d.slug}`, 0.8),
+        images: [`${SITE_URL}${visualImage(d.hero.visual, pageContext(kind, d.slug)).url}`],
+      })),
     ]),
     page("/pricing", 0.8),
     page("/demo", 0.8),

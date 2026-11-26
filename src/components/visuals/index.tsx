@@ -188,6 +188,37 @@ export function PhoneTrio() {
   );
 }
 
+/** The landscape picture that best stands for each visual key: used for share images and the sitemap. */
+const KEY_IMAGE: Record<VisualKey, Web> = {
+  "live-map": "tracking",
+  "trip-playback": "playback",
+  geofence: "geofences",
+  alerts: "alerts",
+  reports: "reports",
+  drivers: "drivers",
+  vehicles: "vehicles",
+  routes: "routes",
+  rental: "rental",
+  "school-bus": "school",
+  "parent-app": "school",
+  enterprise: "enterprise",
+  assets: "assets",
+  trips: "trips",
+  maintenance: "maintenance",
+  coverage: "coverage",
+  branding: "branding",
+  "mobile-app": "overview",
+  device: "device",
+  api: "api",
+};
+
+export const visualImage = (name: VisualKey, context?: string) => ({
+  url: `/images/product/${shot(KEY_IMAGE[name], context)}.jpg`,
+  width: 2240,
+  height: 1400,
+  alt: WEB_ALT[KEY_IMAGE[name]],
+});
+
 /** Each visual key, rendered for the page's sample world when one is given. */
 const VISUALS: Record<VisualKey, (c?: string) => React.ReactNode> = {
   "live-map": (c) => <Duo web="tracking" mobile="live" context={c} />,
