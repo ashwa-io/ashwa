@@ -132,7 +132,7 @@ export default function Home() {
         <div className="wrap relative z-10 grid min-h-[100svh] items-center pb-[46svh] pt-28 lg:pb-16 lg:pt-24">
           <div className="max-w-[40rem]">
             <h1 className="display-1">
-              Every vehicle you run, on one <span className="text-primary">live</span> platform.
+              Your whole fleet, <span className="text-primary">live</span> on one screen.
             </h1>
             <p className="lede mt-6 max-w-xl">
               Ashwa pairs GPS devices with software you build from modules: live tracking, trips,
