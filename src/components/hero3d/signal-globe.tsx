@@ -157,7 +157,7 @@ export function SignalGlobe({ fallback, className }: { fallback: ReactNode; clas
             // Zoom in on arrival, then a slow sway that keeps India in view.
             const zoom = 1 - Math.pow(1 - Math.min(t / 2.2, 1), 3);
             const wide = camera.aspect > 1.25;
-            camera.position.set(0, 0, (wide ? 3.5 : 4.6) + (1 - zoom) * 3.2);
+            camera.position.set(0, 0, (wide ? 3.5 : 3.7) + (1 - zoom) * 3.2);
             spin.rotation.y = facing + (1 - zoom) * -1.6 + Math.sin(t * 0.2) * 0.32;
 
             points.forEach((p) => {
