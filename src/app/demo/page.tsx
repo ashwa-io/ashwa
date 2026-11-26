@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import { LeadForm } from "@/components/site/lead-form";
 import { PageHero, pageMeta } from "@/components/site/page-hero";
-import { CONTACT } from "@/lib/site";
+import { ArrowUpRight } from "lucide-react";
+
+import { CAL_URL, CONTACT } from "@/lib/site";
 
 export const metadata: Metadata = pageMeta(
   "/demo",
@@ -27,7 +29,26 @@ export default function DemoPage() {
       />
       <section className="py-16 md:py-24">
         <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
-          <LeadForm email={CONTACT.email} intent="demo" />
+          <div>
+            <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
+              <h2 className="display-3">Pick a time for a call</h2>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                30 minutes on video. Evenings on weekdays, afternoons and evenings on weekends (India time).
+              </p>
+              <a
+                href={CAL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 font-medium text-primary-foreground transition-[background-color,transform] duration-200 hover:bg-[#cf2f1a] active:scale-[0.98]"
+              >
+                Schedule a call
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+                <span className="sr-only">(opens the booking page in a new tab)</span>
+              </a>
+            </div>
+            <p className="mb-6 mt-12 font-display text-xl font-semibold tracking-tight">Or send us your details</p>
+            <LeadForm email={CONTACT.email} intent="demo" />
+          </div>
           <div>
             <h2 className="display-3">What happens next</h2>
             <ol className="mt-8 divide-y divide-border border-y border-border">

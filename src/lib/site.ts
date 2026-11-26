@@ -39,3 +39,6 @@ export const COMPANY_LINKS = [
   { href: "/demo", label: "Book a demo" },
   { href: "/contact", label: "Contact" },
 ] as const;
+
+/** Public booking page for demo calls (Cal.com). */
+export const CAL_URL = "https://cal.com/ashwa-cgfqvg/30min";
