@@ -1,22 +1,33 @@
 import { Check, CircleCheckBig, Fuel, MapPin, Navigation, Receipt } from "lucide-react";
 
+import { CONTEXTS, type Context } from "../contexts";
 import { MShell, Pill } from "../kit";
 
-const STAGES = ["Loaded", "On the way", "Reached", "Delivered"];
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+const plural = (s: string) => (s === "bus" ? "buses" : `${s}s`);
+
+const GOODS = ["Loaded", "On the way", "Reached", "Delivered"];
+const PEOPLE = ["Started", "On the way", "Reached", "Done"];
 const AT = 1;
 
 /** Phone: what the driver sees during a trip. */
-export default function MobileDriver() {
+export default function MobileDriver({ ctx = CONTEXTS.fleet }: { ctx?: Context }) {
+  // Only the worlds that carry goods load and deliver.
+  const STAGES = ["fleet", "delivery", "construction"].includes(ctx.key) ? GOODS : PEOPLE;
   return (
     <MShell tab="trips">
       <div className="flex h-full flex-col px-5 pb-4 pt-[56px]">
         <div className="flex items-start justify-between">
-          <span>
-            <span className="block text-[12.5px] font-medium text-zinc-500">Trip 2291, HR 26 AS 1024</span>
-            <h1 className="mt-1 text-[26px] font-bold leading-none tracking-tight">Raipur to Nagpur</h1>
+          <span className="min-w-0 flex-1 pr-2">
+            <span className="block truncate text-[12.5px] font-medium text-zinc-500">
+              {cap(ctx.noun.trip)} 2291, {ctx.vehicles[0].plate}
+            </span>
+            <h1 className="mt-1 text-[26px] font-bold leading-none tracking-tight">
+              {ctx.from} to {ctx.to}
+            </h1>
           </span>
           <Pill tone="green" dot>
-            On trip
+            On {ctx.noun.trip}
           </Pill>
         </div>
 
@@ -44,16 +55,16 @@ export default function MobileDriver() {
 
         <div className="mt-7 rounded-2xl border border-zinc-200 bg-white p-4">
           <div className="flex items-center justify-between text-[12px] font-medium text-zinc-500">
-            Next stop
-            <span>Stop 2 of 3</span>
+            Next {ctx.noun.stop}
+            <span>{cap(ctx.noun.stop)} 2 of 3</span>
           </div>
           <div className="mt-3 flex items-center gap-3">
             <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-violet-50 text-violet-700">
               <MapPin className="size-[22px]" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[16px] font-semibold leading-tight">Sharda Steel yard</span>
-              <span className="mt-0.5 block truncate text-[12.5px] leading-tight text-zinc-500">Hingna Road, Nagpur</span>
+              <span className="block truncate text-[16px] font-semibold leading-tight">{ctx.stops[1]}</span>
+              <span className="mt-0.5 block truncate text-[12.5px] leading-tight text-zinc-500">On the way to {ctx.to}</span>
             </span>
             <span className="grid size-11 shrink-0 place-items-center rounded-full bg-zinc-900 text-white">
               <Navigation className="size-[18px]" />
@@ -63,7 +74,7 @@ export default function MobileDriver() {
             {[
               ["122 km", "left"],
               ["14:20", "expected"],
-              ["18 tonnes", "TMT bars"],
+              ctx.key === "fleet" ? ["18 tonnes", "TMT bars"] : ["1 of 3", `${plural(ctx.noun.stop)} done`],
             ].map(([v, k]) => (
               <span key={k}>
                 <span className="block text-[15px] font-semibold leading-tight">{v}</span>

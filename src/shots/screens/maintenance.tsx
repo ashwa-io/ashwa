@@ -1,15 +1,16 @@
 import { Droplets, FileCheck2, Fuel, Gauge, Plus, ShieldCheck, Wind } from "lucide-react";
 
+import { CONTEXTS, type Context } from "../contexts";
 import { Bar, Button, Columns, Float, Panel, Pill, Scene, VehicleTile } from "../kit";
 
 type Status = "Overdue" | "Due soon" | "OK";
 
-const ROWS: { plate: string; model: string; kind: "truck" | "bus" | "car"; hue: number; icon: typeof Fuel; due: string; detail: string; when: string; last: string; status: Status }[] = [
-  { plate: "HR 26 AS 1024", model: "Tata Signa 4825", kind: "truck", hue: 262, icon: ShieldCheck, due: "Insurance", detail: "Policy renewal", when: "4 days ago", last: "Renewed 22 Nov 2025", status: "Overdue" },
-  { plate: "CG 04 MX 2217", model: "Ashok Leyland 2820", kind: "truck", hue: 150, icon: Droplets, due: "Oil change", detail: "Engine oil and filter", when: "310 km ago", last: "Done at 84,200 km", status: "Overdue" },
-  { plate: "HR 39 BK 7741", model: "Ashok Leyland Dost", kind: "truck", hue: 28, icon: Wind, due: "PUC", detail: "Pollution certificate", when: "In 6 days", last: "Issued 2 Jun 2026", status: "Due soon" },
-  { plate: "HR 12 FA 6610", model: "Tata Starbus", kind: "bus", hue: 340, icon: FileCheck2, due: "Fitness", detail: "Fitness certificate", when: "In 12 days", last: "Passed 8 Dec 2025", status: "Due soon" },
-  { plate: "HR 51 DE 9025", model: "Eicher Pro 2049", kind: "truck", hue: 205, icon: Gauge, due: "Tyre rotation", detail: "All six tyres", when: "In 2,800 km", last: "Done at 61,500 km", status: "OK" },
+const ROWS: { icon: typeof Fuel; due: string; detail: string; when: string; last: string; status: Status }[] = [
+  { icon: ShieldCheck, due: "Insurance", detail: "Policy renewal", when: "4 days ago", last: "Renewed 22 Nov 2025", status: "Overdue" },
+  { icon: Droplets, due: "Oil change", detail: "Engine oil and filter", when: "310 km ago", last: "Done at 84,200 km", status: "Overdue" },
+  { icon: Wind, due: "PUC", detail: "Pollution certificate", when: "In 6 days", last: "Issued 2 Jun 2026", status: "Due soon" },
+  { icon: FileCheck2, due: "Fitness", detail: "Fitness certificate", when: "In 12 days", last: "Passed 8 Dec 2025", status: "Due soon" },
+  { icon: Gauge, due: "Tyre rotation", detail: "All six tyres", when: "In 2,800 km", last: "Done at 61,500 km", status: "OK" },
 ];
 
 const TONE = { Overdue: "red", "Due soon": "amber", OK: "green" } as const;
@@ -24,13 +25,17 @@ const DOCS = [
   { label: "Permit", valid: 19, tone: "amber" },
 ] as const;
 
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+const plural = (s: string) => (/bus$/i.test(s) ? `${s}es` : `${s}s`);
+
 /** Maintenance: what is due across the fleet, fuel spend and document cover. */
-export default function Maintenance() {
+export default function Maintenance({ ctx = CONTEXTS.fleet }: { ctx?: Context }) {
+  const vehicles = plural(ctx.noun.vehicle);
   return (
-    <Scene tint="amber">
+    <Scene tint={ctx.tint}>
       <Panel
         title="Needs attention"
-        subtitle="5 of 9 items shown, across 24 vehicles"
+        subtitle={`5 of 9 items shown, across 24 ${vehicles}`}
         className="left-[48px] top-[44px] h-[440px] w-[1024px]"
         flush
         actions={
@@ -49,39 +54,45 @@ export default function Maintenance() {
         }
       >
         <div className={`${COLS} h-[34px] border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-medium text-zinc-500`}>
-          <span>Vehicle</span>
+          <span>{cap(ctx.noun.vehicle)}</span>
           <span>What is due</span>
           <span>Due</span>
           <span>Last time</span>
           <span className="text-right">Status</span>
         </div>
-        {ROWS.map((r) => (
-          <div key={r.plate} className={`${COLS} h-[58px] border-b border-zinc-100 text-[12.5px]`}>
-            <span className="flex items-center gap-3">
-              <VehicleTile kind={r.kind} hue={r.hue} />
-              <span>
-                <span className="block text-[13px] font-semibold leading-tight">{r.plate}</span>
-                <span className="block text-[11.5px] leading-tight text-zinc-500">{r.model}</span>
+        {ROWS.map((r, i) => {
+          const v = ctx.vehicles[i];
+          return (
+            <div key={v.plate} className={`${COLS} h-[58px] border-b border-zinc-100 text-[12.5px]`}>
+              <span className="flex min-w-0 items-center gap-3 pr-3">
+                <VehicleTile kind={v.tile} marker={v.marker} />
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] font-semibold leading-tight">{v.plate}</span>
+                  <span className="block truncate text-[11.5px] leading-tight text-zinc-500">{v.model}</span>
+                </span>
               </span>
-            </span>
-            <span className="flex items-center gap-2.5">
-              <span className="grid size-7 place-items-center rounded-lg bg-zinc-100 text-zinc-600">
-                <r.icon className="size-3.5" />
+              <span className="flex items-center gap-2.5">
+                <span className="grid size-7 place-items-center rounded-lg bg-zinc-100 text-zinc-600">
+                  <r.icon className="size-3.5" />
+                </span>
+                <span>
+                  <span className="block font-semibold leading-tight">{r.due}</span>
+                  <span className="block text-[11.5px] leading-tight text-zinc-500">
+                    {/* Only the freight fleet is known to run six-tyre trucks. */}
+                    {r.due === "Tyre rotation" && ctx.key !== "fleet" ? "All tyres" : r.detail}
+                  </span>
+                </span>
               </span>
-              <span>
-                <span className="block font-semibold leading-tight">{r.due}</span>
-                <span className="block text-[11.5px] leading-tight text-zinc-500">{r.detail}</span>
+              <span className={`font-semibold ${WHEN[r.status]}`}>{r.when}</span>
+              <span className="text-zinc-500">{r.last}</span>
+              <span className="text-right">
+                <Pill tone={TONE[r.status]} dot>
+                  {r.status}
+                </Pill>
               </span>
-            </span>
-            <span className={`font-semibold ${WHEN[r.status]}`}>{r.when}</span>
-            <span className="text-zinc-500">{r.last}</span>
-            <span className="text-right">
-              <Pill tone={TONE[r.status]} dot>
-                {r.status}
-              </Pill>
-            </span>
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </Panel>
 
       <Float className="bottom-[44px] left-[104px] flex h-[208px] w-[430px] gap-5 p-4">
@@ -105,7 +116,7 @@ export default function Maintenance() {
       <Float className="bottom-[44px] right-[104px] h-[208px] w-[400px] p-4">
         <div className="flex items-baseline justify-between">
           <p className="text-[12.5px] font-semibold">Documents</p>
-          <p className="text-[11.5px] text-zinc-500">Valid, of 24 vehicles</p>
+          <p className="text-[11.5px] text-zinc-500">Valid, of 24 {vehicles}</p>
         </div>
         <div className="mt-3 space-y-[13px]">
           {DOCS.map((d) => (

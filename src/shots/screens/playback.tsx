@@ -1,13 +1,17 @@
 import { CalendarDays, Play, SkipBack, SkipForward } from "lucide-react";
 
+import { CONTEXTS, type Context } from "../contexts";
 import { Button, Float, MapArt, MapRoute, MapVehicle, Panel, Pill, Scene, VehicleTile } from "../kit";
+
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+const plural = (s: string) => (s === "bus" ? "buses" : `${s}s`);
 
 /** Halts on the highway route. `at` is the share of the 06:40 to 12:24 window, in percent. */
 const HALTS = [
-  { x: 118, y: 333, place: "NH 53 toll plaza", time: "07:05", mins: 18, at: 7 },
-  { x: 239, y: 282, place: "Tatibandh fuel station", time: "08:02", mins: 6, at: 24 },
-  { x: 359, y: 227, place: "Bhanpuri weighbridge", time: "08:48", mins: 24, at: 37 },
-  { x: 440, y: 190, place: "Telibandha customer yard", time: "09:36", mins: 12, at: 51 },
+  { x: 118, y: 333, time: "07:05", mins: 18, at: 7 },
+  { x: 239, y: 282, time: "08:02", mins: 6, at: 24 },
+  { x: 359, y: 227, time: "08:48", mins: 24, at: 37 },
+  { x: 440, y: 190, time: "09:36", mins: 12, at: 51 },
 ];
 
 /** A numbered halt marker, with its caption below the road. */
@@ -26,12 +30,13 @@ function Halt({ x, y, n, label }: { x: number; y: number; n: number; label: stri
 }
 
 /** Route playback: one vehicle's day replayed on the map, with its halts and a scrubber. */
-export default function Playback() {
+export default function Playback({ ctx = CONTEXTS.fleet }: { ctx?: Context }) {
+  const [v] = ctx.vehicles;
   return (
-    <Scene tint="sky">
+    <Scene tint={ctx.tint}>
       <Panel
         title="Route playback"
-        subtitle="CG 04 MX 2217, Raipur to Durg, 06:40 to 12:24"
+        subtitle={`${v.plate}, ${ctx.from} to ${ctx.to}, 06:40 to 12:24`}
         className="right-[48px] top-[44px] h-[560px] w-[760px]"
         flush
         actions={
@@ -47,31 +52,31 @@ export default function Playback() {
         <MapArt>
           <MapRoute road="highway" done={0.62} />
           {HALTS.map((h, i) => (
-            <Halt key={h.place} x={h.x} y={h.y} n={i + 1} label={`${h.time}, ${h.mins} min`} />
+            <Halt key={h.at} x={h.x} y={h.y} n={i + 1} label={`${h.time}, ${h.mins} min`} />
           ))}
-          <MapVehicle x={497} y={165} angle={-23} label="54 km/h" />
+          <MapVehicle x={497} y={165} angle={-23} kind={v.marker} label="54 km/h" />
         </MapArt>
       </Panel>
 
       <Float className="left-[48px] top-[124px] w-[312px] overflow-hidden">
         <div className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
-          <VehicleTile kind="truck" hue={262} size={34} />
+          <VehicleTile kind={v.tile} marker={v.marker} size={34} />
           <span className="min-w-0 flex-1">
-            <span className="block text-[13.5px] font-semibold leading-tight">Stops today</span>
+            <span className="block truncate text-[13.5px] font-semibold leading-tight">{cap(plural(ctx.noun.stop))} today</span>
             <span className="block text-[11.5px] leading-tight text-zinc-500">4 halts, 1 h halted</span>
           </span>
           <Pill tone="green" dot>
-            On trip
+            On {ctx.noun.trip}
           </Pill>
         </div>
         <ul>
           {HALTS.map((h, i) => (
-            <li key={h.place} className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
+            <li key={h.at} className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3">
               <span className="grid size-6 shrink-0 place-items-center rounded-full bg-zinc-900 text-[11px] font-bold text-white">
                 {i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[12.5px] font-semibold leading-tight">{h.place}</span>
+                <span className="block truncate text-[12.5px] font-semibold leading-tight">{ctx.stops[i]}</span>
                 <span className="mt-0.5 block font-mono text-[11px] leading-tight text-zinc-500">Halted at {h.time}</span>
               </span>
               <Pill tone={h.mins > 20 ? "amber" : "zinc"}>{h.mins} min</Pill>
@@ -100,9 +105,9 @@ export default function Playback() {
             <SkipBack className="size-4" />
             <SkipForward className="size-4" />
           </span>
-          <span className="ml-1 flex-1">
+          <span className="ml-1 min-w-0 flex-1">
             <span className="block font-mono text-[17px] font-semibold leading-none tracking-tight">10:12</span>
-            <span className="mt-1 block text-[11px] leading-none text-zinc-500">Thu 26 Nov, near Telibandha</span>
+            <span className="mt-1 block truncate text-[11px] leading-none text-zinc-500">Thu 26 Nov, near {ctx.stops[3]}</span>
           </span>
           <span className="flex items-center gap-1 rounded-lg bg-zinc-100 p-1">
             {["1x", "2x", "5x", "10x"].map((s) => (
@@ -122,7 +127,7 @@ export default function Playback() {
           <span className="relative h-1.5 flex-1 rounded-full bg-zinc-100">
             <span className="absolute inset-y-0 left-0 w-[62%] rounded-full bg-violet-600" />
             {HALTS.map((h) => (
-              <i key={h.place} className="absolute top-1/2 size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-600 bg-white" style={{ left: `${h.at}%` }} />
+              <i key={h.at} className="absolute top-1/2 size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-600 bg-white" style={{ left: `${h.at}%` }} />
             ))}
             <i className="absolute left-[62%] top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-violet-600 bg-white shadow" />
           </span>

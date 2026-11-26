@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Visual } from "@/components/visuals";
 
+import { pageContext } from "@/content/contexts";
 import { PAGE_PHOTOS } from "@/content/photos";
 
 import { Photo } from "./photo";
@@ -38,6 +39,7 @@ const KIND_COPY: Record<PageKind, { problems: string; features: string; cases: s
 };
 
 function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
+  const context = pageContext(kind, doc.slug);
   const crumbs = (
     <Breadcrumbs
       items={[
@@ -69,7 +71,7 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
             </div>
           </div>
           <Reveal className="mt-14 pb-16 md:pb-24">
-            <Visual name={doc.hero.visual} />
+            <Visual name={doc.hero.visual} context={context} />
           </Reveal>
         </div>
       </section>
@@ -92,7 +94,7 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
             {actions}
           </div>
           <Reveal>
-            <Visual name={doc.hero.visual} />
+            <Visual name={doc.hero.visual} context={context} />
           </Reveal>
         </div>
       </section>
@@ -109,7 +111,7 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
           {actions}
         </div>
         <Reveal>
-          <Visual name={doc.hero.visual} />
+          <Visual name={doc.hero.visual} context={context} />
         </Reveal>
       </div>
     </section>
@@ -117,6 +119,7 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
 }
 
 export function DocPage({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
+  const context = pageContext(kind, doc.slug);
   const related = doc.related.map(resolveRef).filter((r) => r !== undefined);
   const url = `${SITE_URL}/${kind}/${doc.slug}`;
   const photo = PAGE_PHOTOS[`${kind}/${doc.slug}`];
@@ -152,7 +155,7 @@ export function DocPage({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
             )}
           >
             <Reveal className={cn(i % 2 === 1 && "lg:order-2")}>
-              <Visual name={s.visual} />
+              <Visual name={s.visual} context={context} />
             </Reveal>
             <div>
               <h2 className="display-2">{s.title}</h2>

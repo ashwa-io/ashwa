@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import Image from "next/image";
 
 import type { VisualKey } from "@/content/types";
@@ -9,7 +11,16 @@ import { cn } from "@/lib/utils";
  * their own backdrop; phone screens sit in a phone.
  */
 
-/** A designed web visual from /shots, 1680x1050. */
+/**
+ * The image for a screen in a given sample world ("school", "rental"...), when
+ * that variant has been rendered; the general one otherwise. Checked at build time.
+ */
+const shot = (file: string, context?: string) => {
+  const variant = context && context !== "fleet" ? `${file}--${context}` : file;
+  return existsSync(join(process.cwd(), "public", "images", "product", `${variant}.jpg`)) ? variant : file;
+};
+
+/** A designed web visual from /shots, 2240x1400. */
 type Web =
   | "overview"
   | "tracking"
@@ -28,9 +39,11 @@ type Web =
   | "enterprise"
   | "coverage"
   | "branding"
-  | "assets";
+  | "assets"
+  | "device"
+  | "api";
 
-/** A designed phone screen from /shots, 600x1200. */
+/** A designed phone screen from /shots, 900x1800. */
 type Mobile = "fleet" | "live" | "playback" | "driver" | "parent" | "alerts";
 
 const WEB_ALT: Record<Web, string> = {
@@ -52,6 +65,8 @@ const WEB_ALT: Record<Web, string> = {
   coverage: "Ashwa waste collection: ward coverage on a map with households scanned",
   branding: "Ashwa white-label: a dealer's customer list under the dealer's own brand",
   assets: "Ashwa asset tracking: equipment on a work site with engine hours",
+  device: "How Ashwa works: from the GPS device over the network to the platform and your screens",
+  api: "Ashwa integrations: events flowing to your ERP, portals and alerts, with a sample payload",
 };
 
 const MOBILE_ALT: Record<Mobile, string> = {
@@ -64,7 +79,7 @@ const MOBILE_ALT: Record<Mobile, string> = {
 };
 
 /** A web visual. It carries its own backdrop, so it needs no device around it. */
-function Browser({ screen, className }: { screen: Web; className?: string }) {
+function Browser({ screen, className, context }: { screen: Web; className?: string; context?: string }) {
   return (
     <div
       className={cn(
@@ -73,17 +88,19 @@ function Browser({ screen, className }: { screen: Web; className?: string }) {
       )}
     >
       <Image
-        src={`/images/product/${screen}.jpg`}
+        src={`/images/product/${shot(screen, context)}.jpg`}
         alt={WEB_ALT[screen]}
-        width={1680}
-        height={1050}
-        sizes="(min-width: 1024px) 720px, 100vw"
+        width={2240}
+        height={1400}
+        // These run up to the full content width on product pages: ask for that, or they blur.
+        sizes="(min-width: 1100px) 1024px, 100vw"
+        quality={90}
         className="block h-auto w-full"
       />
     </div>
   );
 }
-function Phone({ screen, className }: { screen: Mobile; className?: string }) {
+function Phone({ screen, className, context }: { screen: Mobile; className?: string; context?: string }) {
   return (
     // Every measure inside is in cqw, a share of the phone's own width, so the
     // device keeps its proportions at any size it is placed at.
@@ -104,11 +121,12 @@ function Phone({ screen, className }: { screen: Mobile; className?: string }) {
       >
         <div className="relative overflow-hidden rounded-[12.6cqw] bg-white">
           <Image
-            src={`/images/product/m-${screen}.jpg`}
+            src={`/images/product/${shot(`m-${screen}`, context)}.jpg`}
             alt={MOBILE_ALT[screen]}
-            width={600}
-            height={1200}
-            sizes="(min-width: 1024px) 260px, 45vw"
+            width={900}
+            height={1800}
+            sizes="(min-width: 1024px) 280px, 45vw"
+            quality={90}
             className="block h-auto w-full"
           />
           {/* Dynamic island with its camera lens */}
@@ -136,20 +154,20 @@ function Phone({ screen, className }: { screen: Mobile; className?: string }) {
 }
 
 /** A web screen with the mobile app in front of it, at true relative scale. */
-function Duo({ web, mobile }: { web: Web; mobile: Mobile }) {
+function Duo({ web, mobile, context }: { web: Web; mobile: Mobile; context?: string }) {
   return (
     <div className="relative pb-[7%] pr-[6%]">
-      <Browser screen={web} />
-      <Phone screen={mobile} className="absolute bottom-0 right-0 w-[21%]" />
+      <Browser screen={web} context={context} />
+      <Phone screen={mobile} context={context} className="absolute bottom-0 right-0 w-[21%]" />
     </div>
   );
 }
 
-function Phones({ left, right }: { left: Mobile; right: Mobile }) {
+function Phones({ left, right, context }: { left: Mobile; right: Mobile; context?: string }) {
   return (
     <div className="flex items-start justify-center gap-[6%] px-[6%]">
-      <Phone screen={left} className="w-[34%] max-w-56" />
-      <Phone screen={right} className="mt-[10%] w-[34%] max-w-56" />
+      <Phone screen={left} context={context} className="w-[34%] max-w-56" />
+      <Phone screen={right} context={context} className="mt-[10%] w-[34%] max-w-56" />
     </div>
   );
 }
@@ -170,103 +188,39 @@ export function PhoneTrio() {
   );
 }
 
-function Device() {
-  return (
-    <svg
-      viewBox="0 0 640 480"
-      role="img"
-      aria-label="How a GPS tracking device sends location over satellites and the mobile network to the Ashwa cloud"
-      className="block h-auto w-full"
-    >
-      <g fill="none" stroke="var(--border)" strokeWidth="2" strokeDasharray="4 8">
-        <path d="M320 250 C320 170 320 150 320 100" className="animate-dash" stroke="var(--primary)" />
-        <path d="M360 300 C460 300 470 230 540 200" />
-        <path d="M280 300 C180 300 170 230 100 200" />
-      </g>
-      <g transform="translate(320 300)">
-        <path d="M-110 -10 L0 -60 L110 -10 L0 40 Z" fill="var(--ink-2)" />
-        <path d="M-110 -10 L0 40 L0 90 L-110 40 Z" fill="var(--ink)" />
-        <path d="M110 -10 L0 40 L0 90 L110 40 Z" fill="#2a251d" />
-        <circle cx="-56" cy="34" r="5" fill="var(--moving)" />
-        <circle cx="-38" cy="42" r="5" fill="var(--primary)" />
-        <circle cx="-20" cy="50" r="5" fill="var(--idle)" />
-        <path d="M-30 -12 L0 -26 L30 -12 L0 2 Z" fill="#3a342a" />
-      </g>
-      {[
-        [320, 70, "Satellites"],
-        [100, 180, "Mobile network"],
-        [540, 180, "Ashwa cloud"],
-      ].map(([x, y, label]) => (
-        <g key={label as string} transform={`translate(${x} ${y})`}>
-          <circle r="34" fill="var(--card)" stroke="var(--border)" strokeWidth="2" />
-          <circle r="6" fill="var(--primary)" />
-          <text y="58" textAnchor="middle" fontSize="15" fill="var(--muted-foreground)" fontFamily="var(--ff-mono), monospace">
-            {label}
-          </text>
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-function Api() {
-  const code = `POST /webhooks/your-system
-{
-  "event": "geofence.exit",
-  "vehicle": "CG 07 CN 4409",
-  "zone": "Depot",
-  "at": "2026-11-25T09:12:04+05:30",
-  "position": { "lat": 21.2514, "lng": 81.6296 }
-}`;
-  return (
-    <div className="w-full overflow-hidden rounded-2xl border border-ink-line bg-ink shadow-float">
-      <div className="flex items-center gap-2 border-b border-ink-line px-4 py-2.5">
-        <span className="eyebrow text-ink-muted">Event payload, illustrative</span>
-      </div>
-      <pre className="overflow-x-auto p-5 font-mono text-[0.74rem] leading-relaxed text-[#f4efe4]">
-        <code>{code}</code>
-      </pre>
-      <div className="flex flex-wrap gap-2 border-t border-ink-line p-4">
-        {["Positions", "Trips", "Alerts", "Geofence events"].map((t) => (
-          <span
-            key={t}
-            className="rounded-full border border-ink-line px-2.5 py-1 font-mono text-[0.68rem] text-ink-muted"
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-const VISUALS: Record<VisualKey, () => React.ReactNode> = {
-  "live-map": () => <Duo web="tracking" mobile="live" />,
-  "trip-playback": () => <Browser screen="playback" />,
-  geofence: () => <Browser screen="geofences" />,
-  alerts: () => <Browser screen="alerts" />,
-  reports: () => <Browser screen="reports" />,
-  drivers: () => <Browser screen="drivers" />,
-  vehicles: () => <Browser screen="vehicles" />,
-  routes: () => <Browser screen="routes" />,
+/** Each visual key, rendered for the page's sample world when one is given. */
+const VISUALS: Record<VisualKey, (c?: string) => React.ReactNode> = {
+  "live-map": (c) => <Duo web="tracking" mobile="live" context={c} />,
+  "trip-playback": (c) => <Browser screen="playback" context={c} />,
+  geofence: (c) => <Browser screen="geofences" context={c} />,
+  alerts: (c) => <Browser screen="alerts" context={c} />,
+  reports: (c) => <Browser screen="reports" context={c} />,
+  drivers: (c) => <Browser screen="drivers" context={c} />,
+  vehicles: (c) => <Browser screen="vehicles" context={c} />,
+  routes: (c) => <Browser screen="routes" context={c} />,
   rental: () => <Browser screen="rental" />,
   "school-bus": () => <Browser screen="school" />,
-  "parent-app": () => <Phones left="parent" right="alerts" />,
+  "parent-app": () => <Phones left="parent" right="alerts" context="school" />,
   enterprise: () => <Browser screen="enterprise" />,
   assets: () => <Browser screen="assets" />,
-  trips: () => <Browser screen="trips" />,
-  maintenance: () => <Browser screen="maintenance" />,
+  trips: (c) => <Browser screen="trips" context={c} />,
+  maintenance: (c) => <Browser screen="maintenance" context={c} />,
   coverage: () => <Browser screen="coverage" />,
   branding: () => <Browser screen="branding" />,
-  "mobile-app": () => <Phones left="fleet" right="driver" />,
-  device: Device,
-  api: Api,
+  "mobile-app": (c) => <Phones left="fleet" right="driver" context={c} />,
+  device: () => <Browser screen="device" />,
+  api: () => <Browser screen="api" />,
 };
-export function Visual({ name, className }: { name: VisualKey; className?: string }) {
-  const Component = VISUALS[name];
-  return (
-    <div className={className}>
-      <Component />
-    </div>
-  );
+
+export function Visual({
+  name,
+  className,
+  context,
+}: {
+  name: VisualKey;
+  className?: string;
+  /** The page's sample world, so a school page shows buses and a rental page shows cars. */
+  context?: string;
+}) {
+  return <div className={className}>{VISUALS[name](context)}</div>;
 }

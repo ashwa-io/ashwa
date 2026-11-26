@@ -23,6 +23,7 @@ export function Photo({
         fill
         sizes={sizes}
         priority={priority}
+        quality={85}
         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
       />
     </div>

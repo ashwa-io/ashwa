@@ -1,0 +1,67 @@
+{
+  "alerts": [
+    "corporate",
+    "transit"
+  ],
+  "drivers": [
+    "rental",
+    "school"
+  ],
+  "geofences": [
+    "construction",
+    "delivery",
+    "rental",
+    "service"
+  ],
+  "m-alerts": [
+    "school"
+  ],
+  "m-live": [
+    "corporate",
+    "delivery",
+    "rental",
+    "school",
+    "service",
+    "transit"
+  ],
+  "maintenance": [
+    "construction",
+    "rental",
+    "transit"
+  ],
+  "playback": [
+    "delivery",
+    "rental",
+    "service"
+  ],
+  "reports": [
+    "construction",
+    "corporate",
+    "delivery",
+    "rental",
+    "school",
+    "waste"
+  ],
+  "routes": [
+    "corporate",
+    "delivery",
+    "school",
+    "transit",
+    "waste"
+  ],
+  "tracking": [
+    "corporate",
+    "delivery",
+    "rental",
+    "school",
+    "service",
+    "transit"
+  ],
+  "trips": [
+    "delivery"
+  ],
+  "vehicles": [
+    "corporate",
+    "rental"
+  ]
+}

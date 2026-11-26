@@ -1,38 +1,60 @@
 import { Plus, ShieldCheck } from "lucide-react";
 
+import { CONTEXTS, type Context, type SampleVehicle } from "../contexts";
 import { Avatar, Bar, Button, Float, Panel, Pill, Scene, SearchField, VehicleTile } from "../kit";
 
 type Status = "Moving" | "Idle" | "Stopped" | "In workshop";
 
-const VEHICLES: { plate: string; driver: string; kind: "truck" | "bus" | "car"; hue: number; model: string; type: string; group: string; odo: string; status: Status }[] = [
-  { plate: "HR 26 AS 1024", driver: "Rakesh Yadav", kind: "truck", hue: 262, model: "Tata Signa 4825", type: "Trailer", group: "Long haul", odo: "1,84,620 km", status: "Moving" },
-  { plate: "CG 04 MX 2217", driver: "Sunil Kumar", kind: "truck", hue: 150, model: "Ashok Leyland 2820", type: "Truck", group: "Long haul", odo: "84,510 km", status: "Moving" },
-  { plate: "CG 07 BQ 5530", driver: "Imran Qureshi", kind: "truck", hue: 28, model: "Eicher Pro 2049", type: "Truck", group: "Raipur local", odo: "62,380 km", status: "Idle" },
-  { plate: "HR 39 BK 7741", driver: "Harpreet Singh", kind: "truck", hue: 205, model: "Tata Prima 2830", type: "Tipper", group: "Korba mines", odo: "1,12,940 km", status: "Stopped" },
-  { plate: "HR 12 FA 6610", driver: "Manoj Verma", kind: "bus", hue: 340, model: "Tata Starbus", type: "Bus", group: "Staff", odo: "96,275 km", status: "Moving" },
-  { plate: "HR 51 DE 9025", driver: "No driver", kind: "truck", hue: 48, model: "Ashok Leyland Dost", type: "Pickup", group: "Raipur local", odo: "41,860 km", status: "In workshop" },
-  { plate: "HR 20 CM 3308", driver: "Dinesh Sahu", kind: "car", hue: 180, model: "Mahindra Bolero", type: "Car", group: "Staff", odo: "58,130 km", status: "Stopped" },
+/** Seven rows over ctx.vehicles (six): the last reuses the first with its own details. */
+const ROWS: { odo: string; status: Status }[] = [
+  { odo: "1,84,620 km", status: "Moving" },
+  { odo: "84,510 km", status: "Moving" },
+  { odo: "62,380 km", status: "Idle" },
+  { odo: "1,12,940 km", status: "Stopped" },
+  { odo: "96,275 km", status: "Moving" },
+  { odo: "41,860 km", status: "In workshop" },
+  { odo: "58,130 km", status: "Stopped" },
 ];
 
 const TONE = { Moving: "green", Idle: "amber", Stopped: "zinc", "In workshop": "red" } as const;
 
 const COLS = "grid grid-cols-[176px_150px_76px_104px_100px_100px] items-center pl-16 pr-5";
 
-const TYPES = [
-  { label: "Trucks", n: 11, color: "bg-violet-600" },
-  { label: "Trailers", n: 5, color: "bg-sky-500" },
-  { label: "Tippers", n: 4, color: "bg-emerald-500" },
-  { label: "Buses", n: 2, color: "bg-amber-500" },
-  { label: "Cars and pickups", n: 2, color: "bg-zinc-400" },
+const FLEET_TYPES = [
+  { label: "Trucks", n: 11 },
+  { label: "Trailers", n: 5 },
+  { label: "Tippers", n: 4 },
+  { label: "Buses", n: 2 },
+  { label: "Cars and pickups", n: 2 },
 ];
+const COLORS = ["bg-violet-600", "bg-sky-500", "bg-emerald-500", "bg-amber-500", "bg-zinc-400"];
+/** How 24 vehicles split over one to five types. */
+const SPLIT = [[24], [18, 6], [13, 7, 4], [11, 6, 5, 2], [11, 5, 4, 2, 2]];
+
+const KIND = { truck: "Truck", bus: "Bus", car: "Car", suv: "SUV", sports: "Car", pickup: "Pickup", jeep: "Jeep", police: "Car" } as const;
+
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+const plural = (s: string) => (/bus$/i.test(s) ? `${s}es` : `${s}s`);
+
+/** "Excavator 02" is an excavator; a registration plate says nothing, so fall back to the marker. */
+const typeOf = (v: SampleVehicle) => {
+  const named = /^([A-Za-z ]+) \d+$/.exec(v.plate)?.[1];
+  return named && named !== "Vehicle" ? named : KIND[v.marker];
+};
 
 /** Vehicles: the whole fleet in one list, with one vehicle's profile alongside. */
-export default function Vehicles() {
+export default function Vehicles({ ctx = CONTEXTS.fleet }: { ctx?: Context }) {
+  const n = ctx.noun;
+  const [focus] = ctx.vehicles;
+  // In a rental the customers are people, so cars are grouped by handover place instead.
+  const groups = n.driver === n.customer ? ctx.stops : ctx.customers;
+  const kinds = [...new Set(ctx.vehicles.map(typeOf))].slice(0, 5);
+  const types = ctx.key === "fleet" ? FLEET_TYPES : kinds.map((k, i) => ({ label: plural(k), n: SPLIT[kinds.length - 1][i] }));
   return (
-    <Scene tint="emerald">
+    <Scene tint={ctx.tint}>
       <Panel
-        title="Vehicles"
-        subtitle="24 vehicles in 4 groups"
+        title={cap(plural(n.vehicle))}
+        subtitle={`24 ${plural(n.vehicle)} in 4 groups`}
         className="right-[48px] top-[44px] h-[612px] w-[790px]"
         flush
         actions={
@@ -40,47 +62,52 @@ export default function Vehicles() {
             <SearchField placeholder="Search plate or model" />
             <Button primary>
               <Plus className="size-3.5" />
-              Add vehicle
+              Add {n.vehicle}
             </Button>
           </>
         }
       >
         <div className={`${COLS} h-[34px] border-b border-zinc-100 bg-zinc-50/70 text-[11px] font-medium text-zinc-500`}>
-          <span>Vehicle</span>
+          <span>{cap(n.vehicle)}</span>
           <span>Model</span>
           <span>Type</span>
           <span>Group</span>
           <span>Odometer</span>
           <span className="text-right">Status</span>
         </div>
-        {VEHICLES.map((v, i) => (
-          <div key={v.plate} className={`${COLS} h-[72px] border-b border-zinc-100 text-[12.5px] ${i === 0 ? "bg-violet-50/60" : ""}`}>
-            <span className="flex items-center gap-2.5">
-              <VehicleTile kind={v.kind} hue={v.hue} size={34} />
-              <span>
-                <span className="block text-[13px] font-semibold leading-tight">{v.plate}</span>
-                <span className="mt-0.5 block text-[11px] leading-tight text-zinc-500">{v.driver}</span>
+        {ROWS.map((r, i) => {
+          const v = ctx.vehicles[i % ctx.vehicles.length];
+          return (
+            <div key={i} className={`${COLS} h-[72px] border-b border-zinc-100 text-[12.5px] ${i === 0 ? "bg-violet-50/60" : ""}`}>
+              <span className="flex min-w-0 items-center gap-2.5 pr-2">
+                <VehicleTile kind={v.tile} marker={v.marker} size={34} />
+                <span className="min-w-0">
+                  <span className="block truncate text-[13px] font-semibold leading-tight">{v.plate}</span>
+                  <span className="mt-0.5 block truncate text-[11px] leading-tight text-zinc-500">
+                    {i === 5 ? `No ${n.driver}` : ctx.people[i === 6 ? 1 : i]}
+                  </span>
+                </span>
               </span>
-            </span>
-            <span className="text-zinc-700">{v.model}</span>
-            <span className="text-zinc-700">{v.type}</span>
-            <span className="text-zinc-700">{v.group}</span>
-            <span className="font-mono text-[11.5px] text-zinc-700">{v.odo}</span>
-            <span className="text-right">
-              <Pill tone={TONE[v.status]} dot>
-                {v.status}
-              </Pill>
-            </span>
-          </div>
-        ))}
+              <span className="truncate pr-3 text-zinc-700">{v.model}</span>
+              <span className="truncate pr-2 text-zinc-700">{typeOf(v)}</span>
+              <span className="truncate pr-2 text-zinc-700">{groups[i % 4]}</span>
+              <span className="font-mono text-[11.5px] text-zinc-700">{r.odo}</span>
+              <span className="text-right">
+                <Pill tone={TONE[r.status]} dot>
+                  {r.status}
+                </Pill>
+              </span>
+            </div>
+          );
+        })}
       </Panel>
 
       <Float className="left-[48px] top-[120px] w-[290px] p-4">
         <div className="flex items-center gap-3">
-          <VehicleTile kind="truck" hue={262} size={40} />
+          <VehicleTile kind={focus.tile} marker={focus.marker} size={40} />
           <span className="min-w-0 flex-1">
-            <span className="block text-[14px] font-semibold leading-tight">HR 26 AS 1024</span>
-            <span className="block text-[11.5px] leading-tight text-zinc-500">Tata Signa 4825</span>
+            <span className="block truncate text-[14px] font-semibold leading-tight">{focus.plate}</span>
+            <span className="block truncate text-[11.5px] leading-tight text-zinc-500">{focus.model}</span>
           </span>
           <Pill tone="green" dot>
             Moving
@@ -97,9 +124,9 @@ export default function Vehicles() {
           </span>
         </div>
         <div className="mt-3.5 flex items-center gap-2">
-          <Avatar name="Rakesh Yadav" hue={24} size={24} />
-          <span className="flex-1 text-[12px] font-medium">Rakesh Yadav</span>
-          <span className="text-[11.5px] text-zinc-500">Driver</span>
+          <Avatar name={ctx.people[0]} hue={24} size={24} />
+          <span className="min-w-0 flex-1 truncate text-[12px] font-medium">{ctx.people[0]}</span>
+          <span className="text-[11.5px] text-zinc-500">{cap(n.driver)}</span>
         </div>
         <div className="mt-3.5 border-t border-zinc-100 pt-3">
           <div className="mb-1.5 flex justify-between text-[12px]">
@@ -117,17 +144,17 @@ export default function Vehicles() {
       <Float className="bottom-[44px] left-[48px] w-[290px] p-4">
         <div className="flex items-baseline justify-between">
           <p className="text-[12.5px] font-semibold">By type</p>
-          <p className="text-[11.5px] text-zinc-500">24 vehicles</p>
+          <p className="text-[11.5px] text-zinc-500">24 {plural(n.vehicle)}</p>
         </div>
         <div className="mt-3 flex h-2 gap-0.5 overflow-hidden rounded-full">
-          {TYPES.map((t) => (
-            <i key={t.label} className={t.color} style={{ flex: t.n }} />
+          {types.map((t, i) => (
+            <i key={t.label} className={COLORS[i]} style={{ flex: t.n }} />
           ))}
         </div>
         <ul className="mt-3 space-y-1.5 text-[12px]">
-          {TYPES.map((t) => (
+          {types.map((t, i) => (
             <li key={t.label} className="flex items-center gap-2">
-              <i className={`size-2 rounded-full ${t.color}`} />
+              <i className={`size-2 rounded-full ${COLORS[i]}`} />
               <span className="flex-1 text-zinc-700">{t.label}</span>
               <span className="font-semibold">{t.n}</span>
             </li>

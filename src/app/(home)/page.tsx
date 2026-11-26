@@ -15,6 +15,7 @@ import { LiveShowcase, PhoneTrio, Visual } from "@/components/visuals";
 import { PORTRAITS } from "@/content/photos";
 import { cn } from "@/lib/utils";
 import { DOCS, articles, getDoc } from "@/content";
+import { pageContext } from "@/content/contexts";
 import { siteFaqs } from "@/content/faqs";
 import type { PageKind } from "@/content/types";
 
@@ -112,7 +113,7 @@ function Panel({ kind, slug, points }: { kind: PageKind; slug: string; points: s
           {doc.name}
         </ButtonLink>
       </div>
-      <Visual name={doc.hero.visual} />
+      <Visual name={doc.hero.visual} context={pageContext(kind, slug)} />
     </div>
   );
 }

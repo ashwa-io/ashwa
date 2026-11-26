@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BellRing } from "lucide-react";
 
-import { Visual } from "@/components/visuals";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
@@ -619,7 +619,13 @@ export function FleetScene({
     <div className={cn("relative", className)}>
       {state === "failed" ? (
         <div className="grid size-full place-items-center p-6">
-          <Visual name="live-map" className="w-full max-w-3xl" />
+          <Image
+            src="/images/product/overview.jpg"
+            alt="Ashwa live tracking: a live map, the vehicle table and fleet filters"
+            width={2240}
+            height={1400}
+            className="h-auto w-full max-w-3xl rounded-2xl"
+          />
         </div>
       ) : (
         <div

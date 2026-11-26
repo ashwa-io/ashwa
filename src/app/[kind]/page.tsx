@@ -7,6 +7,7 @@ import { Reveal } from "@/components/site/reveal";
 import { Breadcrumbs, CtaBand, JsonLd, SectionHeader } from "@/components/site/ui";
 import { Visual } from "@/components/visuals";
 import { DOCS, KIND_META, KINDS } from "@/content";
+import { pageContext } from "@/content/contexts";
 import type { PageKind } from "@/content/types";
 import { SITE_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -67,7 +68,7 @@ export default async function IndexPage({ params }: Props) {
                   </span>
                 </span>
                 <Reveal className={cn("hidden lg:block", i % 2 === 1 && "lg:pl-10")}>
-                  <Visual name={d.hero.visual} />
+                  <Visual name={d.hero.visual} context={pageContext(kind, d.slug)} />
                 </Reveal>
               </Link>
             </li>

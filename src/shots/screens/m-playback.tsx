@@ -1,11 +1,13 @@
 import { CalendarDays, ChevronLeft, Play, SkipBack, SkipForward } from "lucide-react";
 
+import { CONTEXTS, type Context } from "../contexts";
 import { MapArt, MapPin, MapRoute, MapVehicle, MShell, VehicleTile } from "../kit";
 
 const SPEEDS = ["1x", "2x", "4x", "8x"];
 
 /** Phone: a day's route replayed on the map. */
-export default function MobilePlayback() {
+export default function MobilePlayback({ ctx = CONTEXTS.fleet }: { ctx?: Context }) {
+  const [v] = ctx.vehicles;
   return (
     <MShell tab="tracking">
       <div className="relative h-full">
@@ -13,7 +15,7 @@ export default function MobilePlayback() {
           <MapArt>
             <MapRoute road="highway" done={0.6} />
             <MapPin x={318} y={246} label="Halt 38 min" />
-            <MapVehicle x={436} y={192} angle={-25} label="11:42" />
+            <MapVehicle x={436} y={192} angle={-25} kind={v.marker} label="11:42" />
           </MapArt>
         </div>
 
@@ -30,9 +32,9 @@ export default function MobilePlayback() {
 
         <div className="absolute inset-x-3 bottom-3 rounded-3xl bg-white p-4 shadow-[0_18px_40px_-12px_rgb(24_24_27/0.35)]">
           <div className="flex items-center gap-3">
-            <VehicleTile kind="truck" hue={262} size={44} />
+            <VehicleTile kind={v.tile} marker={v.marker} size={44} />
             <span className="min-w-0 flex-1">
-              <span className="block text-[16px] font-semibold leading-tight">HR 26 AS 1024</span>
+              <span className="block truncate text-[16px] font-semibold leading-tight">{v.plate}</span>
               <span className="block text-[12.5px] leading-tight text-zinc-500">312 km, 3 halts, top 78 km/h</span>
             </span>
           </div>
