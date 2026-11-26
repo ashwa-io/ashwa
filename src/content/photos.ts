@@ -1,5 +1,4 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import ASSETS from "./assets.json";
 
 /**
  * Generated editorial photography (Higgsfield). Files live in public/images/site.
@@ -27,8 +26,8 @@ export const PHOTOS = {
   fieldVan: photo("field-van", "A field engineer with a tool case beside a utility van near a telecom tower"),
 } as const;
 
-/** True once the generated file has been saved into public/. Checked at build time. */
-export const hasPhoto = (p: Photo) => existsSync(join(process.cwd(), "public", p.src));
+/** True once the file is in public/images/site (listed at build time by scripts/asset-list.mjs). */
+export const hasPhoto = (p: Photo) => ASSETS.site.includes(p.src.slice("/images/site/".length, -4));
 
 /** Photo shown under the hero of a solution or industry page, keyed by "kind/slug". */
 const PAGE_PHOTO_PLAN: Record<string, Photo> = {
@@ -51,5 +50,5 @@ export const PAGE_PHOTOS: Record<string, Photo> = Object.fromEntries(
 
 /** Portraits for the hero's live cards, listed only when the file has been saved. */
 export const PORTRAITS = ["avatar-driver", "avatar-bus-driver", "avatar-customer"].filter((name) =>
-  existsSync(join(process.cwd(), "public", "images", "site", `${name}.jpg`)),
+  ASSETS.site.includes(name),
 );

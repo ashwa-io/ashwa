@@ -1,5 +1,4 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import ASSETS from "@/content/assets.json";
 import Image from "next/image";
 
 import type { VisualKey } from "@/content/types";
@@ -17,7 +16,7 @@ import { cn } from "@/lib/utils";
  */
 const shot = (file: string, context?: string) => {
   const variant = context && context !== "fleet" ? `${file}--${context}` : file;
-  return existsSync(join(process.cwd(), "public", "images", "product", `${variant}.jpg`)) ? variant : file;
+  return ASSETS.product.includes(variant) ? variant : file;
 };
 
 /** A designed web visual from /shots, 2240x1400. */
