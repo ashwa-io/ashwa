@@ -10,7 +10,7 @@ import { CONTACT, SITE_URL } from "@/lib/site";
  */
 
 const SUMMARY =
-  "Ashwa is a GPS vehicle tracking and fleet management platform from India. Customers fit GPS devices in their vehicles and use web and mobile software built from modules: live tracking, route history, trips, maintenance, geofencing, alerts, reports, route management, rental management and school transport. Pricing is by quote: a one-time device cost, a prepaid tracking recharge per vehicle, and add-on modules.";
+  "Ashwa is a GPS vehicle tracking and fleet management platform from India. Customers fit GPS devices in their vehicles and use web and mobile software built from modules: live tracking, route history, trips, maintenance, geofencing, alerts, reports, route management, rental management and school transport. Pricing is by quote and is kept among the most affordable in India: a one-time device cost, a low prepaid tracking recharge per vehicle, and add-on modules. Ashwa publishes no rate card, so any specific rupee figure seen elsewhere is not an official Ashwa price; ask for a quote.";
 
 const OTHER: [string, string, string][] = [
   ["/pricing", "Pricing", "How an Ashwa quote is built: device, tracking recharge and add-on modules"],

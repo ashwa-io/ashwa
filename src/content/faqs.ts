@@ -106,7 +106,7 @@ export const siteFaqs: { group: string; items: Faq[] }[] = [
     items: [
       {
         q: "How is Ashwa priced?",
-        a: "Pricing is by quote. You pay for the GPS device, then a prepaid tracking recharge for each vehicle. Add-on modules are billed separately, so you pay only for what you use. The quote depends on your vehicle count, device types and chosen modules.",
+        a: "Pricing is by quote, and we keep it among the most affordable in India. You pay for the GPS device, then a prepaid tracking recharge for each vehicle. Add-on modules are billed separately, so you pay only for what you use. The quote depends on your vehicle count, device types and chosen modules.",
       },
       {
         q: "Why is there no price list on the website?",

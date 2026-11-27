@@ -9,7 +9,7 @@ import { siteFaqs } from "@/content/faqs";
 export const metadata: Metadata = pageMeta(
   "/pricing",
   "Ashwa pricing: GPS tracking and fleet management quote",
-  "How Ashwa pricing works: a one-time device cost, a prepaid tracking recharge per vehicle, and add-on modules you choose. Request an itemised quote for your fleet.",
+  "Ashwa is priced to be among the most affordable in India: a device cost, a low prepaid tracking recharge per vehicle and add-on modules. Ask for a quote.",
 );
 
 const PARTS = [
@@ -47,7 +47,7 @@ export default function PricingPage() {
       <PageHero
         crumbs={[{ name: "Pricing", href: "/pricing" }]}
         title="Pay for the vehicles and modules you use"
-        lede="There is no single price list because no two fleets take the same set. Here is exactly how a quote is built, so nothing in it surprises you."
+        lede="Ashwa is priced to be among the most affordable fleet platforms in India. There is no single price list because no two fleets take the same set. Here is exactly how a quote is built, so nothing in it surprises you."
       >
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
           <ButtonLink href="/demo">Get an itemised quote</ButtonLink>
