@@ -1,9 +1,11 @@
+import { GridTraffic } from "@/components/site/grid-traffic";
 import { ButtonLink } from "@/components/site/ui";
 
 export default function NotFound() {
   return (
-    <main className="grid-lines grid min-h-[80svh] place-items-center pt-24">
-      <div className="wrap max-w-2xl text-center">
+    <main className="grid-lines relative grid min-h-[80svh] place-items-center pt-24">
+      <GridTraffic speed={0.5} />
+      <div className="wrap relative max-w-2xl text-center">
         <p className="eyebrow text-primary">Error 404</p>
         <h1 className="display-1 mt-5">This route is off the map</h1>
         <p className="lede mx-auto mt-6 max-w-md">

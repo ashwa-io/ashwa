@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 
 import { LogoWithText } from "@/components/logo";
+import { GridTraffic } from "@/components/site/grid-traffic";
 import { cn } from "@/lib/utils";
 
 export interface NavLink {
@@ -227,9 +228,10 @@ export function HeaderNav({ groups, appUrl }: { groups: NavGroup[]; appUrl: stri
                 </div>
                 <Link
                   href={active.feature.href}
-                  className="on-ink grid-lines group flex flex-col justify-between rounded-2xl p-6"
+                  className="on-ink grid-lines group relative flex flex-col justify-between overflow-hidden rounded-2xl p-6"
                 >
-                  <div>
+                  <GridTraffic count={2} speed={0.6} />
+                  <div className="relative">
                     <p className="eyebrow text-ink-muted">{active.feature.kicker}</p>
                     <p className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight">
                       {active.feature.title}
@@ -238,7 +240,7 @@ export function HeaderNav({ groups, appUrl }: { groups: NavGroup[]; appUrl: stri
                       {active.feature.body}
                     </p>
                   </div>
-                  <span className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                  <span className="relative mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
                     {active.feature.cta}
                     <ArrowRight
                       aria-hidden="true"

@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { FleetScene } from "@/components/hero3d/fleet-scene";
 import { SignalGlobe } from "@/components/hero3d/signal-globe";
+import { GridTraffic } from "@/components/site/grid-traffic";
 import { Reveal } from "@/components/site/reveal";
 import { Tabs } from "@/components/site/tabs";
 import {
@@ -129,6 +130,8 @@ export default function Home() {
     <main>
       {/* 1. Hero: copy is server-rendered text; the 3D tile loads after it. */}
       <section className="grid-lines relative overflow-hidden">
+        {/* Kept off the 3D scene: above it on phones, left of it on desktop. */}
+        <GridTraffic count={4} speed={1.1} className="inset-x-0 top-0 bottom-[52svh] lg:bottom-0 lg:right-[54%]" />
         <div className="wrap relative z-10 grid min-h-[100svh] items-center pb-[46svh] pt-28 lg:pb-16 lg:pt-24">
           <div className="max-w-[40rem]">
             <h1 className="display-1">

@@ -10,6 +10,7 @@ import { Visual } from "@/components/visuals";
 import { pageContext } from "@/content/contexts";
 import { PAGE_PHOTOS } from "@/content/photos";
 
+import { GridTraffic } from "./grid-traffic";
 import { Photo } from "./photo";
 import { Reveal } from "./reveal";
 import { Breadcrumbs, ButtonLink, CardLink, CtaBand, FaqList, JsonLd } from "./ui";
@@ -81,8 +82,9 @@ function Hero({ kind, doc }: { kind: PageKind; doc: PageDoc }) {
   // Industries open on ink, the way a trade magazine opens a feature.
   if (kind === "industries") {
     return (
-      <section className="on-ink grid-lines pt-28 md:pt-36">
-        <div className="wrap grid items-end gap-12 pb-16 lg:grid-cols-[1.05fr_0.95fr] lg:pb-24">
+      <section className="on-ink grid-lines relative pt-28 md:pt-36">
+        <GridTraffic speed={0.8} />
+        <div className="wrap relative grid items-end gap-12 pb-16 lg:grid-cols-[1.05fr_0.95fr] lg:pb-24">
           <div>
             <div className="[&_a]:text-ink-muted [&_nav]:text-ink-muted [&_span[aria-current]]:text-white">
               {crumbs}

@@ -6,6 +6,8 @@ import type { Faq } from "@/content/types";
 import { SITE_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
+import { GridTraffic } from "./grid-traffic";
+
 type Variant = "primary" | "secondary" | "ghost" | "inverse";
 
 const VARIANTS: Record<Variant, string> = {
@@ -166,8 +168,9 @@ export function CtaBand({
   body?: string;
 }) {
   return (
-    <section aria-labelledby="cta-title" className="on-ink grid-lines">
-      <div className="wrap flex flex-col gap-10 py-20 md:flex-row md:items-end md:justify-between md:py-28">
+    <section aria-labelledby="cta-title" className="on-ink grid-lines relative">
+      <GridTraffic speed={1.5} />
+      <div className="wrap relative flex flex-col gap-10 py-20 md:flex-row md:items-end md:justify-between md:py-28">
         <div className="max-w-2xl">
           <h2 id="cta-title" className="display-2">
             {title}
